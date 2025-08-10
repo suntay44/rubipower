@@ -1,0 +1,36 @@
+<div class="login-container">
+  <div class="logo-section">
+    <%= image_tag "rubipower.png", alt: "Rubipower Logo", class: "logo-image" %>
+  </div>
+  
+  <div class="login-card">
+    <div class="login-header">
+      <h2 class="login-title">Welcome Back!</h2>
+    </div>
+    
+    <%= form_with url: login_path, method: :post do |form| %>
+      <div class="form-group">
+        <%= form.label :email, "E-Mail", class: "form-label" %>
+        <%= form.email_field :email, 
+            placeholder: "Enter your email...", 
+            required: true,
+            class: "form-input" %>
+      </div>
+      
+      <div class="form-group">
+        <%= form.label :password, "Password", class: "form-label" %>
+        <%= form.password_field :password, 
+            placeholder: "Enter your password...", 
+            required: true,
+            class: "form-input" %>
+      </div>
+      
+      <div class="form-options">
+        <a href="#" class="forgot-link">Forgot Password?</a>
+      </div>
+      
+      <%= form.submit "Login", 
+          class: "login-button" %>
+    <% end %>
+  </div>
+</div> 

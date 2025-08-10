@@ -1,0 +1,52 @@
+<div class="login-container">
+  <div class="logo-section">
+    <%= image_tag "rubipower.png", alt: "Rubipower Logo", class: "logo-image" %>
+  </div>
+  
+  <div class="login-card">
+    <div class="login-header">
+      <h2 class="login-title">Create Account</h2>
+    </div>
+    
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+      <%= render "devise/shared/error_messages", resource: resource %>
+
+      <div class="form-group">
+        <%= f.label :email, "E-Mail", class: "form-label" %>
+        <%= f.email_field :email, 
+            placeholder: "Enter your email...", 
+            required: true,
+            autofocus: true,
+            autocomplete: "email",
+            class: "form-input" %>
+      </div>
+      
+      <div class="form-group">
+        <%= f.label :password, "Password", class: "form-label" %>
+        <% if @minimum_password_length %>
+          <span class="password-hint">(<%= @minimum_password_length %> characters minimum)</span>
+        <% end %>
+        <%= f.password_field :password, 
+            placeholder: "Enter your password...", 
+            required: true,
+            autocomplete: "new-password",
+            class: "form-input" %>
+      </div>
+      
+      <div class="form-group">
+        <%= f.label :password_confirmation, "Confirm Password", class: "form-label" %>
+        <%= f.password_field :password_confirmation, 
+            placeholder: "Confirm your password...", 
+            required: true,
+            autocomplete: "new-password",
+            class: "form-input" %>
+      </div>
+      
+      <%= f.submit "Sign Up", class: "login-button" %>
+    <% end %>
+    
+    <div class="signup-link">
+      <%= render "devise/shared/links" %>
+    </div>
+  </div>
+</div>
