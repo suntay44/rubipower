@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get "purchase_order/index"
   devise_for :users
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
@@ -12,6 +13,11 @@ Rails.application.routes.draw do
 
   # Dashboard route (protected by authentication)
   get "/dashboard", to: "dashboard#index", as: :dashboard
+
+  # Purchase Order Workflow
+  get "/purchase-order", to: "purchase_order#index", as: :purchase_order
+  get "/purchase-order/purchase-request", to: "purchase_order#purchase_request", as: :purchase_request
+  get "/purchase-order/purchase-request/new", to: "purchase_order#new_purchase_request", as: :new_purchase_request
 
   # Test pages (all protected by authentication)
   get "/home", to: "pages#home"

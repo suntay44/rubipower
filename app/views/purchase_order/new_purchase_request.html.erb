@@ -1,0 +1,386 @@
+<div class="flex h-screen bg-gray-100">
+  <!-- Sidebar -->
+  <div id="sidebar" class="bg-red-800 text-white w-64 transition-all duration-300 ease-in-out">
+    <!-- Sidebar Header -->
+    <div class="flex items-center justify-between p-4 border-b border-red-700">
+      <div class="flex items-center space-x-3">
+        <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center">
+          <span class="text-red-800 font-bold text-sm">RP</span>
+        </div>
+        <span class="font-semibold text-lg">Rubipower</span>
+      </div>
+      <button id="sidebar-toggle" class="text-white hover:text-red-200 transition-colors">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Navigation Menu -->
+    <nav class="mt-4">
+      <div class="px-4 space-y-2">
+        <!-- Dashboard -->
+        <a href="<%= root_path %>" class="flex items-center space-x-3 px-3 py-2 rounded-lg text-white hover:bg-red-700 transition-colors group">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v6H8V5z"></path>
+          </svg>
+          <span class="sidebar-text">Dashboard</span>
+        </a>
+
+        <!-- Purchase Order Workflow -->
+        <a href="<%= purchase_order_path %>" class="flex items-center space-x-3 px-3 py-2 rounded-lg bg-red-700 text-white hover:bg-red-600 transition-colors group">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+          </svg>
+          <span class="sidebar-text">Purchase Order Workflow</span>
+        </a>
+
+        <!-- Employee Reimbursement Workflow -->
+        <a href="#" class="flex items-center space-x-3 px-3 py-2 rounded-lg text-white hover:bg-red-700 transition-colors group">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+          </svg>
+          <span class="sidebar-text">Employee Reimbursement</span>
+        </a>
+
+        <!-- Expense/Revenue Encoding Workflow -->
+        <a href="#" class="flex items-center space-x-3 px-3 py-2 rounded-lg text-white hover:bg-red-700 transition-colors group">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+          </svg>
+          <span class="sidebar-text">Expense/Revenue Encoding</span>
+        </a>
+
+        <!-- Invoice Creation Workflow -->
+        <a href="#" class="flex items-center space-x-3 px-3 py-2 rounded-lg text-white hover:bg-red-700 transition-colors group">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+          </svg>
+          <span class="sidebar-text">Invoice Creation</span>
+        </a>
+
+        <!-- Cash Advance Request Workflow -->
+        <a href="#" class="flex items-center space-x-3 px-3 py-2 rounded-lg text-white hover:bg-red-700 transition-colors group">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+          </svg>
+          <span class="sidebar-text">Cash Advance Request</span>
+        </a>
+
+        <!-- Logout -->
+        <div class="pt-4 border-t border-red-700">
+          <%= button_to destroy_user_session_path, method: :delete, 
+              class: "flex items-center space-x-3 px-3 py-2 rounded-lg text-white hover:bg-red-700 transition-colors group w-full text-left" do %>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+            </svg>
+            <span class="sidebar-text">Logout</span>
+          <% end %>
+        </div>
+      </div>
+    </nav>
+  </div>
+
+  <!-- Main Content -->
+  <div class="flex-1 flex flex-col overflow-hidden">
+    <!-- Top Navigation -->
+    <header class="bg-white shadow-sm border-b border-gray-200">
+      <div class="flex items-center justify-between px-6 py-4">
+        <div class="flex items-center space-x-4">
+          <button id="mobile-sidebar-toggle" class="text-gray-500 hover:text-gray-700 lg:hidden">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+          </button>
+          <div class="flex items-center space-x-3">
+            <a href="<%= purchase_request_path %>" class="text-gray-500 hover:text-gray-700">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+              </svg>
+            </a>
+            <h1 class="text-2xl font-bold text-gray-900">Create Purchase Request</h1>
+          </div>
+        </div>
+        
+        <div class="flex items-center space-x-4">
+          <!-- User Profile -->
+          <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center">
+              <span class="text-white font-semibold text-sm">A</span>
+            </div>
+            <div class="hidden md:block">
+              <p class="text-sm font-medium text-gray-900">Admin User</p>
+              <p class="text-xs text-gray-500">admin@example.com</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 overflow-y-auto bg-gray-50 p-6">
+      <div class="max-w-4xl mx-auto">
+        <!-- Header Section -->
+        <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+          <div class="text-center">
+            <h2 class="text-2xl font-bold text-gray-900 mb-2">Purchase Request Form</h2>
+            <p class="text-gray-600">Fill out the Materials Requisition Sheet (MRS) and Purchase Requisition Form (PRF)</p>
+            <div class="mt-4 flex justify-center space-x-4 text-sm text-gray-500">
+              <span>*MRS = Total materials of all project request</span>
+              <span>*PRF = Request per supplier</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Purchase Request Form -->
+        <form class="bg-white rounded-lg shadow-sm p-6">
+          <!-- Basic Information Section -->
+          <div class="mb-8">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+              <svg class="w-5 h-5 text-red-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+              </svg>
+              Basic Information
+            </h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Requester Name</label>
+                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent" value="<%= current_user.full_name %>" readonly>
+              </div>
+              
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Department</label>
+                <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent">
+                  <option value="">Select Department</option>
+                  <% @departments.each do |dept| %>
+                    <option value="<%= dept %>"><%= dept %></option>
+                  <% end %>
+                </select>
+              </div>
+              
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Request Date</label>
+                <input type="date" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent" value="<%= Date.current %>">
+              </div>
+              
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Priority Level</label>
+                <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent">
+                  <option value="">Select Priority</option>
+                  <% @priority_levels.each do |priority| %>
+                    <option value="<%= priority %>"><%= priority %></option>
+                  <% end %>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Item Details Section -->
+          <div class="mb-8">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+              <svg class="w-5 h-5 text-red-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+              </svg>
+              Item Details
+            </h3>
+            
+            <div class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Item Description *</label>
+                <textarea rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent" placeholder="Provide detailed description of the items needed..."></textarea>
+              </div>
+              
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Quantity *</label>
+                  <input type="number" min="1" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent" placeholder="Enter quantity">
+                </div>
+                
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Unit</label>
+                  <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent">
+                    <option value="">Select Unit</option>
+                    <option value="pcs">Pieces</option>
+                    <option value="kg">Kilograms</option>
+                    <option value="m">Meters</option>
+                    <option value="l">Liters</option>
+                    <option value="box">Box</option>
+                    <option value="set">Set</option>
+                  </select>
+                </div>
+                
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Estimated Cost (₱) *</label>
+                  <input type="number" min="0" step="0.01" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent" placeholder="0.00">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Vendor Details Section -->
+          <div class="mb-8">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+              <svg class="w-5 h-5 text-red-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+              </svg>
+              Vendor Details
+            </h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Vendor Name *</label>
+                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent" placeholder="Enter vendor name">
+              </div>
+              
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Vendor Address *</label>
+                <textarea rows="2" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent" placeholder="Enter complete vendor address"></textarea>
+              </div>
+              
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">2303 (Tax Certificate) *</label>
+                <input type="file" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent" accept=".pdf,.jpg,.jpeg,.png">
+                <p class="text-xs text-gray-500 mt-1">Upload vendor's 2303 tax certificate</p>
+              </div>
+              
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Bank Details</label>
+                <textarea rows="2" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent" placeholder="Bank name, account number, etc."></textarea>
+              </div>
+              
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Sample Sales Invoice</label>
+                <input type="file" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent" accept=".pdf,.jpg,.jpeg,.png">
+                <p class="text-xs text-gray-500 mt-1">Upload sample sales invoice from vendor</p>
+              </div>
+              
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Vendor Quotation *</label>
+                <input type="file" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent" accept=".pdf,.jpg,.jpeg,.png">
+                <p class="text-xs text-gray-500 mt-1">Upload vendor quotation document</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Additional Information Section -->
+          <div class="mb-8">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+              <svg class="w-5 h-5 text-red-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+              </svg>
+              Additional Information
+            </h3>
+            
+            <div class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Reason for Purchase *</label>
+                <textarea rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent" placeholder="Explain why this purchase is needed..."></textarea>
+              </div>
+              
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Sales Order Number</label>
+                  <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent" placeholder="Enter sales order number">
+                </div>
+                
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Client Name</label>
+                  <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent" placeholder="Enter client name">
+                </div>
+              </div>
+              
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Additional Notes</label>
+                <textarea rows="2" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent" placeholder="Any additional information or special requirements..."></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- Form Actions -->
+          <div class="flex items-center justify-between pt-6 border-t border-gray-200">
+            <div class="flex items-center space-x-4">
+              <a href="<%= purchase_request_path %>" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors">
+                Cancel
+              </a>
+              <button type="button" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors">
+                Save Draft
+              </button>
+            </div>
+            
+            <div class="flex items-center space-x-4">
+              <button type="submit" class="px-6 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors font-medium">
+                Submit Request
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- Tooltip for collapsed sidebar -->
+<div id="tooltip" class="fixed bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-lg opacity-0 pointer-events-none transition-opacity duration-200 z-50"></div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const sidebar = document.getElementById('sidebar');
+  const sidebarToggle = document.getElementById('sidebar-toggle');
+  const mobileSidebarToggle = document.getElementById('mobile-sidebar-toggle');
+  const sidebarTexts = document.querySelectorAll('.sidebar-text');
+  const tooltip = document.getElementById('tooltip');
+  
+  // Toggle sidebar
+  function toggleSidebar() {
+    sidebar.classList.toggle('w-64');
+    sidebar.classList.toggle('w-16');
+    
+    sidebarTexts.forEach(text => {
+      text.classList.toggle('hidden');
+    });
+    
+    // Update toggle button icon
+    const icon = sidebarToggle.querySelector('svg');
+    if (sidebar.classList.contains('w-16')) {
+      icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>';
+    } else {
+      icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>';
+    }
+  }
+  
+  // Mobile sidebar toggle
+  function toggleMobileSidebar() {
+    sidebar.classList.toggle('hidden');
+  }
+  
+  // Tooltip functionality for collapsed sidebar
+  function showTooltip(event, text) {
+    if (sidebar.classList.contains('w-16')) {
+      tooltip.textContent = text;
+      tooltip.style.left = event.pageX + 10 + 'px';
+      tooltip.style.top = event.pageY - 10 + 'px';
+      tooltip.classList.remove('opacity-0');
+    }
+  }
+  
+  function hideTooltip() {
+    tooltip.classList.add('opacity-0');
+  }
+  
+  // Event listeners
+  sidebarToggle.addEventListener('click', toggleSidebar);
+  mobileSidebarToggle.addEventListener('click', toggleMobileSidebar);
+  
+  // Add tooltip events to sidebar items
+  const sidebarItems = document.querySelectorAll('#sidebar a, #sidebar button');
+  sidebarItems.forEach(item => {
+    const text = item.querySelector('.sidebar-text')?.textContent;
+    if (text) {
+      item.addEventListener('mouseenter', (e) => showTooltip(e, text));
+      item.addEventListener('mouseleave', hideTooltip);
+    }
+  });
+});
+</script> 
