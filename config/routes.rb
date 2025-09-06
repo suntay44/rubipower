@@ -18,6 +18,9 @@ Rails.application.routes.draw do
   get "/purchase-order", to: "purchase_order#index", as: :purchase_order
   get "/purchase-order/purchase-request", to: "purchase_order#purchase_request", as: :purchase_request
   get "/purchase-order/purchase-request/new", to: "purchase_order#new_purchase_request", as: :new_purchase_request
+  get "/purchase-order/budget-approval", to: "purchase_order#budget_approval", as: :budget_approval
+  get "/purchase-order/procurement-review", to: "purchase_order#procurement_review", as: :procurement_review
+  get "/purchase-order/new", to: "purchase_order#new_purchase_order", as: :new_purchase_order
 
   # Test pages (all protected by authentication)
   get "/home", to: "pages#home"

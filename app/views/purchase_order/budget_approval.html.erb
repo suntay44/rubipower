@@ -99,19 +99,11 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
               </svg>
             </a>
-            <h1 class="text-2xl font-bold text-gray-900">Purchase Requests</h1>
+            <h1 class="text-2xl font-bold text-gray-900">Budget Approval</h1>
           </div>
         </div>
         
         <div class="flex items-center space-x-4">
-          <!-- Create Purchase Request Button -->
-          <a href="<%= new_purchase_request_path %>" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md font-medium transition-colors flex items-center space-x-2">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-            </svg>
-            <span>Create Purchase Request</span>
-          </a>
-          
           <!-- User Profile -->
           <div class="flex items-center space-x-3">
             <div class="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center">
@@ -133,8 +125,8 @@
         <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
           <div class="flex items-center justify-between">
             <div>
-              <h2 class="text-2xl font-bold text-gray-900 mb-2">Purchase Requests</h2>
-              <p class="text-gray-600">Manage and track all purchase requests in the system</p>
+              <h2 class="text-2xl font-bold text-gray-900 mb-2">Budget Approval</h2>
+              <p class="text-gray-600">Review and approve purchase requests based on budget availability</p>
             </div>
             <div class="flex items-center space-x-4">
               <div class="flex items-center space-x-2">
@@ -177,6 +169,9 @@
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Created Date
                   </th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody class="bg-white divide-y divide-gray-200">
@@ -215,6 +210,19 @@
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       <%= request[:created_at] %>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <div class="flex items-center space-x-2">
+                        <button class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-xs transition-colors">
+                          Approve
+                        </button>
+                        <button class="bg-yellow-600 hover:bg-yellow-700 text-white px-3 py-1 rounded text-xs transition-colors">
+                          Revise
+                        </button>
+                        <button class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-xs transition-colors">
+                          Reject
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 <% end %>
@@ -263,9 +271,10 @@
       </div>
     </main>
   </div>
-  <!-- Tooltip for collapsed sidebar -->
-<div id="tooltip" class="fixed bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-lg opacity-0 pointer-events-none transition-opacity duration-200 z-50"></div>
+</div>
 
+<!-- Tooltip for collapsed sidebar -->
+<div id="tooltip" class="fixed bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-lg opacity-0 pointer-events-none transition-opacity duration-200 z-50"></div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -326,4 +335,4 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 });
-</script> 
+</script>
