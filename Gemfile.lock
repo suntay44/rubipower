@@ -202,6 +202,12 @@ GEM
       ast (~> 2.4.1)
       racc
     pg (1.5.9)
+    phlex (2.3.1)
+      zeitwerk (~> 2.7)
+    phlex-rails (2.3.1)
+      phlex (~> 2.3.0)
+      railties (>= 7.1, < 9)
+      zeitwerk (~> 2.7)
     pp (0.6.2)
       prettyprint
     prettyprint (0.2.0)
@@ -356,6 +362,13 @@ GEM
       railties (>= 7.1.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
+    ultimate_turbo_modal (2.2.1)
+      actionpack
+      activesupport
+      phlex-rails
+      railties
+      stimulus-rails
+      turbo-rails
     unicode-display_width (3.1.4)
       unicode-emoji (~> 4.0, >= 4.0.4)
     unicode-emoji (4.0.4)
@@ -413,6 +426,7 @@ DEPENDENCIES
   thruster
   turbo-rails
   tzinfo-data
+  ultimate_turbo_modal (~> 2.2)
   web-console
 
 BUNDLED WITH

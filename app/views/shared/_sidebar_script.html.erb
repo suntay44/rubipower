@@ -1,0 +1,179 @@
+<!-- Tooltip for collapsed sidebar -->
+<div id="tooltip" class="fixed bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-lg opacity-0 pointer-events-none transition-opacity duration-200 z-50"></div>
+
+<!-- Overlay for mobile sidebar -->
+<div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden lg:hidden" style="z-index: 25;"></div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const sidebar = document.getElementById('sidebar');
+  const sidebarToggle = document.getElementById('sidebar-toggle');
+  const mobileSidebarToggle = document.getElementById('mobile-sidebar-toggle');
+  const sidebarTexts = document.querySelectorAll('.sidebar-text');
+  const tooltip = document.getElementById('tooltip');
+  const overlay = document.getElementById('sidebar-overlay');
+  const mainContent = document.getElementById('main-content');
+  
+  // Check if we're on mobile
+  function isMobile() {
+    return window.innerWidth < 1024; // lg breakpoint
+  }
+  
+  // Desktop sidebar toggle (collapse/expand)
+  function toggleDesktopSidebar() {
+    if (isMobile()) return;
+    
+    sidebar.classList.toggle('w-64');
+    sidebar.classList.toggle('w-16');
+    
+    // Adjust main content margin based on sidebar state
+    if (sidebar.classList.contains('w-16')) {
+      mainContent.style.marginLeft = '64px';
+      // Center the toggle button when collapsed
+      sidebarToggle.parentElement.classList.add('justify-center');
+      sidebarToggle.parentElement.classList.remove('justify-between');
+      // Center all navigation items when collapsed
+      const navItems = document.querySelectorAll('#sidebar nav a, #sidebar nav button');
+      navItems.forEach(item => {
+        item.classList.add('justify-center');
+        item.classList.remove('justify-start');
+      });
+    } else {
+      mainContent.style.marginLeft = '256px';
+      // Restore normal layout when expanded
+      sidebarToggle.parentElement.classList.remove('justify-center');
+      sidebarToggle.parentElement.classList.add('justify-between');
+      // Restore normal layout for navigation items
+      const navItems = document.querySelectorAll('#sidebar nav a, #sidebar nav button');
+      navItems.forEach(item => {
+        item.classList.remove('justify-center');
+        item.classList.add('justify-start');
+      });
+    }
+    
+    sidebarTexts.forEach(text => {
+      text.classList.toggle('hidden');
+    });
+    
+    // Update toggle button icon
+    const icon = sidebarToggle.querySelector('svg');
+    if (sidebar.classList.contains('w-16')) {
+      icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>';
+    } else {
+      icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>';
+    }
+  }
+  
+  // Mobile sidebar toggle (show/hide)
+  function toggleMobileSidebar() {
+    if (!isMobile()) return;
+    
+    const isHidden = sidebar.classList.contains('hidden');
+    
+    if (isHidden) {
+      // Show sidebar
+      sidebar.classList.remove('hidden');
+      sidebar.classList.add('block');
+      overlay.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+      mainContent.style.marginLeft = '0px';
+    } else {
+      // Hide sidebar
+      sidebar.classList.add('hidden');
+      sidebar.classList.remove('block');
+      overlay.classList.add('hidden');
+      document.body.style.overflow = '';
+      mainContent.style.marginLeft = '0px';
+    }
+  }
+  
+  // Close mobile sidebar when clicking overlay
+  function closeMobileSidebar() {
+    if (isMobile() && !sidebar.classList.contains('hidden')) {
+      sidebar.classList.add('hidden');
+      sidebar.classList.remove('block');
+      overlay.classList.add('hidden');
+      document.body.style.overflow = '';
+      mainContent.style.marginLeft = '0px';
+    }
+  }
+  
+  // Tooltip functionality for collapsed sidebar
+  function showTooltip(event, text) {
+    if (sidebar.classList.contains('w-16') && !isMobile()) {
+      tooltip.textContent = text;
+      tooltip.style.left = event.pageX + 10 + 'px';
+      tooltip.style.top = event.pageY - 10 + 'px';
+      tooltip.classList.remove('opacity-0');
+    }
+  }
+  
+  function hideTooltip() {
+    tooltip.classList.add('opacity-0');
+  }
+  
+  // Handle window resize
+  function handleResize() {
+    if (isMobile()) {
+      // On mobile, ensure sidebar is hidden and overlay is hidden
+      sidebar.classList.add('hidden');
+      sidebar.classList.remove('block');
+      overlay.classList.add('hidden');
+      document.body.style.overflow = '';
+      mainContent.style.marginLeft = '0px';
+    } else {
+      // On desktop, ensure sidebar is visible and overlay is hidden
+      sidebar.classList.remove('hidden');
+      sidebar.classList.add('block');
+      overlay.classList.add('hidden');
+      document.body.style.overflow = '';
+      // Set initial margin for main content based on sidebar state
+      if (sidebar.classList.contains('w-16')) {
+        mainContent.style.marginLeft = '64px';
+        // Center the toggle button when collapsed
+        sidebarToggle.parentElement.classList.add('justify-center');
+        sidebarToggle.parentElement.classList.remove('justify-between');
+        // Center all navigation items when collapsed
+        const navItems = document.querySelectorAll('#sidebar nav a, #sidebar nav button');
+        navItems.forEach(item => {
+          item.classList.add('justify-center');
+          item.classList.remove('justify-start');
+        });
+      } else {
+        mainContent.style.marginLeft = '256px';
+        // Restore normal layout when expanded
+        sidebarToggle.parentElement.classList.remove('justify-center');
+        sidebarToggle.parentElement.classList.add('justify-between');
+        // Restore normal layout for navigation items
+        const navItems = document.querySelectorAll('#sidebar nav a, #sidebar nav button');
+        navItems.forEach(item => {
+          item.classList.remove('justify-center');
+          item.classList.add('justify-start');
+        });
+      }
+    }
+  }
+  
+  // Event listeners
+  sidebarToggle.addEventListener('click', toggleDesktopSidebar);
+  if (mobileSidebarToggle) {
+    mobileSidebarToggle.addEventListener('click', toggleMobileSidebar);
+  }
+  
+  overlay.addEventListener('click', closeMobileSidebar);
+  window.addEventListener('resize', handleResize);
+  
+  // Add tooltip events to sidebar items
+  const sidebarItems = document.querySelectorAll('#sidebar a, #sidebar button');
+  sidebarItems.forEach(item => {
+    const text = item.querySelector('.sidebar-text')?.textContent;
+    if (text) {
+      item.addEventListener('mouseenter', (e) => showTooltip(e, text));
+      item.addEventListener('mouseleave', hideTooltip);
+    }
+  });
+  
+  // Initialize sidebar state
+  handleResize();
+});
+</script>

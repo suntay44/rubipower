@@ -1,0 +1,197 @@
+<!-- Header with Back Button and Title -->
+<div class="bg-white border-b border-gray-200 px-6 py-4">
+  <div class="flex items-center justify-between">
+    <div class="flex items-center space-x-4">
+      <%= link_to purchase_request_detail_path(@request[:id]), class: "flex items-center text-gray-600 hover:text-gray-900 transition-colors" do %>
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+        </svg>
+        Back to Purchase Request
+      <% end %>
+    </div>
+    
+    <!-- Page Title -->
+    <div class="flex items-center space-x-3">
+      <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+        </svg>
+      </div>
+      <div>
+        <h1 class="text-2xl font-bold text-gray-900">Create Purchase Order</h1>
+        <p class="text-sm text-gray-500">For Request #<%= @request[:id] %></p>
+      </div>
+    </div>
+    
+    <!-- User Profile -->
+    <div class="flex items-center space-x-3">
+      <div class="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center">
+        <span class="text-white font-semibold text-sm">
+          <%= current_user&.first_name&.first&.upcase || 'A' %>
+        </span>
+      </div>
+      <div class="text-right">
+        <div class="text-sm font-medium text-gray-900">
+          <%= current_user&.first_name %> <%= current_user&.last_name %>
+        </div>
+        <div class="text-xs text-gray-500">
+          <%= current_user&.email %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Main Content -->
+<div class="bg-gray-50 min-h-screen p-6">
+  <div class="max-w-4xl mx-auto">
+    
+    <!-- Purchase Order Form -->
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+      <h2 class="text-lg font-semibold text-gray-900 mb-6">Purchase Order Details</h2>
+      
+      <form class="space-y-6">
+        <!-- PO Number -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">PO Number</label>
+            <input type="text" value="PO-<%= Date.current.strftime('%Y%m%d') %>-<%= @request[:id].to_s.rjust(3, '0') %>" 
+                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" readonly>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Date</label>
+            <input type="date" value="<%= Date.current %>" 
+                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+          </div>
+        </div>
+
+        <!-- Vendor Information -->
+        <div class="border-t pt-6">
+          <h3 class="text-md font-medium text-gray-900 mb-4">Vendor Information</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Vendor Name</label>
+              <input type="text" placeholder="Enter vendor name" 
+                     class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Contact Person</label>
+              <input type="text" placeholder="Enter contact person" 
+                     class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+            </div>
+            
+            <div class="md:col-span-2">
+              <label class="block text-sm font-medium text-gray-700 mb-2">Vendor Address</label>
+              <textarea rows="3" placeholder="Enter vendor address" 
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+              <input type="tel" placeholder="Enter phone number" 
+                     class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+              <input type="email" placeholder="Enter email address" 
+                     class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+            </div>
+          </div>
+        </div>
+
+        <!-- Delivery Information -->
+        <div class="border-t pt-6">
+          <h3 class="text-md font-medium text-gray-900 mb-4">Delivery Information</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="md:col-span-2">
+              <label class="block text-sm font-medium text-gray-700 mb-2">Delivery Address</label>
+              <textarea rows="3" placeholder="Enter delivery address" 
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Delivery Date</label>
+              <input type="date" 
+                     class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Payment Terms</label>
+              <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                <option value="">Select payment terms</option>
+                <option value="net30">Net 30</option>
+                <option value="net60">Net 60</option>
+                <option value="cod">Cash on Delivery</option>
+                <option value="advance">Advance Payment</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Items Information -->
+        <div class="border-t pt-6">
+          <h3 class="text-md font-medium text-gray-900 mb-4">Items</h3>
+          <div class="bg-gray-50 rounded-lg p-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Item Description</label>
+                <input type="text" value="<%= @request[:items] %>" readonly
+                       class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100">
+              </div>
+              
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Quantity</label>
+                <input type="number" placeholder="Enter quantity" 
+                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+              </div>
+              
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Unit Price</label>
+                <input type="number" step="0.01" placeholder="Enter unit price" 
+                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+              </div>
+              
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Total Amount</label>
+                <input type="number" step="0.01" placeholder="0.00" readonly
+                       class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100">
+              </div>
+            </div>
+            
+            <div class="text-sm text-gray-600 mb-4">
+              <strong>Description:</strong> <%= @request[:description] %>
+            </div>
+          </div>
+        </div>
+
+        <!-- Terms and Conditions -->
+        <div class="border-t pt-6">
+          <h3 class="text-md font-medium text-gray-900 mb-4">Terms and Conditions</h3>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Company PO Terms & Conditions</label>
+            <textarea rows="4" placeholder="Enter terms and conditions" 
+                      class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">1. All goods must be delivered in accordance with the specifications provided.
+2. Payment will be made within the agreed terms upon receipt of invoice.
+3. Any defects or non-conformities must be reported within 7 days of delivery.
+4. The vendor is responsible for all shipping and handling costs unless otherwise specified.</textarea>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="border-t pt-6 flex justify-end space-x-4">
+          <button type="button" onclick="window.history.back()" 
+                  class="px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors">
+            Cancel
+          </button>
+          <button type="submit" 
+                  class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
+            Create Purchase Order
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

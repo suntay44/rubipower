@@ -1,0 +1,82 @@
+<!-- Sidebar -->
+<div id="sidebar" class="bg-red-800 text-white w-64 transition-all duration-300 ease-in-out fixed h-full hidden lg:block" style="z-index: 30;">
+  <!-- Sidebar Header -->
+  <div class="flex items-center justify-between p-5 border-b border-red-700">
+    <div class="flex items-center space-x-3">
+      <div class=" w-8 h-8 bg-white rounded-full flex items-center justify-center">
+        <span class="text-red-800 font-bold text-sm">RP</span>
+      </div>
+      <span class="font-semibold text-lg sidebar-text">Rubipower</span>
+    </div>
+    <button id="sidebar-toggle" class="text-white hover:text-red-200 transition-colors mr-4">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Navigation Menu -->
+  <nav class="mt-4">
+    <div class="px-4 space-y-2">
+      <!-- Dashboard -->
+      <a href="<%= root_path %>" class="flex items-center space-x-3 px-3 py-2 rounded-lg text-white hover:bg-red-700 transition-colors group">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v6H8V5z"></path>
+        </svg>
+        <span class="sidebar-text">Dashboard</span>
+      </a>
+
+      <!-- Purchase Request Workflow -->
+      <a href="<%= purchase_request_path %>" class="flex items-center space-x-3 px-3 py-2 rounded-lg bg-red-700 text-white hover:bg-red-600 transition-colors group">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+        </svg>
+        <span class="sidebar-text">Purchase Request Workflow</span>
+      </a>
+
+      <!-- Employee Reimbursement Workflow -->
+      <a href="#" class="flex items-center space-x-3 px-3 py-2 rounded-lg text-white hover:bg-red-700 transition-colors group">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+        </svg>
+        <span class="sidebar-text">Employee Reimbursement</span>
+      </a>
+
+      <!-- Expense/Revenue Encoding Workflow -->
+      <a href="#" class="flex items-center space-x-3 px-3 py-2 rounded-lg text-white hover:bg-red-700 transition-colors group">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+        </svg>
+        <span class="sidebar-text">Expense/Revenue Encoding</span>
+      </a>
+
+      <!-- Invoice Creation Workflow -->
+      <a href="#" class="flex items-center space-x-3 px-3 py-2 rounded-lg text-white hover:bg-red-700 transition-colors group">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+        </svg>
+        <span class="sidebar-text">Invoice Creation</span>
+      </a>
+
+      <!-- Cash Advance Request Workflow -->
+      <a href="#" class="flex items-center space-x-3 px-3 py-2 rounded-lg text-white hover:bg-red-700 transition-colors group">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+        </svg>
+        <span class="sidebar-text">Cash Advance Request</span>
+      </a>
+
+      <!-- Logout -->
+      <div class="pt-4 border-t border-red-700">
+        <%= button_to destroy_user_session_path, method: :delete, 
+            class: "flex items-center space-x-3 px-3 py-2 rounded-lg text-white hover:bg-red-700 transition-colors group w-full text-left" do %>
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+          </svg>
+          <span class="sidebar-text">Logout</span>
+        <% end %>
+      </div>
+    </div>
+  </nav>
+</div>

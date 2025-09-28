@@ -69,3 +69,5 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
+
+gem "ultimate_turbo_modal", "~> 2.2"

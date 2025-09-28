@@ -1,89 +1,4 @@
-<div class="flex h-screen bg-gray-100">
-  <!-- Sidebar -->
-  <div id="sidebar" class="bg-red-800 text-white w-64 transition-all duration-300 ease-in-out">
-    <!-- Sidebar Header -->
-    <div class="flex items-center justify-between p-4 border-b border-red-700">
-      <div class="flex items-center space-x-3">
-        <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center">
-          <span class="text-red-800 font-bold text-sm">RP</span>
-        </div>
-        <span class="font-semibold text-lg">Rubipower</span>
-      </div>
-      <button id="sidebar-toggle" class="text-white hover:text-red-200 transition-colors">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-        </svg>
-      </button>
-    </div>
-
-    <!-- Navigation Menu -->
-    <nav class="mt-4">
-      <div class="px-4 space-y-2">
-        <!-- Dashboard -->
-        <a href="<%= root_path %>" class="flex items-center space-x-3 px-3 py-2 rounded-lg text-white hover:bg-red-700 transition-colors group">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v6H8V5z"></path>
-          </svg>
-          <span class="sidebar-text">Dashboard</span>
-        </a>
-
-        <!-- Purchase Order Workflow -->
-        <a href="<%= purchase_order_path %>" class="flex items-center space-x-3 px-3 py-2 rounded-lg bg-red-700 text-white hover:bg-red-600 transition-colors group">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-          </svg>
-          <span class="sidebar-text">Purchase Order Workflow</span>
-        </a>
-
-        <!-- Employee Reimbursement Workflow -->
-        <a href="#" class="flex items-center space-x-3 px-3 py-2 rounded-lg text-white hover:bg-red-700 transition-colors group">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
-          </svg>
-          <span class="sidebar-text">Employee Reimbursement</span>
-        </a>
-
-        <!-- Expense/Revenue Encoding Workflow -->
-        <a href="#" class="flex items-center space-x-3 px-3 py-2 rounded-lg text-white hover:bg-red-700 transition-colors group">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-          </svg>
-          <span class="sidebar-text">Expense/Revenue Encoding</span>
-        </a>
-
-        <!-- Invoice Creation Workflow -->
-        <a href="#" class="flex items-center space-x-3 px-3 py-2 rounded-lg text-white hover:bg-red-700 transition-colors group">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
-          </svg>
-          <span class="sidebar-text">Invoice Creation</span>
-        </a>
-
-        <!-- Cash Advance Request Workflow -->
-        <a href="#" class="flex items-center space-x-3 px-3 py-2 rounded-lg text-white hover:bg-red-700 transition-colors group">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
-          </svg>
-          <span class="sidebar-text">Cash Advance Request</span>
-        </a>
-
-        <!-- Logout -->
-        <div class="pt-4 border-t border-red-700">
-          <%= button_to destroy_user_session_path, method: :delete, 
-              class: "flex items-center space-x-3 px-3 py-2 rounded-lg text-white hover:bg-red-700 transition-colors group w-full text-left" do %>
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
-            </svg>
-            <span class="sidebar-text">Logout</span>
-          <% end %>
-        </div>
-      </div>
-    </nav>
-  </div>
-
-  <!-- Main Content -->
-  <div class="flex-1 flex flex-col overflow-hidden">
+<!-- Main Content -->
     <!-- Top Navigation -->
     <header class="bg-white shadow-sm border-b border-gray-200">
       <div class="flex items-center justify-between px-6 py-4">
@@ -125,11 +40,6 @@
         <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
           <div class="text-center">
             <h2 class="text-2xl font-bold text-gray-900 mb-2">Purchase Request Form</h2>
-            <p class="text-gray-600">Fill out the Materials Requisition Sheet (MRS) and Purchase Requisition Form (PRF)</p>
-            <div class="mt-4 flex justify-center space-x-4 text-sm text-gray-500">
-              <span>*MRS = Total materials of all project request</span>
-              <span>*PRF = Request per supplier</span>
-            </div>
           </div>
         </div>
         
@@ -145,21 +55,6 @@
             </h3>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Requester Name</label>
-                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent" value="<%= current_user.full_name %>" readonly>
-              </div>
-              
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Department</label>
-                <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent">
-                  <option value="">Select Department</option>
-                  <% @departments.each do |dept| %>
-                    <option value="<%= dept %>"><%= dept %></option>
-                  <% end %>
-                </select>
-              </div>
-              
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Request Date</label>
                 <input type="date" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent" value="<%= Date.current %>">
@@ -179,43 +74,23 @@
 
           <!-- Item Details Section -->
           <div class="mb-8">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-              <svg class="w-5 h-5 text-red-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
-              </svg>
-              Item Details
-            </h3>
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                <svg class="w-5 h-5 text-red-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                </svg>
+                Item Details
+              </h3>
+              <button type="button" id="add-item-btn" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors text-sm font-medium">
+                <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                </svg>
+                Add Item
+              </button>
+            </div>
             
-            <div class="space-y-4">
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Item Description *</label>
-                <textarea rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent" placeholder="Provide detailed description of the items needed..."></textarea>
-              </div>
-              
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Quantity *</label>
-                  <input type="number" min="1" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent" placeholder="Enter quantity">
-                </div>
-                
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Unit</label>
-                  <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent">
-                    <option value="">Select Unit</option>
-                    <option value="pcs">Pieces</option>
-                    <option value="kg">Kilograms</option>
-                    <option value="m">Meters</option>
-                    <option value="l">Liters</option>
-                    <option value="box">Box</option>
-                    <option value="set">Set</option>
-                  </select>
-                </div>
-                
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Estimated Cost (₱) *</label>
-                  <input type="number" min="0" step="0.01" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent" placeholder="0.00">
-                </div>
-              </div>
+            <div id="items-container" class="space-y-4">
+              <!-- Items will be dynamically added here -->
             </div>
           </div>
 
@@ -369,9 +244,75 @@ document.addEventListener('DOMContentLoaded', function() {
     tooltip.classList.add('opacity-0');
   }
   
+  // Dynamic Items Functionality
+  let itemCounter = 0;
+  const itemsContainer = document.getElementById('items-container');
+  const addItemBtn = document.getElementById('add-item-btn');
+  
+  function createItemRow() {
+    itemCounter++;
+    const itemRow = document.createElement('div');
+    itemRow.className = 'bg-gray-50 border border-gray-200 rounded-lg p-4';
+    itemRow.id = `item-${itemCounter}`;
+    
+    itemRow.innerHTML = `
+      <div class="flex items-center justify-between mb-4">
+        <h4 class="text-md font-medium text-gray-900">Item ${itemCounter}</h4>
+        <button type="button" class="remove-item-btn text-red-600 hover:text-red-800 transition-colors" onclick="removeItem(${itemCounter})">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Item Description *</label>
+          <textarea name="items[${itemCounter}][description]" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent" placeholder="Provide detailed description of the item..." required></textarea>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Quantity *</label>
+            <input type="number" name="items[${itemCounter}][quantity]" min="1" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent" placeholder="Enter quantity" required>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Estimated Cost (₱) *</label>
+            <input type="number" name="items[${itemCounter}][cost]" min="0" step="0.01" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent" placeholder="0.00" required>
+          </div>
+        </div>
+      </div>
+    `;
+    
+    return itemRow;
+  }
+  
+  function addItem() {
+    const itemRow = createItemRow();
+    itemsContainer.appendChild(itemRow);
+    
+    // Scroll to the new item
+    itemRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+  
+  function removeItem(itemId) {
+    const itemElement = document.getElementById(`item-${itemId}`);
+    if (itemElement) {
+      itemElement.remove();
+    }
+  }
+  
+  // Make removeItem globally available
+  window.removeItem = removeItem;
+  
+  // Add initial item
+  addItem();
+  
   // Event listeners
   sidebarToggle.addEventListener('click', toggleSidebar);
   mobileSidebarToggle.addEventListener('click', toggleMobileSidebar);
+  addItemBtn.addEventListener('click', addItem);
   
   // Add tooltip events to sidebar items
   const sidebarItems = document.querySelectorAll('#sidebar a, #sidebar button');
