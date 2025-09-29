@@ -44,7 +44,26 @@
         </div>
         
         <!-- Purchase Request Form -->
-        <form class="bg-white rounded-lg shadow-sm p-6">
+        <%= form_with model: @purchase_request, url: create_purchase_request_path, local: true, class: "bg-white rounded-lg shadow-sm p-6" do |form| %>
+          <!-- Error Messages -->
+          <% if @purchase_request.errors.any? %>
+            <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md mb-6">
+              <h4 class="font-medium">Please fix the following errors:</h4>
+              <ul class="list-disc list-inside mt-2">
+                <% @purchase_request.errors.full_messages.each do |message| %>
+                  <li><%= message %></li>
+                <% end %>
+              </ul>
+            </div>
+          <% end %>
+          
+          <!-- Required Fields Note -->
+          <div class="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-md">
+            <p class="text-sm text-blue-800">
+              <span class="font-medium">Note:</span> Fields marked with <span class="text-red-600 font-bold">*</span> are required and must be filled out.
+            </p>
+          </div>
+
           <!-- Basic Information Section -->
           <div class="mb-8">
             <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
@@ -56,18 +75,13 @@
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Request Date</label>
-                <input type="date" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent" value="<%= Date.current %>">
+                <%= form.label :request_date, "Request Date *", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                <%= form.date_field :request_date, value: Date.current, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent", required: true %>
               </div>
               
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Priority Level</label>
-                <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent">
-                  <option value="">Select Priority</option>
-                  <% @priority_levels.each do |priority| %>
-                    <option value="<%= priority %>"><%= priority %></option>
-                  <% end %>
-                </select>
+                <%= form.label :priority_level, "Priority Level *", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                <%= form.select :priority_level, options_for_select(@priority_levels.map { |p| [p, p.downcase] }, @purchase_request.priority_level), { prompt: "Select Priority" }, { class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent", required: true } %>
               </div>
             </div>
           </div>
@@ -105,35 +119,35 @@
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Vendor Name *</label>
-                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent" placeholder="Enter vendor name">
+                <%= form.label :vendor_name, "Vendor Name *", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                <%= form.text_field :vendor_name, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent", placeholder: "Enter vendor name", required: true %>
               </div>
               
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Vendor Address *</label>
-                <textarea rows="2" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent" placeholder="Enter complete vendor address"></textarea>
+                <%= form.label :vendor_address, "Vendor Address *", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                <%= form.text_area :vendor_address, rows: 2, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent", placeholder: "Enter complete vendor address", required: true %>
               </div>
               
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">2303 (Tax Certificate) *</label>
-                <input type="file" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent" accept=".pdf,.jpg,.jpeg,.png">
+                <%= form.file_field :attachments, multiple: true, accept: ".pdf,.jpg,.jpeg,.png", class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent", required: true %>
                 <p class="text-xs text-gray-500 mt-1">Upload vendor's 2303 tax certificate</p>
               </div>
               
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Bank Details</label>
-                <textarea rows="2" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent" placeholder="Bank name, account number, etc."></textarea>
+                <%= form.label :bank_details, "Bank Details", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                <%= form.text_area :bank_details, rows: 2, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent", placeholder: "Bank name, account number, etc." %>
               </div>
               
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Sample Sales Invoice</label>
-                <input type="file" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent" accept=".pdf,.jpg,.jpeg,.png">
+                <%= form.file_field :attachments, multiple: true, accept: ".pdf,.jpg,.jpeg,.png", class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent" %>
                 <p class="text-xs text-gray-500 mt-1">Upload sample sales invoice from vendor</p>
               </div>
               
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Vendor Quotation *</label>
-                <input type="file" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent" accept=".pdf,.jpg,.jpeg,.png">
+                <%= form.file_field :attachments, multiple: true, accept: ".pdf,.jpg,.jpeg,.png", class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent", required: true %>
                 <p class="text-xs text-gray-500 mt-1">Upload vendor quotation document</p>
               </div>
             </div>
@@ -150,25 +164,25 @@
             
             <div class="space-y-4">
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Reason for Purchase *</label>
-                <textarea rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent" placeholder="Explain why this purchase is needed..."></textarea>
+                <%= form.label :reason_for_purchase, "Reason for Purchase *", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                <%= form.text_area :reason_for_purchase, rows: 3, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent", placeholder: "Explain why this purchase is needed...", required: true %>
               </div>
               
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Sales Order Number</label>
-                  <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent" placeholder="Enter sales order number">
+                  <%= form.label :sales_order_number, "Sales Order Number", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                  <%= form.text_field :sales_order_number, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent", placeholder: "Enter sales order number" %>
                 </div>
                 
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Client Name</label>
-                  <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent" placeholder="Enter client name">
+                  <%= form.label :client_name, "Client Name", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                  <%= form.text_field :client_name, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent", placeholder: "Enter client name" %>
                 </div>
               </div>
               
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Additional Notes</label>
-                <textarea rows="2" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent" placeholder="Any additional information or special requirements..."></textarea>
+                <%= form.label :additional_notes, "Additional Notes", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                <%= form.text_area :additional_notes, rows: 2, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent", placeholder: "Any additional information or special requirements..." %>
               </div>
             </div>
           </div>
@@ -176,21 +190,19 @@
           <!-- Form Actions -->
           <div class="flex items-center justify-between pt-6 border-t border-gray-200">
             <div class="flex items-center space-x-4">
-              <a href="<%= purchase_request_path %>" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors">
+              <%= link_to purchase_request_path, class: "px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors" do %>
                 Cancel
-              </a>
+              <% end %>
               <button type="button" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors">
                 Save Draft
               </button>
             </div>
             
             <div class="flex items-center space-x-4">
-              <button type="submit" class="px-6 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors font-medium">
-                Submit Request
-              </button>
+              <%= form.submit "Submit Request", class: "px-6 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors font-medium" %>
             </div>
           </div>
-        </form>
+        <% end %>
       </div>
     </main>
   </div>
@@ -268,18 +280,18 @@ document.addEventListener('DOMContentLoaded', function() {
       <div class="space-y-4">
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-2">Item Description *</label>
-          <textarea name="items[${itemCounter}][description]" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent" placeholder="Provide detailed description of the item..." required></textarea>
+          <textarea name="purchase_request[items_attributes][${itemCounter}][description]" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent" placeholder="Provide detailed description of the item..." required></textarea>
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">Quantity *</label>
-            <input type="number" name="items[${itemCounter}][quantity]" min="1" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent" placeholder="Enter quantity" required>
+            <input type="number" name="purchase_request[items_attributes][${itemCounter}][quantity]" min="1" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent" placeholder="Enter quantity" required>
           </div>
           
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">Estimated Cost (₱) *</label>
-            <input type="number" name="items[${itemCounter}][cost]" min="0" step="0.01" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent" placeholder="0.00" required>
+            <input type="number" name="purchase_request[items_attributes][${itemCounter}][cost]" min="0" step="0.01" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent" placeholder="0.00" required>
           </div>
         </div>
       </div>

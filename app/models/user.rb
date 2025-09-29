@@ -6,6 +6,7 @@ class User < ApplicationRecord
 
   # Associations
   has_many :roles, dependent: :destroy
+  has_many :purchase_requests, foreign_key: "requester_user_id", dependent: :destroy
 
   # Validations
   validates :first_name, presence: true, length: { minimum: 2, maximum: 50 }

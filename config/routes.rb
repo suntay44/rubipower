@@ -17,6 +17,7 @@ Rails.application.routes.draw do
   # Purchase Request Workflow
   get "/purchase-request", to: "purchase_request#index", as: :purchase_request
   get "/purchase-request/new", to: "purchase_request#new_purchase_request", as: :new_purchase_request
+  post "/purchase-request", to: "purchase_request#create", as: :create_purchase_request
   get "/purchase-request/budget-approval", to: "purchase_request#budget_approval", as: :budget_approval
   get "/purchase-request/procurement-review", to: "purchase_request#procurement_review", as: :procurement_review
   get "/purchase-request/:id", to: "purchase_request#show", as: :purchase_request_detail
