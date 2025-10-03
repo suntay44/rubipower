@@ -21,6 +21,13 @@ Rails.application.routes.draw do
   get "/purchase-request/budget-approval", to: "purchase_request#budget_approval", as: :budget_approval
   get "/purchase-request/procurement-review", to: "purchase_request#procurement_review", as: :procurement_review
   get "/purchase-request/:id", to: "purchase_request#show", as: :purchase_request_detail
+  get "/purchase-request/:id/edit", to: "purchase_request#edit", as: :edit_purchase_request
+  patch "/purchase-request/:id", to: "purchase_request#update", as: :update_purchase_request
+  patch "/purchase-request/:id/approve-budget", to: "purchase_request#approve_budget", as: :approve_budget
+  patch "/purchase-request/:id/approve-procurement", to: "purchase_request#approve_procurement", as: :approve_procurement
+  delete "/purchase-request/:id/delete-tax_certificate", to: "purchase_request#delete_tax_certificate", as: :delete_tax_certificate
+  delete "/purchase-request/:id/delete-sales_invoice", to: "purchase_request#delete_sales_invoice", as: :delete_sales_invoice
+  delete "/purchase-request/:id/delete-vendor_quotation", to: "purchase_request#delete_vendor_quotation", as: :delete_vendor_quotation
   get "/purchase-request/:id/create-purchase-order", to: "purchase_request#create_purchase_order", as: :create_purchase_order
 
   # Test pages (all protected by authentication)

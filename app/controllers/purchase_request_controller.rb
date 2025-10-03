@@ -4,7 +4,64 @@ class PurchaseRequestController < ApplicationController
   end
 
   def show
-    @purchase_request = PurchaseRequest.includes(:requester_user, :items, :attachments_attachments).find(params[:id])
+    @purchase_request = PurchaseRequest.includes(:requester_user, :items).find(params[:id])
+  end
+
+  def edit
+    @purchase_request = PurchaseRequest.includes(:requester_user, :items).find(params[:id])
+    @departments = [ "Engineering", "Operations", "Maintenance", "IT", "Finance", "HR", "Sales", "Marketing" ]
+    @priority_levels = [ "Low", "Medium", "High", "Urgent" ]
+  end
+
+  def update
+    @purchase_request = PurchaseRequest.find(params[:id])
+
+    if @purchase_request.update(purchase_request_params)
+      # Handle file attachments - replace existing ones
+      @purchase_request.tax_certificate.purge if @purchase_request.tax_certificate.attached? && params[:purchase_request][:tax_certificate].present?
+      @purchase_request.sales_invoice.purge if @purchase_request.sales_invoice.attached? && params[:purchase_request][:sales_invoice].present?
+      @purchase_request.vendor_quotation.purge if @purchase_request.vendor_quotation.attached? && params[:purchase_request][:vendor_quotation].present?
+
+      @purchase_request.tax_certificate.attach(params[:purchase_request][:tax_certificate]) if params[:purchase_request][:tax_certificate].present?
+      @purchase_request.sales_invoice.attach(params[:purchase_request][:sales_invoice]) if params[:purchase_request][:sales_invoice].present?
+      @purchase_request.vendor_quotation.attach(params[:purchase_request][:vendor_quotation]) if params[:purchase_request][:vendor_quotation].present?
+
+      redirect_to purchase_request_detail_path(@purchase_request), notice: "Purchase request was successfully updated."
+    else
+      @departments = [ "Engineering", "Operations", "Maintenance", "IT", "Finance", "HR", "Sales", "Marketing" ]
+      @priority_levels = [ "Low", "Medium", "High", "Urgent" ]
+      render :edit, status: :unprocessable_entity
+    end
+  end
+
+  def approve_budget
+    @purchase_request = PurchaseRequest.find(params[:id])
+    @purchase_request.update(budget_approve: true)
+    redirect_to purchase_request_detail_path(@purchase_request), notice: "Budget has been approved."
+  end
+
+  def approve_procurement
+    @purchase_request = PurchaseRequest.find(params[:id])
+    @purchase_request.update(procurement_approve: true)
+    redirect_to purchase_request_detail_path(@purchase_request), notice: "Procurement has been approved."
+  end
+
+  def delete_tax_certificate
+    @purchase_request = PurchaseRequest.find(params[:id])
+    @purchase_request.tax_certificate.purge
+    head :ok
+  end
+
+  def delete_sales_invoice
+    @purchase_request = PurchaseRequest.find(params[:id])
+    @purchase_request.sales_invoice.purge
+    head :ok
+  end
+
+  def delete_vendor_quotation
+    @purchase_request = PurchaseRequest.find(params[:id])
+    @purchase_request.vendor_quotation.purge
+    head :ok
   end
 
   def new_purchase_request
@@ -20,11 +77,9 @@ class PurchaseRequestController < ApplicationController
 
     if @purchase_request.save
       # Handle file attachments
-      if params[:purchase_request][:attachments].present?
-        params[:purchase_request][:attachments].each do |attachment|
-          @purchase_request.attachments.attach(attachment)
-        end
-      end
+      @purchase_request.tax_certificate.attach(params[:purchase_request][:tax_certificate]) if params[:purchase_request][:tax_certificate].present?
+      @purchase_request.sales_invoice.attach(params[:purchase_request][:sales_invoice]) if params[:purchase_request][:sales_invoice].present?
+      @purchase_request.vendor_quotation.attach(params[:purchase_request][:vendor_quotation]) if params[:purchase_request][:vendor_quotation].present?
 
       redirect_to purchase_request_detail_path(@purchase_request), notice: "Purchase request was successfully created."
     else
@@ -47,8 +102,10 @@ class PurchaseRequestController < ApplicationController
       :vendor_name,
       :vendor_address,
       :bank_details,
-      items_attributes: [ :id, :description, :quantity, :cost, :_destroy ],
-      attachments: []
+      :tax_certificate,
+      :sales_invoice,
+      :vendor_quotation,
+      items_attributes: [ :id, :description, :quantity, :cost, :_destroy ]
     )
   end
 
