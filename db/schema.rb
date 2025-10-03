@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_29_003907) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_03_231311) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -50,6 +50,30 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_29_003907) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["purchase_request_id"], name: "index_items_on_purchase_request_id"
+  end
+
+  create_table "purchase_order_status_logs", force: :cascade do |t|
+    t.bigint "purchase_order_id", null: false
+    t.string "status"
+    t.bigint "updated_by_id", null: false
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["purchase_order_id"], name: "index_purchase_order_status_logs_on_purchase_order_id"
+    t.index ["updated_by_id"], name: "index_purchase_order_status_logs_on_updated_by_id"
+  end
+
+  create_table "purchase_orders", force: :cascade do |t|
+    t.bigint "purchase_request_id", null: false
+    t.string "po_number", null: false
+    t.string "status", default: "draft", null: false
+    t.decimal "total_amount", precision: 10, scale: 2, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.text "delivery_note"
+    t.index ["po_number"], name: "index_purchase_orders_on_po_number", unique: true
+    t.index ["purchase_request_id"], name: "index_purchase_orders_on_purchase_request_id"
+    t.index ["status"], name: "index_purchase_orders_on_status"
   end
 
   create_table "purchase_requests", force: :cascade do |t|
@@ -98,6 +122,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_29_003907) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "items", "purchase_requests"
+  add_foreign_key "purchase_order_status_logs", "purchase_orders"
+  add_foreign_key "purchase_order_status_logs", "users", column: "updated_by_id"
+  add_foreign_key "purchase_orders", "purchase_requests"
   add_foreign_key "purchase_requests", "users", column: "requester_user_id"
   add_foreign_key "roles", "users", on_delete: :cascade
 end

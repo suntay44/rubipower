@@ -1,6 +1,7 @@
 class PurchaseRequest < ApplicationRecord
   belongs_to :requester_user, class_name: "User"
   has_many :items, dependent: :destroy
+  has_one :purchase_order, dependent: :destroy
   has_one_attached :tax_certificate
   has_one_attached :sales_invoice
   has_one_attached :vendor_quotation

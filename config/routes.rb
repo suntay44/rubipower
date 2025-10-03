@@ -28,7 +28,12 @@ Rails.application.routes.draw do
   delete "/purchase-request/:id/delete-tax_certificate", to: "purchase_request#delete_tax_certificate", as: :delete_tax_certificate
   delete "/purchase-request/:id/delete-sales_invoice", to: "purchase_request#delete_sales_invoice", as: :delete_sales_invoice
   delete "/purchase-request/:id/delete-vendor_quotation", to: "purchase_request#delete_vendor_quotation", as: :delete_vendor_quotation
-  get "/purchase-request/:id/create-purchase-order", to: "purchase_request#create_purchase_order", as: :create_purchase_order
+  post "/purchase-request/:id/create-purchase-order", to: "purchase_order#create", as: :create_purchase_order
+  get "/purchase-request/:id/purchase-order", to: "purchase_order#show_by_request", as: :purchase_request_purchase_order
+
+  # Purchase Order routes
+  get "/purchase-order/:id", to: "purchase_order#show", as: :purchase_order
+  patch "/purchase-order/:id/update-status", to: "purchase_order#update_status", as: :update_purchase_order_status
 
   # Test pages (all protected by authentication)
   get "/home", to: "pages#home"

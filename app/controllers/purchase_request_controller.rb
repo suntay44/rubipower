@@ -4,7 +4,7 @@ class PurchaseRequestController < ApplicationController
   end
 
   def show
-    @purchase_request = PurchaseRequest.includes(:requester_user, :items).find(params[:id])
+    @purchase_request = PurchaseRequest.includes(:requester_user, :items, :purchase_order).find(params[:id])
   end
 
   def edit
@@ -36,14 +36,26 @@ class PurchaseRequestController < ApplicationController
 
   def approve_budget
     @purchase_request = PurchaseRequest.find(params[:id])
-    @purchase_request.update(budget_approve: true)
-    redirect_to purchase_request_detail_path(@purchase_request), notice: "Budget has been approved."
+    new_status = !@purchase_request.budget_approve?
+    @purchase_request.update(budget_approve: new_status)
+
+    if new_status
+      redirect_to purchase_request_detail_path(@purchase_request), notice: "Budget has been approved."
+    else
+      redirect_to purchase_request_detail_path(@purchase_request), notice: "Budget approval has been revoked."
+    end
   end
 
   def approve_procurement
     @purchase_request = PurchaseRequest.find(params[:id])
-    @purchase_request.update(procurement_approve: true)
-    redirect_to purchase_request_detail_path(@purchase_request), notice: "Procurement has been approved."
+    new_status = !@purchase_request.procurement_approve?
+    @purchase_request.update(procurement_approve: new_status)
+
+    if new_status
+      redirect_to purchase_request_detail_path(@purchase_request), notice: "Procurement has been approved."
+    else
+      redirect_to purchase_request_detail_path(@purchase_request), notice: "Procurement approval has been revoked."
+    end
   end
 
   def delete_tax_certificate
@@ -110,47 +122,18 @@ class PurchaseRequestController < ApplicationController
   end
 
   def create_purchase_order
-    # Find the specific purchase request by ID
-    all_requests = [
-      {
-        id: 1,
-        requester: "John Doe",
-        department: "Engineering",
-        items: "Electrical Equipment",
-        description: "Purchase of electrical equipment for the new project installation.",
-        estimated_cost: 50000,
-        engineering_budget_status: "Approved",
-        procurement_review_status: "Approved",
-        created_at: "2024-01-15",
-        purchase_order_created: false
-      },
-      {
-        id: 2,
-        requester: "Jane Smith",
-        department: "Operations",
-        items: "Safety Equipment",
-        description: "Safety equipment for warehouse operations including helmets, gloves, and safety vests.",
-        estimated_cost: 25000,
-        engineering_budget_status: "Approved",
-        procurement_review_status: "Approved",
-        created_at: "2024-01-14",
-        purchase_order_created: true
-      },
-      {
-        id: 3,
-        requester: "Mike Johnson",
-        department: "Maintenance",
-        items: "Tools and Supplies",
-        description: "Various tools and maintenance supplies for equipment repair and upkeep.",
-        estimated_cost: 15000,
-        engineering_budget_status: "Approved",
-        procurement_review_status: "Approved",
-        created_at: "2024-01-13",
-        purchase_order_created: false
-      }
-    ]
+    # Find the specific purchase request by ID from the database
+    @purchase_request = PurchaseRequest.includes(:requester_user, :items).find(params[:id])
 
-    @request = all_requests.find { |req| req[:id] == params[:id].to_i }
+    # Check if both approvals are present
+    unless @purchase_request.budget_approve? && @purchase_request.procurement_approve?
+      redirect_to purchase_request_detail_path(@purchase_request), alert: "Both budget and procurement approvals are required to create a purchase order."
+      return
+    end
+
+    # For now, just redirect back with a success message
+    # In the future, this would create an actual purchase order
+    redirect_to purchase_request_detail_path(@purchase_request), notice: "Purchase order creation functionality will be implemented soon."
   end
 
   def budget_approval
