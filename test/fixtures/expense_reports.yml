@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  cash_advance_request: one
+  explanation: MyText
+  unused_cash: 1
+  submitted_by: one
+
+two:
+  cash_advance_request: two
+  explanation: MyText
+  unused_cash: 1
+  submitted_by: two

@@ -1,0 +1,546 @@
+<!-- Main Content -->
+    <!-- Top Navigation -->
+    <header class="bg-white shadow-sm border-b border-gray-200">
+      <div class="flex items-center justify-between px-6 py-4">
+        <div class="flex items-center space-x-4">
+          <a href="<%= cash_advance_requests_path %>" class="text-gray-500 hover:text-gray-700">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+            </svg>
+          </a>
+          <div class="flex items-center space-x-3">
+            <h1 class="text-2xl font-bold text-gray-900">Cash Advance Request #<%= @cash_advance_request.id %></h1>
+          </div>
+        </div>
+        
+        <div class="flex items-center space-x-4">
+          <% if @cash_advance_request.expense_report.present? %>
+            <a href="<%= expense_report_path(@cash_advance_request) %>" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition-colors duration-200 flex items-center space-x-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+              </svg>
+              <span>View Expense Report</span>
+            </a>
+          <% else %>
+            <a href="<%= new_expense_report_path(@cash_advance_request) %>" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors duration-200 flex items-center space-x-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+              </svg>
+              <span>+ Expense Report</span>
+            </a>
+          <% end %>
+          <a href="<%= edit_cash_advance_request_path(@cash_advance_request) %>" class="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition-colors duration-200 flex items-center space-x-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+            </svg>
+            <span>Edit</span>
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <div class="p-6">
+      <div class="max-w-6xl mx-auto">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- Main Content -->
+          <div class="lg:col-span-2 space-y-6">
+            <!-- Employee Information -->
+            <div class="bg-white rounded-lg shadow-sm p-6">
+              <h3 class="text-lg font-semibold text-gray-900 mb-4">Employee Information</h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Employee Name</label>
+                  <p class="text-sm text-gray-900"><%= @cash_advance_request.employee_name %></p>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Employee ID</label>
+                  <p class="text-sm text-gray-900"><%= @cash_advance_request.employee_id %></p>
+                </div>
+                <div class="md:col-span-2">
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Department</label>
+                  <p class="text-sm text-gray-900"><%= @cash_advance_request.department %></p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Project Information -->
+            <div class="bg-white rounded-lg shadow-sm p-6">
+              <h3 class="text-lg font-semibold text-gray-900 mb-4">Project Information</h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Sales Order Number</label>
+                  <p class="text-sm text-gray-900"><%= @cash_advance_request.sales_order_number.present? ? @cash_advance_request.sales_order_number : 'N/A' %></p>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Client Name</label>
+                  <p class="text-sm text-gray-900"><%= @cash_advance_request.client_name.present? ? @cash_advance_request.client_name : 'N/A' %></p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Request Details -->
+            <div class="bg-white rounded-lg shadow-sm p-6">
+              <h3 class="text-lg font-semibold text-gray-900 mb-4">Request Details</h3>
+              <div class="space-y-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Purpose of Advance</label>
+                  <p class="text-sm text-gray-900 whitespace-pre-line"><%= @cash_advance_request.purpose_of_advance %></p>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Breakdown of Expenses</label>
+                  <p class="text-sm text-gray-900 whitespace-pre-line"><%= @cash_advance_request.breakdown_of_expenses %></p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Amount Requested</label>
+                    <p class="text-sm text-gray-900 font-semibold">$<%= number_with_precision(@cash_advance_request.amount_requested, precision: 2) %></p>
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Required Date</label>
+                    <p class="text-sm text-gray-900"><%= @cash_advance_request.required_date.strftime("%B %d, %Y") %></p>
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Supporting Documents</label>
+                  <% if @cash_advance_request.supporting_documents.attached? %>
+                    <div class="space-y-2">
+                      <% @cash_advance_request.supporting_documents.each do |attachment| %>
+                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg border">
+                          <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                              <% if attachment.content_type&.include?('pdf') %>
+                                <span class="text-blue-600 text-lg">📄</span>
+                              <% elsif attachment.content_type&.include?('word') || attachment.content_type&.include?('document') %>
+                                <span class="text-blue-600 text-lg">📝</span>
+                              <% elsif attachment.content_type&.include?('image') %>
+                                <span class="text-blue-600 text-lg">🖼️</span>
+                              <% else %>
+                                <span class="text-blue-600 text-lg">📎</span>
+                              <% end %>
+                            </div>
+                            <div>
+                              <p class="text-sm font-medium text-gray-900"><%= attachment.filename %></p>
+                              <p class="text-xs text-gray-500"><%= number_to_human_size(attachment.byte_size) %> • <%= attachment.content_type %></p>
+                            </div>
+                          </div>
+                          <div class="flex items-center space-x-2">
+                            <%= link_to "View", rails_blob_path(attachment, disposition: "inline"), target: "_blank", class: "text-xs text-blue-600 hover:text-blue-800 font-medium" %>
+                            <%= link_to "Download", rails_blob_path(attachment, disposition: "attachment"), class: "text-xs text-gray-600 hover:text-gray-800 font-medium" %>
+                          </div>
+                        </div>
+                      <% end %>
+                    </div>
+                  <% else %>
+                    <p class="text-sm text-gray-500 italic">No supporting documents provided</p>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+
+            <!-- Signature Section -->
+            <div class="bg-white rounded-lg shadow-sm p-6">
+              <h3 class="text-lg font-semibold text-gray-900 mb-4">Signature and Date</h3>
+              <p class="text-sm text-gray-600 mb-6 italic">Note: By adding the name it is considered as signature</p>
+              
+              <div class="space-y-6">
+                <!-- Prepare -->
+                <div>
+                  <h4 class="text-sm font-medium text-gray-700 mb-4">Prepare</h4>
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label class="block text-sm font-medium text-gray-700 mb-2">Name</label>
+                      <p class="text-sm text-gray-900 bg-gray-50 px-3 py-2 rounded border"><%= @cash_advance_request.prepare_name.present? ? @cash_advance_request.prepare_name : 'Not provided' %></p>
+                    </div>
+                    <div>
+                      <label class="block text-sm font-medium text-gray-700 mb-2">Date</label>
+                      <p class="text-sm text-gray-900 bg-gray-50 px-3 py-2 rounded border"><%= @cash_advance_request.prepare_date.present? ? @cash_advance_request.prepare_date.strftime("%B %d, %Y") : 'Not provided' %></p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Approval -->
+                <div>
+                  <h4 class="text-sm font-medium text-gray-700 mb-4">Approval</h4>
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label class="block text-sm font-medium text-gray-700 mb-2">Name</label>
+                      <p class="text-sm text-gray-900 bg-gray-50 px-3 py-2 rounded border"><%= @cash_advance_request.approval_name.present? ? @cash_advance_request.approval_name : 'Not provided' %></p>
+                    </div>
+                    <div>
+                      <label class="block text-sm font-medium text-gray-700 mb-2">Date</label>
+                      <p class="text-sm text-gray-900 bg-gray-50 px-3 py-2 rounded border"><%= @cash_advance_request.approval_date.present? ? @cash_advance_request.approval_date.strftime("%B %d, %Y") : 'Not provided' %></p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Release -->
+                <div>
+                  <h4 class="text-sm font-medium text-gray-700 mb-4">Release</h4>
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label class="block text-sm font-medium text-gray-700 mb-2">Name</label>
+                      <p class="text-sm text-gray-900 bg-gray-50 px-3 py-2 rounded border"><%= @cash_advance_request.release_name.present? ? @cash_advance_request.release_name : 'Not provided' %></p>
+                    </div>
+                    <div>
+                      <label class="block text-sm font-medium text-gray-700 mb-2">Date</label>
+                      <p class="text-sm text-gray-900 bg-gray-50 px-3 py-2 rounded border"><%= @cash_advance_request.release_date.present? ? @cash_advance_request.release_date.strftime("%B %d, %Y") : 'Not provided' %></p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Receive -->
+                <div>
+                  <h4 class="text-sm font-medium text-gray-700 mb-4">Receive</h4>
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label class="block text-sm font-medium text-gray-700 mb-2">Name</label>
+                      <p class="text-sm text-gray-900 bg-gray-50 px-3 py-2 rounded border"><%= @cash_advance_request.receive_name.present? ? @cash_advance_request.receive_name : 'Not provided' %></p>
+                    </div>
+                    <div>
+                      <label class="block text-sm font-medium text-gray-700 mb-2">Date</label>
+                      <p class="text-sm text-gray-900 bg-gray-50 px-3 py-2 rounded border"><%= @cash_advance_request.receive_date.present? ? @cash_advance_request.receive_date.strftime("%B %d, %Y") : 'Not provided' %></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Manager Rejection Notes -->
+            <% if @cash_advance_request.manager_reject_notes.present? %>
+            <div class="bg-red-50 border border-red-200 rounded-lg p-6">
+              <h3 class="text-lg font-semibold text-red-900 mb-2">Manager Rejection Notes</h3>
+              <p class="text-sm text-red-800 whitespace-pre-line"><%= @cash_advance_request.manager_reject_notes %></p>
+            </div>
+            <% end %>
+
+            <!-- Finance Department Documentation Notes -->
+            <% if @cash_advance_request.finance_department_documentation_notes.present? %>
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-6">
+              <h3 class="text-lg font-semibold text-blue-900 mb-2">Finance Department Documentation Notes</h3>
+              <p class="text-sm text-blue-800 whitespace-pre-line"><%= @cash_advance_request.finance_department_documentation_notes %></p>
+            </div>
+            <% end %>
+          </div>
+
+          <!-- Sidebar -->
+          <div class="space-y-6">
+            <!-- Status Card -->
+            <div class="bg-white rounded-lg shadow-sm p-6">
+              <h3 class="text-lg font-semibold text-gray-900 mb-4">Status</h3>
+              <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                  <span class="text-sm font-medium text-gray-700">Manager Status</span>
+                  <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full
+                    <%= case @cash_advance_request.manager_status
+                        when 'pending' then 'bg-yellow-100 text-yellow-800'
+                        when 'approved' then 'bg-green-100 text-green-800'
+                        when 'revised' then 'bg-blue-100 text-blue-800'
+                        when 'rejected' then 'bg-red-100 text-red-800'
+                        else 'bg-gray-100 text-gray-800'
+                        end %>">
+                    <%= @cash_advance_request.manager_status&.humanize || 'Unknown' %>
+                  </span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="text-sm font-medium text-gray-700">Finance Status</span>
+                  <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full
+                    <%= case @cash_advance_request.finance_department_status
+                        when 'pending' then 'bg-yellow-100 text-yellow-800'
+                        when 'approved' then 'bg-green-100 text-green-800'
+                        when 'rejected' then 'bg-red-100 text-red-800'
+                        else 'bg-gray-100 text-gray-800'
+                        end %>">
+                    <%= @cash_advance_request.finance_department_status&.humanize || 'Unknown' %>
+                  </span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="text-sm font-medium text-gray-700">Created</span>
+                  <span class="text-sm text-gray-900"><%= @cash_advance_request.created_at.strftime("%m/%d/%Y") %></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Manager Actions -->
+            <div class="bg-white rounded-lg shadow-sm p-6">
+              <h3 class="text-lg font-semibold text-gray-900 mb-4">Manager Actions</h3>
+              <div class="space-y-3">
+                <button onclick="confirmManagerAction('approve')" class="w-full bg-green-600 text-white px-4 py-2 rounded-md text-center text-sm font-medium hover:bg-green-700 transition-colors duration-200 shadow-sm hover:shadow-md border border-green-700">
+                  Approve
+                </button>
+                <button onclick="confirmManagerAction('revise')" class="w-full bg-blue-600 text-white px-4 py-2 rounded-md text-center text-sm font-medium hover:bg-blue-700 transition-colors duration-200 shadow-sm hover:shadow-md border border-blue-700">
+                  Revise
+                </button>
+                <button onclick="openRejectModal()" class="w-full bg-red-600 text-white px-4 py-2 rounded-md text-center text-sm font-medium hover:bg-red-700 transition-colors duration-200 shadow-sm hover:shadow-md border border-red-700">
+                  Reject
+                </button>
+              </div>
+            </div>
+
+            <!-- Finance Department Actions -->
+            <% if @cash_advance_request.manager_status == 'approved' %>
+            <div class="bg-white rounded-lg shadow-sm p-6">
+              <h3 class="text-lg font-semibold text-gray-900 mb-4">Finance Department Actions</h3>
+              <div class="space-y-3">
+                <button onclick="confirmFinanceAction('approve')" class="w-full bg-green-600 text-white px-4 py-2 rounded-md text-center text-sm font-medium hover:bg-green-700 transition-colors duration-200 shadow-sm hover:shadow-md border border-green-700">
+                  Approve
+                </button>
+                <button onclick="openFinanceRejectModal()" class="w-full bg-red-600 text-white px-4 py-2 rounded-md text-center text-sm font-medium hover:bg-red-700 transition-colors duration-200 shadow-sm hover:shadow-md border border-red-700">
+                  Reject
+                </button>
+              </div>
+            </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Manager Reject Modal -->
+    <div id="rejectModal" class="fixed inset-0 bg-white bg-opacity-10 overflow-y-auto h-full w-full hidden z-50">
+      <div class="relative top-20 mx-auto p-6 border w-96 shadow-lg rounded-md bg-white min-h-96">
+        <div class="mt-3">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-medium text-gray-900">Reject Request</h3>
+            <button onclick="closeRejectModal()" class="text-gray-400 hover:text-gray-600">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+          
+          <form id="rejectForm">
+            <div class="mb-4">
+              <label class="block text-sm font-medium text-gray-700 mb-2">Rejection Reason</label>
+              <textarea id="rejectNotes" name="manager_reject_notes" rows="5" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 resize-none" placeholder="Please provide a reason for rejection..."></textarea>
+            </div>
+            
+            <div class="flex justify-end space-x-3">
+              <button type="button" onclick="closeRejectModal()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition-colors">
+                Cancel
+              </button>
+              <button type="button" onclick="submitReject()" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors">
+                Reject Request
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Finance Reject Modal -->
+    <div id="financeRejectModal" class="fixed inset-0 bg-white bg-opacity-10 overflow-y-auto h-full w-full hidden z-50">
+      <div class="relative top-20 mx-auto p-6 border w-96 shadow-lg rounded-md bg-white min-h-96">
+        <div class="mt-3">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-medium text-gray-900">Reject Request</h3>
+            <button onclick="closeFinanceRejectModal()" class="text-gray-400 hover:text-gray-600">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+          
+          <form id="financeRejectForm">
+            <div class="mb-4">
+              <label class="block text-sm font-medium text-gray-700 mb-2">Documentation Notes</label>
+              <textarea id="financeRejectNotes" name="finance_department_documentation_notes" rows="5" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 resize-none" placeholder="Please provide documentation notes..."></textarea>
+            </div>
+            
+            <div class="flex justify-end space-x-3">
+              <button type="button" onclick="closeFinanceRejectModal()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition-colors">
+                Cancel
+              </button>
+              <button type="button" onclick="submitFinanceReject()" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors">
+                Reject Request
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Finance Approve Modal -->
+    <div id="financeApproveModal" class="fixed inset-0 bg-white bg-opacity-10 overflow-y-auto h-full w-full hidden z-50">
+      <div class="relative top-20 mx-auto p-6 border w-96 shadow-lg rounded-md bg-white min-h-96">
+        <div class="mt-3">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-medium text-gray-900">Approve Request</h3>
+            <button onclick="closeFinanceApproveModal()" class="text-gray-400 hover:text-gray-600">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+          
+          <form id="financeApproveForm">
+            <div class="mb-4">
+              <label class="block text-sm font-medium text-gray-700 mb-2">Documentation Notes</label>
+              <textarea id="financeApproveNotes" name="finance_department_documentation_notes" rows="5" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 resize-none" placeholder="Please provide documentation notes..."></textarea>
+            </div>
+            
+            <div class="flex justify-end space-x-3">
+              <button type="button" onclick="closeFinanceApproveModal()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition-colors">
+                Cancel
+              </button>
+              <button type="button" onclick="submitFinanceApprove()" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors">
+                Approve Request
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+<script>
+function confirmManagerAction(action) {
+  const actionText = action === 'approve' ? 'approve' : 'mark for revision';
+  if (confirm(`Are you sure you want to ${actionText} this cash advance request?`)) {
+    submitManagerAction(action);
+  }
+}
+
+function submitManagerAction(action) {
+  const form = document.createElement('form');
+  form.method = 'POST';
+  form.action = `/cash-advance-request/<%= @cash_advance_request.id %>/${action}-manager`;
+  
+  const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+  const csrfInput = document.createElement('input');
+  csrfInput.type = 'hidden';
+  csrfInput.name = 'authenticity_token';
+  csrfInput.value = csrfToken;
+  form.appendChild(csrfInput);
+  
+  const methodInput = document.createElement('input');
+  methodInput.type = 'hidden';
+  methodInput.name = '_method';
+  methodInput.value = 'PATCH';
+  form.appendChild(methodInput);
+  
+  document.body.appendChild(form);
+  form.submit();
+}
+
+function openRejectModal() {
+  document.getElementById('rejectModal').classList.remove('hidden');
+}
+
+function closeRejectModal() {
+  document.getElementById('rejectModal').classList.add('hidden');
+}
+
+function submitReject() {
+  if (confirm('Are you sure you want to reject this cash advance request?')) {
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = `/cash-advance-request/<%= @cash_advance_request.id %>/reject-manager`;
+    
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+    const csrfInput = document.createElement('input');
+    csrfInput.type = 'hidden';
+    csrfInput.name = 'authenticity_token';
+    csrfInput.value = csrfToken;
+    form.appendChild(csrfInput);
+    
+    const methodInput = document.createElement('input');
+    methodInput.type = 'hidden';
+    methodInput.name = '_method';
+    methodInput.value = 'PATCH';
+    form.appendChild(methodInput);
+    
+    const notesInput = document.createElement('input');
+    notesInput.type = 'hidden';
+    notesInput.name = 'manager_reject_notes';
+    notesInput.value = document.getElementById('rejectNotes').value;
+    form.appendChild(notesInput);
+    
+    document.body.appendChild(form);
+    form.submit();
+  }
+}
+
+function confirmFinanceAction(action) {
+  if (action === 'approve') {
+    openFinanceApproveModal();
+  } else {
+    openFinanceRejectModal();
+  }
+}
+
+function openFinanceApproveModal() {
+  document.getElementById('financeApproveModal').classList.remove('hidden');
+}
+
+function closeFinanceApproveModal() {
+  document.getElementById('financeApproveModal').classList.add('hidden');
+}
+
+function submitFinanceApprove() {
+  if (confirm('Are you sure you want to approve this cash advance request?')) {
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = `/cash-advance-request/<%= @cash_advance_request.id %>/approve-finance`;
+    
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+    const csrfInput = document.createElement('input');
+    csrfInput.type = 'hidden';
+    csrfInput.name = 'authenticity_token';
+    csrfInput.value = csrfToken;
+    form.appendChild(csrfInput);
+    
+    const methodInput = document.createElement('input');
+    methodInput.type = 'hidden';
+    methodInput.name = '_method';
+    methodInput.value = 'PATCH';
+    form.appendChild(methodInput);
+    
+    const notesInput = document.createElement('input');
+    notesInput.type = 'hidden';
+    notesInput.name = 'finance_department_documentation_notes';
+    notesInput.value = document.getElementById('financeApproveNotes').value;
+    form.appendChild(notesInput);
+    
+    document.body.appendChild(form);
+    form.submit();
+  }
+}
+
+function openFinanceRejectModal() {
+  document.getElementById('financeRejectModal').classList.remove('hidden');
+}
+
+function closeFinanceRejectModal() {
+  document.getElementById('financeRejectModal').classList.add('hidden');
+}
+
+function submitFinanceReject() {
+  if (confirm('Are you sure you want to reject this cash advance request?')) {
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = `/cash-advance-request/<%= @cash_advance_request.id %>/reject-finance`;
+    
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+    const csrfInput = document.createElement('input');
+    csrfInput.type = 'hidden';
+    csrfInput.name = 'authenticity_token';
+    csrfInput.value = csrfToken;
+    form.appendChild(csrfInput);
+    
+    const methodInput = document.createElement('input');
+    methodInput.type = 'hidden';
+    methodInput.name = '_method';
+    methodInput.value = 'PATCH';
+    form.appendChild(methodInput);
+    
+    const notesInput = document.createElement('input');
+    notesInput.type = 'hidden';
+    notesInput.name = 'finance_department_documentation_notes';
+    notesInput.value = document.getElementById('financeRejectNotes').value;
+    form.appendChild(notesInput);
+    
+    document.body.appendChild(form);
+    form.submit();
+  }
+}
+</script>

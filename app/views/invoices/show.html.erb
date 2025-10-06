@@ -1,0 +1,209 @@
+<!-- Main Content -->
+    <!-- Top Navigation -->
+    <header class="bg-white shadow-sm border-b border-gray-200">
+      <div class="flex items-center justify-between px-6 py-4">
+        <div class="flex items-center space-x-4">
+          <a href="<%= invoices_path %>" class="text-gray-500 hover:text-gray-700">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+            </svg>
+          </a>
+          <div class="flex items-center space-x-3">
+            <h1 class="text-2xl font-bold text-gray-900">Invoice #<%= @invoice.invoice_number %></h1>
+          </div>
+        </div>
+        
+        <div class="flex items-center space-x-4">
+          <a href="<%= edit_invoice_path(@invoice) %>" class="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition-colors duration-200 flex items-center space-x-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+            </svg>
+            <span>Edit</span>
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <div class="p-6">
+      <div class="max-w-6xl mx-auto">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- Main Content -->
+          <div class="lg:col-span-2 space-y-6">
+            <!-- Invoice Type and Basic Info -->
+            <div class="bg-white rounded-lg shadow-sm p-6">
+              <h2 class="text-lg font-semibold text-gray-900 mb-4">Invoice Information</h2>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Invoice Type</label>
+                  <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full <%= case @invoice.invoice_type
+                    when 'partial' then 'bg-blue-100 text-blue-800'
+                    when 'downpayment' then 'bg-yellow-100 text-yellow-800'
+                    when 'fullpayment' then 'bg-green-100 text-green-800'
+                    else 'bg-gray-100 text-gray-800'
+                  end %>">
+                    <%= @invoice.invoice_type&.humanize || 'Unknown' %>
+                  </span>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Invoice Number</label>
+                  <div class="text-sm text-gray-900"><%= @invoice.invoice_number %></div>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Invoice Date</label>
+                  <div class="text-sm text-gray-900"><%= @invoice.invoice_date.strftime("%b %d, %Y") %></div>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Due Date</label>
+                  <div class="text-sm text-gray-900"><%= @invoice.due_date.strftime("%b %d, %Y") %></div>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Total Amount Due</label>
+                  <div class="text-sm text-gray-900 font-semibold">₱<%= number_with_precision(@invoice.total_amount_due, precision: 2) %></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Company Information -->
+            <div class="bg-white rounded-lg shadow-sm p-6">
+              <h2 class="text-lg font-semibold text-gray-900 mb-4">Company Information</h2>
+              <div class="space-y-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Company Name</label>
+                  <div class="text-sm text-gray-900"><%= @invoice.company_name %></div>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Contact</label>
+                  <div class="text-sm text-gray-900"><%= @invoice.company_contact %></div>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Address</label>
+                  <div class="text-sm text-gray-900 whitespace-pre-line"><%= @invoice.company_address %></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Client Information -->
+            <div class="bg-white rounded-lg shadow-sm p-6">
+              <h2 class="text-lg font-semibold text-gray-900 mb-4">Client Information</h2>
+              <div class="space-y-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Client Name</label>
+                  <div class="text-sm text-gray-900"><%= @invoice.client_name %></div>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Client Company</label>
+                  <div class="text-sm text-gray-900"><%= @invoice.client_company %></div>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Client Address</label>
+                  <div class="text-sm text-gray-900 whitespace-pre-line"><%= @invoice.client_address %></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Description and Rates -->
+            <div class="bg-white rounded-lg shadow-sm p-6">
+              <h2 class="text-lg font-semibold text-gray-900 mb-4">Description & Rates</h2>
+              <div class="space-y-6">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Description of Goods/Services</label>
+                  <div class="text-sm text-gray-900 whitespace-pre-line"><%= @invoice.description %></div>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Rates and Quantities</label>
+                  <div class="text-sm text-gray-900 whitespace-pre-line"><%= @invoice.rates_and_quantities %></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Payment Instructions -->
+            <div class="bg-white rounded-lg shadow-sm p-6">
+              <h2 class="text-lg font-semibold text-gray-900 mb-4">Payment Instructions</h2>
+              <div class="text-sm text-gray-900 whitespace-pre-line"><%= @invoice.payment_instructions %></div>
+            </div>
+
+            <!-- Supporting Documents -->
+            <% if @invoice.supporting_documents.attached? %>
+              <div class="bg-white rounded-lg shadow-sm p-6">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">Supporting Documents</h2>
+                <div class="space-y-2">
+                  <% @invoice.supporting_documents.each do |document| %>
+                    <div class="flex items-center justify-between p-2 bg-blue-50 rounded border">
+                      <div class="flex items-center space-x-2">
+                        <span class="text-blue-600">📎</span>
+                        <span class="text-sm text-gray-700"><%= document.filename %></span>
+                        <span class="text-xs text-gray-500">(<%= number_to_human_size(document.byte_size) %>)</span>
+                      </div>
+                      <div class="flex items-center space-x-2">
+                        <%= link_to "Download", rails_blob_path(document, disposition: "attachment"), class: "text-xs text-blue-600 hover:text-blue-800" %>
+                      </div>
+                    </div>
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+
+          <!-- Sidebar -->
+          <div class="space-y-6">
+            <!-- Summary -->
+            <div class="bg-white rounded-lg shadow-sm p-6">
+              <h3 class="text-lg font-semibold text-gray-900 mb-4">Summary</h3>
+              <div class="space-y-3">
+                <div class="flex justify-between">
+                  <span class="text-sm text-gray-600">Invoice Type:</span>
+                  <span class="text-sm font-medium text-gray-900"><%= @invoice.invoice_type&.humanize || 'Unknown' %></span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-sm text-gray-600">Invoice Number:</span>
+                  <span class="text-sm font-medium text-gray-900"><%= @invoice.invoice_number %></span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-sm text-gray-600">Total Amount:</span>
+                  <span class="text-sm font-medium text-gray-900">₱<%= number_with_precision(@invoice.total_amount_due, precision: 2) %></span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-sm text-gray-600">Due Date:</span>
+                  <span class="text-sm font-medium text-gray-900"><%= @invoice.due_date.strftime("%b %d, %Y") %></span>
+                </div>
+                <div class="border-t pt-3">
+                  <div class="flex justify-between">
+                    <span class="text-sm font-medium text-gray-900">Days Until Due:</span>
+                    <span class="text-sm font-medium text-gray-900">
+                      <% days_until_due = (@invoice.due_date - Date.current).to_i %>
+                      <% if days_until_due > 0 %>
+                        <span class="text-green-600"><%= days_until_due %> days</span>
+                      <% elsif days_until_due == 0 %>
+                        <span class="text-yellow-600">Due today</span>
+                      <% else %>
+                        <span class="text-red-600"><%= days_until_due.abs %> days overdue</span>
+                      <% end %>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Created Info -->
+            <div class="bg-white rounded-lg shadow-sm p-6">
+              <h3 class="text-lg font-semibold text-gray-900 mb-4">Created</h3>
+              <div class="space-y-2">
+                <div>
+                  <span class="text-sm text-gray-600">Created:</span>
+                  <span class="text-sm text-gray-900 ml-2"><%= @invoice.created_at.strftime("%b %d, %Y at %I:%M %p") %></span>
+                </div>
+                <div>
+                  <span class="text-sm text-gray-600">Last Updated:</span>
+                  <span class="text-sm text-gray-900 ml-2"><%= @invoice.updated_at.strftime("%b %d, %Y at %I:%M %p") %></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar Script -->
+    <%= render 'shared/sidebar_script' %>
+

@@ -19,6 +19,10 @@ class User < ApplicationRecord
     "#{first_name} #{last_name}"
   end
 
+  def employee_id
+    id.to_s.rjust(5, "0")
+  end
+
   # Role checking methods
   def admin?
     roles.exists?(name: "admin")

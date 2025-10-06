@@ -1,0 +1,35 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  employee_name: MyString
+  employee_id: MyString
+  expense_type: 1
+  expense_purpose: MyText
+  amount_claimed: 9.99
+  expense_date: 2025-10-04
+  sales_order_number: MyString
+  client_name: MyString
+  supervisor_status: 1
+  supervisor_comments: MyText
+  finance_status: 1
+  finance_comments: MyText
+  payment_method: 1
+  payment_processed_date: 2025-10-04
+  requester_user: one
+
+two:
+  employee_name: MyString
+  employee_id: MyString
+  expense_type: 1
+  expense_purpose: MyText
+  amount_claimed: 9.99
+  expense_date: 2025-10-04
+  sales_order_number: MyString
+  client_name: MyString
+  supervisor_status: 1
+  supervisor_comments: MyText
+  finance_status: 1
+  finance_comments: MyText
+  payment_method: 1
+  payment_processed_date: 2025-10-04
+  requester_user: two

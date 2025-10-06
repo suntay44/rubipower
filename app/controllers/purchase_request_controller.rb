@@ -1,6 +1,6 @@
 class PurchaseRequestController < ApplicationController
   def index
-    @purchase_requests = PurchaseRequest.includes(:requester_user, :items).order(created_at: :desc)
+    @purchase_requests = PurchaseRequest.includes(:requester_user, :items, :purchase_order).order(created_at: :desc)
   end
 
   def show

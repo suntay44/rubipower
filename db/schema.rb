@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_03_231311) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_04_190649) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -40,6 +40,127 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_03_231311) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "cash_advance_requests", force: :cascade do |t|
+    t.string "employee_name", null: false
+    t.string "employee_id", null: false
+    t.string "department", null: false
+    t.string "sales_order_number"
+    t.string "client_name"
+    t.text "purpose_of_advance", null: false
+    t.text "breakdown_of_expenses", null: false
+    t.decimal "amount_requested", precision: 10, scale: 2, null: false
+    t.date "request_date", null: false
+    t.date "required_date", null: false
+    t.text "supporting_documents"
+    t.string "manager_status", default: "pending"
+    t.text "manager_reject_notes"
+    t.string "finance_department_status", default: "pending"
+    t.text "finance_department_documentation_notes"
+    t.bigint "requester_user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "prepare_name"
+    t.date "prepare_date"
+    t.string "approval_name"
+    t.date "approval_date"
+    t.string "release_name"
+    t.date "release_date"
+    t.string "receive_name"
+    t.date "receive_date"
+    t.index ["finance_department_status"], name: "index_cash_advance_requests_on_finance_department_status"
+    t.index ["manager_status"], name: "index_cash_advance_requests_on_manager_status"
+    t.index ["requester_user_id"], name: "index_cash_advance_requests_on_requester_user_id"
+  end
+
+  create_table "employee_reimbursements", force: :cascade do |t|
+    t.string "employee_name"
+    t.string "employee_id"
+    t.integer "expense_type", default: 0
+    t.text "expense_purpose"
+    t.decimal "amount_claimed", precision: 10, scale: 2
+    t.date "expense_date"
+    t.string "sales_order_number"
+    t.string "client_name"
+    t.integer "supervisor_status", default: 0
+    t.text "supervisor_comments"
+    t.integer "finance_status", default: 0
+    t.text "finance_comments"
+    t.integer "payment_method"
+    t.date "payment_processed_date"
+    t.bigint "requester_user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["expense_type"], name: "index_employee_reimbursements_on_expense_type"
+    t.index ["finance_status"], name: "index_employee_reimbursements_on_finance_status"
+    t.index ["requester_user_id"], name: "index_employee_reimbursements_on_requester_user_id"
+    t.index ["supervisor_status"], name: "index_employee_reimbursements_on_supervisor_status"
+  end
+
+  create_table "expense_reports", force: :cascade do |t|
+    t.bigint "cash_advance_request_id", null: false
+    t.text "explanation"
+    t.integer "unused_cash", default: 0
+    t.bigint "submitted_by_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cash_advance_request_id"], name: "index_expense_reports_on_cash_advance_request_id"
+    t.index ["submitted_by_id"], name: "index_expense_reports_on_submitted_by_id"
+  end
+
+  create_table "expense_revenues", force: :cascade do |t|
+    t.date "expense_date"
+    t.string "vendor_name"
+    t.text "vendor_address"
+    t.string "vendor_tin"
+    t.text "purpose"
+    t.decimal "amount"
+    t.date "receipt_date"
+    t.string "po_number"
+    t.string "rfp_number"
+    t.string "bank_reference"
+    t.decimal "quantity"
+    t.decimal "unit_price"
+    t.integer "category"
+    t.string "sales_order_number"
+    t.string "client_name"
+    t.integer "supervisor_status"
+    t.integer "finance_status"
+    t.text "supervisor_comments"
+    t.text "finance_comments"
+    t.bigint "verified_by_id"
+    t.datetime "verified_at"
+    t.bigint "requester_user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["category"], name: "index_expense_revenues_on_category"
+    t.index ["expense_date"], name: "index_expense_revenues_on_expense_date"
+    t.index ["finance_status"], name: "index_expense_revenues_on_finance_status"
+    t.index ["requester_user_id"], name: "index_expense_revenues_on_requester_user_id"
+    t.index ["supervisor_status"], name: "index_expense_revenues_on_supervisor_status"
+    t.index ["verified_by_id"], name: "index_expense_revenues_on_verified_by_id"
+  end
+
+  create_table "invoices", force: :cascade do |t|
+    t.integer "invoice_type", default: 0
+    t.string "company_name"
+    t.text "company_address"
+    t.string "company_contact"
+    t.string "client_name"
+    t.string "client_company"
+    t.text "client_address"
+    t.string "invoice_number"
+    t.date "invoice_date"
+    t.date "due_date"
+    t.text "description"
+    t.text "rates_and_quantities"
+    t.decimal "total_amount_due", precision: 10, scale: 2
+    t.text "payment_instructions"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["invoice_number"], name: "index_invoices_on_invoice_number", unique: true
+    t.index ["invoice_type"], name: "index_invoices_on_invoice_type"
   end
 
   create_table "items", force: :cascade do |t|
@@ -121,6 +242,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_03_231311) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "cash_advance_requests", "users", column: "requester_user_id"
+  add_foreign_key "employee_reimbursements", "users", column: "requester_user_id"
+  add_foreign_key "expense_reports", "cash_advance_requests"
+  add_foreign_key "expense_reports", "users", column: "submitted_by_id"
+  add_foreign_key "expense_revenues", "users", column: "requester_user_id"
+  add_foreign_key "expense_revenues", "users", column: "verified_by_id"
   add_foreign_key "items", "purchase_requests"
   add_foreign_key "purchase_order_status_logs", "purchase_orders"
   add_foreign_key "purchase_order_status_logs", "users", column: "updated_by_id"

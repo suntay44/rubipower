@@ -1,0 +1,365 @@
+<!-- Main Content -->
+    <!-- Top Navigation -->
+    <header class="bg-white shadow-sm border-b border-gray-200">
+      <div class="flex items-center justify-between px-6 py-4">
+        <div class="flex items-center space-x-4">
+          <button id="mobile-sidebar-toggle" class="text-gray-500 hover:text-gray-700 lg:hidden">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+          </button>
+          <div class="flex items-center space-x-3">
+            <h1 class="text-2xl font-bold text-gray-900">Cash Advance Requests</h1>
+          </div>
+        </div>
+        
+        <div class="flex items-center space-x-4">
+          <a href="<%= new_cash_advance_request_path %>" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors duration-200 flex items-center space-x-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            <span>Cash Advance Request</span>
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <div class="p-6 space-y-8">
+      <% if @cash_advance_requests.any? %>
+        <!-- Pending Requests Table -->
+        <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+          <div class="px-6 py-4 border-b border-gray-200">
+            <h3 class="text-lg font-semibold text-gray-900">Pending Requests</h3>
+            <p class="text-sm text-gray-600">Requests awaiting manager approval</p>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Request ID</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Department</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Purpose</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Required Date</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <% if @pending_requests.any? %>
+                  <% @pending_requests.each do |request| %>
+                    <tr class="hover:bg-gray-50">
+                      <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        #<%= request.id %>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <div>
+                          <div class="font-medium"><%= request.employee_name %></div>
+                          <div class="text-gray-500">ID: <%= request.employee_id %></div>
+                        </div>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <%= request.department %>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <div class="max-w-xs truncate" title="<%= request.purpose_of_advance %>">
+                          <%= request.purpose_of_advance %>
+                        </div>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        $<%= number_with_precision(request.amount_requested, precision: 2) %>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <%= request.required_date.strftime("%b %d, %Y") %>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full
+                          <%= case request.manager_status
+                              when 'pending' then 'bg-yellow-100 text-yellow-800'
+                              when 'approved' then 'bg-green-100 text-green-800'
+                              when 'revised' then 'bg-blue-100 text-blue-800'
+                              when 'rejected' then 'bg-red-100 text-red-800'
+                              else 'bg-gray-100 text-gray-800'
+                              end %>">
+                          <%= request.manager_status&.humanize || 'Unknown' %>
+                        </span>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <%= request.created_at.strftime("%b %d, %Y") %>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <a href="<%= cash_advance_request_path(request) %>" class="text-red-600 hover:text-red-900">
+                          View Details
+                        </a>
+                      </td>
+                    </tr>
+                  <% end %>
+                <% else %>
+                  <tr>
+                    <td colspan="9" class="px-6 py-8 text-center text-sm text-gray-500">
+                      No pending requests
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Approved Requests Table -->
+        <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+          <div class="px-6 py-4 border-b border-gray-200">
+            <h3 class="text-lg font-semibold text-gray-900">Approved Requests</h3>
+            <p class="text-sm text-gray-600">Requests approved by manager</p>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Request ID</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Department</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Purpose</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Required Date</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <% if @approved_requests.any? %>
+                  <% @approved_requests.each do |request| %>
+                    <tr class="hover:bg-gray-50">
+                      <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        #<%= request.id %>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <div>
+                          <div class="font-medium"><%= request.employee_name %></div>
+                          <div class="text-gray-500">ID: <%= request.employee_id %></div>
+                        </div>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <%= request.department %>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <div class="max-w-xs truncate" title="<%= request.purpose_of_advance %>">
+                          <%= request.purpose_of_advance %>
+                        </div>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        $<%= number_with_precision(request.amount_requested, precision: 2) %>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <%= request.required_date.strftime("%b %d, %Y") %>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex flex-col space-y-1">
+                          <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full
+                            <%= case request.manager_status
+                                when 'pending' then 'bg-yellow-100 text-yellow-800'
+                                when 'approved' then 'bg-green-100 text-green-800'
+                                when 'revised' then 'bg-blue-100 text-blue-800'
+                                when 'rejected' then 'bg-red-100 text-red-800'
+                                else 'bg-gray-100 text-gray-800'
+                                end %>">
+                            Manager: <%= request.manager_status&.humanize || 'Unknown' %>
+                          </span>
+                          <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full
+                            <%= case request.finance_department_status
+                                when 'pending' then 'bg-yellow-100 text-yellow-800'
+                                when 'approved' then 'bg-green-100 text-green-800'
+                                when 'rejected' then 'bg-red-100 text-red-800'
+                                else 'bg-gray-100 text-gray-800'
+                                end %>">
+                            Finance: <%= request.finance_department_status&.humanize || 'Unknown' %>
+                          </span>
+                        </div>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <%= request.created_at.strftime("%b %d, %Y") %>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <a href="<%= cash_advance_request_path(request) %>" class="text-red-600 hover:text-red-900">
+                          View Details
+                        </a>
+                      </td>
+                    </tr>
+                  <% end %>
+                <% else %>
+                  <tr>
+                    <td colspan="9" class="px-6 py-8 text-center text-sm text-gray-500">
+                      No approved requests
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Revised Requests Table -->
+        <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+          <div class="px-6 py-4 border-b border-gray-200">
+            <h3 class="text-lg font-semibold text-gray-900">Revised Requests</h3>
+            <p class="text-sm text-gray-600">Requests marked for revision by manager</p>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Request ID</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Department</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Purpose</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Required Date</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <% if @revised_requests.any? %>
+                  <% @revised_requests.each do |request| %>
+                    <tr class="hover:bg-gray-50">
+                      <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        #<%= request.id %>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <div>
+                          <div class="font-medium"><%= request.employee_name %></div>
+                          <div class="text-gray-500">ID: <%= request.employee_id %></div>
+                        </div>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <%= request.department %>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <div class="max-w-xs truncate" title="<%= request.purpose_of_advance %>">
+                          <%= request.purpose_of_advance %>
+                        </div>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        ₱<%= number_with_precision(request.amount_requested, precision: 2) %>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <%= request.required_date.strftime("%b %d, %Y") %>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+                          <%= request.manager_status&.humanize || 'Unknown' %>
+                        </span>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <%= request.created_at.strftime("%b %d, %Y") %>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <a href="<%= cash_advance_request_path(request) %>" class="text-red-600 hover:text-red-900">
+                          View Details
+                        </a>
+                      </td>
+                    </tr>
+                  <% end %>
+                <% else %>
+                  <tr>
+                    <td colspan="9" class="px-6 py-8 text-center text-sm text-gray-500">
+                      No revised requests
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Rejected Requests Table -->
+        <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+          <div class="px-6 py-4 border-b border-gray-200">
+            <h3 class="text-lg font-semibold text-gray-900">Rejected Requests</h3>
+            <p class="text-sm text-gray-600">Requests rejected by manager</p>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Request ID</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Department</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Purpose</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Required Date</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <% if @rejected_requests.any? %>
+                  <% @rejected_requests.each do |request| %>
+                    <tr class="hover:bg-gray-50">
+                      <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        #<%= request.id %>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <div>
+                          <div class="font-medium"><%= request.employee_name %></div>
+                          <div class="text-gray-500">ID: <%= request.employee_id %></div>
+                        </div>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <%= request.department %>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <div class="max-w-xs truncate" title="<%= request.purpose_of_advance %>">
+                          <%= request.purpose_of_advance %>
+                        </div>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        ₱<%= number_with_precision(request.amount_requested, precision: 2) %>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <%= request.required_date.strftime("%b %d, %Y") %>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">
+                          <%= request.manager_status&.humanize || 'Unknown' %>
+                        </span>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <%= request.created_at.strftime("%b %d, %Y") %>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <a href="<%= cash_advance_request_path(request) %>" class="text-red-600 hover:text-red-900">
+                          View Details
+                        </a>
+                      </td>
+                    </tr>
+                  <% end %>
+                <% else %>
+                  <tr>
+                    <td colspan="9" class="px-6 py-8 text-center text-sm text-gray-500">
+                      No rejected requests
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      <% else %>
+        <!-- Empty State -->
+        <div class="text-center py-12">
+          <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+          </svg>
+          <h3 class="mt-2 text-sm font-medium text-gray-900">No cash advance requests</h3>
+          <p class="mt-1 text-sm text-gray-500">Get started by creating a new cash advance request.</p>
+        </div>
+      <% end %>
+    </div>

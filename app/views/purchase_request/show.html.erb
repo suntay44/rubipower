@@ -53,6 +53,19 @@
                   <a href="<%= purchase_request_purchase_order_path(@purchase_request) %>" class="text-xs text-blue-600 bg-blue-100 px-2 py-1 rounded-md font-medium hover:text-blue-800 flex items-center">
                     View Purchase Order
                   </a>
+                  <span class="ml-2 inline-flex px-2 py-1 text-xs font-semibold rounded-full
+                    <%= case @purchase_request.purchase_order.status
+                        when 'draft' then 'bg-gray-100 text-gray-800'
+                        when 'approved' then 'bg-green-100 text-green-800'
+                        when 'sent' then 'bg-blue-100 text-blue-800'
+                        when 'goods_received' then 'bg-yellow-100 text-yellow-800'
+                        when 'invoice_matched' then 'bg-yellow-100 text-yellow-800'
+                        when 'payment_processed' then 'bg-purple-100 text-purple-800'
+                        when 'cancelled' then 'bg-red-100 text-red-800'
+                        else 'bg-gray-100 text-gray-800'
+                        end %>">
+                    P.O.: <%= @purchase_request.purchase_order.status&.humanize || 'Unknown' %>
+                  </span>
                 <% elsif @purchase_request.budget_approve? && @purchase_request.procurement_approve? %>
                   <span class="text-xs text-green-600 font-medium">✓ Ready for P.O.</span>
                 <% else %>
@@ -355,7 +368,19 @@
                   <a href="<%= purchase_request_purchase_order_path(@purchase_request) %>" class="bg-green-600 text-white px-4 py-2 rounded-md text-center text-sm font-medium hover:bg-green-700 transition-colors duration-200 shadow-sm hover:shadow-md border border-green-700">
                     View Purchase Order (P.O.)
                   </a>
-                  <span class="ml-2 text-xs text-green-600 font-medium">✓ PO Created</span>
+                  <span class="ml-2 inline-flex px-2 py-1 text-xs font-semibold rounded-full
+                    <%= case @purchase_request.purchase_order.status
+                        when 'draft' then 'bg-gray-100 text-gray-800'
+                        when 'approved' then 'bg-green-100 text-green-800'
+                        when 'sent' then 'bg-blue-100 text-blue-800'
+                        when 'goods_received' then 'bg-yellow-100 text-yellow-800'
+                        when 'invoice_matched' then 'bg-yellow-100 text-yellow-800'
+                        when 'payment_processed' then 'bg-purple-100 text-purple-800'
+                        when 'cancelled' then 'bg-red-100 text-red-800'
+                        else 'bg-gray-100 text-gray-800'
+                        end %>">
+                    P.O.: <%= @purchase_request.purchase_order.status&.humanize || 'Unknown' %>
+                  </span>
                 <% elsif @purchase_request.budget_approve? && @purchase_request.procurement_approve? %>
                   <!-- Create Purchase Order (approvals ready, no PO exists) -->
                   <button onclick="confirmCreatePO()" class="bg-blue-600 text-white px-4 py-2 rounded-md text-center text-sm font-medium hover:bg-blue-700 transition-colors duration-200 shadow-sm hover:shadow-md border border-blue-700">

@@ -1,0 +1,253 @@
+<!-- Main Content -->
+    <!-- Top Navigation -->
+    <header class="bg-white shadow-sm border-b border-gray-200">
+      <div class="flex items-center justify-between px-6 py-4">
+        <div class="flex items-center space-x-4">
+          <button id="mobile-sidebar-toggle" class="text-gray-500 hover:text-gray-700 lg:hidden">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+          </button>
+          <div class="flex items-center space-x-3">
+            <a href="<%= invoices_path %>" class="text-gray-500 hover:text-gray-700">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+              </svg>
+            </a>
+            <h1 class="text-2xl font-bold text-gray-900">Create Invoice</h1>
+          </div>
+        </div>
+        
+        <div class="flex items-center space-x-4">
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 overflow-y-auto bg-gray-50 p-6">
+      <div class="max-w-4xl mx-auto">
+        <!-- Header Section -->
+        <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+          <div class="text-center">
+            <h2 class="text-2xl font-bold text-gray-900 mb-2">Invoice Creation Workflow</h2>
+            <p class="text-gray-600">Prepare invoice information and gather following details</p>
+          </div>
+        </div>
+        
+        <!-- Invoice Form -->
+        <%= form_with model: @invoice, local: true, class: "bg-white rounded-lg shadow-sm p-6" do |form| %>
+          <!-- Error Messages -->
+          <% if @invoice.errors.any? %>
+            <div class="bg-red-50 border border-red-200 rounded-md p-4 mb-6">
+              <div class="flex">
+                <div class="flex-shrink-0">
+                  <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                  </svg>
+                </div>
+                <div class="ml-3">
+                  <h3 class="text-sm font-medium text-red-800">
+                    There were <%= pluralize(@invoice.errors.count, "error") %> with your submission:
+                  </h3>
+                  <div class="mt-2 text-sm text-red-700">
+                    <ul class="list-disc pl-5 space-y-1">
+                      <% @invoice.errors.full_messages.each do |message| %>
+                        <li><%= message %></li>
+                      <% end %>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% end %>
+
+          <!-- Invoice Type -->
+          <div class="mb-8">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Invoice Type</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <%= form.radio_button :invoice_type, "partial", class: "h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300" %>
+                <%= form.label :invoice_type_partial, "Partial", class: "ml-2 text-sm font-medium text-gray-700" %>
+              </div>
+              <div>
+                <%= form.radio_button :invoice_type, "downpayment", class: "h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300" %>
+                <%= form.label :invoice_type_downpayment, "Downpayment", class: "ml-2 text-sm font-medium text-gray-700" %>
+              </div>
+              <div>
+                <%= form.radio_button :invoice_type, "fullpayment", class: "h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300" %>
+                <%= form.label :invoice_type_fullpayment, "Fullpayment", class: "ml-2 text-sm font-medium text-gray-700" %>
+              </div>
+            </div>
+            <p class="mt-2 text-sm text-gray-500">If downpayment is applicable = After receiving client's PO, proceed to processing of DP invoice</p>
+          </div>
+
+          <!-- Company Information -->
+          <div class="mb-8">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Company Information</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <%= form.label :company_name, "Company Name *", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                <%= form.text_field :company_name, required: true, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500" %>
+              </div>
+              <div>
+                <%= form.label :company_contact, "Contact *", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                <%= form.text_field :company_contact, required: true, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500" %>
+              </div>
+              <div class="md:col-span-2">
+                <%= form.label :company_address, "Company Address *", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                <%= form.text_area :company_address, rows: 3, required: true, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500" %>
+              </div>
+            </div>
+          </div>
+
+          <!-- Client Information -->
+          <div class="mb-8">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Client Information</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <%= form.label :client_name, "Client Name *", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                <%= form.text_field :client_name, required: true, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500" %>
+              </div>
+              <div>
+                <%= form.label :client_company, "Client Company *", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                <%= form.text_field :client_company, required: true, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500" %>
+              </div>
+              <div class="md:col-span-2">
+                <%= form.label :client_address, "Client Address *", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                <%= form.text_area :client_address, rows: 3, required: true, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500" %>
+              </div>
+            </div>
+          </div>
+
+          <!-- Invoice Details -->
+          <div class="mb-8">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Invoice Details</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <%= form.label :invoice_number, "Invoice Number", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                <%= form.text_field :invoice_number, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500", placeholder: "Auto-generated if left blank" %>
+              </div>
+              <div>
+                <%= form.label :invoice_date, "Invoice Date *", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                <%= form.date_field :invoice_date, required: true, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500" %>
+              </div>
+              <div>
+                <%= form.label :due_date, "Due Date *", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                <%= form.date_field :due_date, required: true, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500" %>
+              </div>
+              <div>
+                <%= form.label :total_amount_due, "Total Amount Due (₱) *", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                <%= form.number_field :total_amount_due, step: 0.01, required: true, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500" %>
+              </div>
+            </div>
+          </div>
+
+          <!-- Description and Rates -->
+          <div class="mb-8">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Description & Rates</h3>
+            <div class="space-y-6">
+              <div>
+                <%= form.label :description, "Description of Goods/Services *", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                <%= form.text_area :description, rows: 4, required: true, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500" %>
+              </div>
+              <div>
+                <%= form.label :rates_and_quantities, "Rates and Quantities *", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                <%= form.text_area :rates_and_quantities, rows: 4, required: true, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500" %>
+              </div>
+            </div>
+          </div>
+
+          <!-- Payment Instructions -->
+          <div class="mb-8">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Payment Instructions</h3>
+            <div class="space-y-4">
+              <div>
+                <%= form.label :payment_instructions, "Payment Instructions *", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                <%= form.text_area :payment_instructions, rows: 3, required: true, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500", placeholder: "Collection, bank transfer, cash, PDC" %>
+              </div>
+              <p class="text-sm text-gray-500">For fullpayment, engineering documents must be submitted to finance dept to support final invoice. Original documents will be forwarded to client's billing office.</p>
+            </div>
+          </div>
+
+          <!-- Supporting Documents -->
+          <div class="mb-8">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Supporting Documents</h3>
+            <div>
+              <%= form.label :supporting_documents, "Supporting Documents", class: "block text-sm font-medium text-gray-700 mb-2" %>
+              <p class="text-sm text-gray-500 mb-2">Upload supporting documents (PDF, DOC, DOCX, JPG, PNG)</p>
+              <%= form.file_field :supporting_documents, multiple: true, accept: ".pdf,.doc,.docx,.jpg,.jpeg,.png", class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500" %>
+              <div id="file-preview" class="mt-2 space-y-2"></div>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <div class="mt-8 flex justify-end">
+            <%= form.submit "Create Invoice", class: "bg-red-600 text-white px-6 py-2 rounded-md hover:bg-red-700 transition-colors duration-200" %>
+          </div>
+        <% end %>
+      </div>
+    </main>
+
+    <!-- Sidebar Script -->
+    <%= render 'shared/sidebar_script' %>
+
+<script>
+  // File preview functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    const fileInput = document.querySelector('input[type="file"][multiple]');
+    const filePreview = document.getElementById('file-preview');
+
+    if (fileInput) {
+      fileInput.addEventListener('change', function(e) {
+        filePreview.innerHTML = '';
+        
+        Array.from(e.target.files).forEach((file, index) => {
+          const fileItem = document.createElement('div');
+          fileItem.className = 'flex items-center justify-between p-2 bg-gray-50 rounded border';
+          
+          const fileInfo = document.createElement('div');
+          fileInfo.className = 'flex items-center space-x-2';
+          
+          const fileIcon = document.createElement('div');
+          fileIcon.className = 'w-4 h-4 text-gray-500';
+          fileIcon.innerHTML = getFileIcon(file.type);
+          
+          const fileName = document.createElement('span');
+          fileName.className = 'text-sm text-gray-700';
+          fileName.textContent = file.name;
+          
+          const fileSize = document.createElement('span');
+          fileSize.className = 'text-xs text-gray-500';
+          fileSize.textContent = `(${formatFileSize(file.size)})`;
+          
+          fileInfo.appendChild(fileIcon);
+          fileInfo.appendChild(fileName);
+          fileInfo.appendChild(fileSize);
+          
+          fileItem.appendChild(fileInfo);
+          filePreview.appendChild(fileItem);
+        });
+      });
+    }
+  });
+
+  function getFileIcon(fileType) {
+    if (fileType.includes('pdf')) {
+      return '📄';
+    } else if (fileType.includes('word') || fileType.includes('document')) {
+      return '📝';
+    } else if (fileType.includes('image')) {
+      return '🖼️';
+    } else {
+      return '📎';
+    }
+  }
+
+  function formatFileSize(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  }
+</script>

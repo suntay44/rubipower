@@ -1,0 +1,33 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  invoice_type: 1
+  company_name: MyString
+  company_address: MyText
+  company_contact: MyString
+  client_name: MyString
+  client_company: MyString
+  client_address: MyText
+  invoice_number: MyString
+  invoice_date: 2025-10-04
+  due_date: 2025-10-04
+  description: MyText
+  rates_and_quantities: MyText
+  total_amount_due: 9.99
+  payment_instructions: MyText
+
+two:
+  invoice_type: 1
+  company_name: MyString
+  company_address: MyText
+  company_contact: MyString
+  client_name: MyString
+  client_company: MyString
+  client_address: MyText
+  invoice_number: MyString
+  invoice_date: 2025-10-04
+  due_date: 2025-10-04
+  description: MyText
+  rates_and_quantities: MyText
+  total_amount_due: 9.99
+  payment_instructions: MyText
