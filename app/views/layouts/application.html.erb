@@ -38,14 +38,26 @@
       </div>
     <% end %>
 
-    <div class="flex h-screen bg-gray-100">
-      <%= render 'shared/sidebar' %>
+        <div class="flex h-screen bg-gray-100">
+          <% if request.path.start_with?('/hr-payroll') %>
+            <%= render 'shared/hr_payroll_sidebar' %>
+          <% elsif request.path.start_with?('/inventory-and-sales') %>
+            <%= render 'shared/inventory_sales_sidebar' %>
+          <% else %>
+            <%= render 'shared/sidebar' %>
+          <% end %>
       
       <main class="flex-1 flex flex-col overflow-y-auto lg:ml-0" id="main-content">
         <%= yield %>
       </main>
     </div>
 
-    <%= render 'shared/sidebar_script' %>
+        <% if request.path.start_with?('/hr-payroll') %>
+          <%= render 'shared/hr_payroll_sidebar_script' %>
+        <% elsif request.path.start_with?('/inventory-and-sales') %>
+          <%= render 'shared/inventory_sales_sidebar_script' %>
+        <% else %>
+          <%= render 'shared/sidebar_script' %>
+        <% end %>
   </body>
 </html>

@@ -1,0 +1,299 @@
+<% content_for :title, "Inventory & Sales Dashboard" %>
+
+<div class="min-h-screen bg-gray-50">
+  <!-- Header -->
+  <div class="bg-white shadow-sm border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center py-6">
+        <div class="flex items-center space-x-4">
+          <button id="mobile-sidebar-toggle" class="text-gray-500 hover:text-gray-700 lg:hidden">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+          </button>
+          <div>
+            <h1 class="text-3xl font-bold text-gray-900">Inventory & Sales Dashboard</h1>
+            <p class="mt-2 text-gray-600">Overview of your inventory and sales performance</p>
+          </div>
+        </div>
+        <div class="flex space-x-3">
+          <button class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors">
+            <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            New Sale
+          </button>
+          <button class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+            <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            Add Product
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <!-- Total Products -->
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+              <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+              </svg>
+            </div>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-600">Total Products</p>
+            <p class="text-2xl font-bold text-gray-900"><%= @total_products %></p>
+            <p class="text-sm text-green-600">+12% from last month</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Total Sales -->
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+              <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+              </svg>
+            </div>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-600">Total Sales</p>
+            <p class="text-2xl font-bold text-gray-900">₱<%= number_with_delimiter(@total_sales) %></p>
+            <p class="text-sm text-green-600">+8% from last month</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Total Customers -->
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+              <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+              </svg>
+            </div>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-600">Total Customers</p>
+            <p class="text-2xl font-bold text-gray-900"><%= @total_customers %></p>
+            <p class="text-sm text-green-600">+5% from last month</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Total Orders -->
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+              <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+              </svg>
+            </div>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-600">Total Orders</p>
+            <p class="text-2xl font-bold text-gray-900"><%= @total_orders %></p>
+            <p class="text-sm text-green-600">+15% from last month</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts and Tables Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+      <!-- Sales Chart -->
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-semibold text-gray-900">Sales Overview</h3>
+          <select class="text-sm border border-gray-300 rounded-md px-3 py-1">
+            <option>Last 7 days</option>
+            <option>Last 30 days</option>
+            <option>Last 3 months</option>
+          </select>
+        </div>
+        <div class="h-64 flex items-center justify-center bg-gray-50 rounded-lg">
+          <div class="text-center">
+            <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+            </svg>
+            <p class="text-gray-500">Sales chart will be displayed here</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top Products -->
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-semibold text-gray-900">Top Selling Products</h3>
+          <a href="<%= inventory_sales_products_path %>" class="text-yellow-600 hover:text-yellow-700 text-sm font-medium">View All</a>
+        </div>
+        <div class="space-y-4">
+          <% if @top_selling_products.any? %>
+            <% @top_selling_products.each_with_index do |product, index| %>
+              <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div class="flex items-center space-x-3">
+                  <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <span class="text-blue-600 font-semibold text-sm"><%= index + 1 %></span>
+                  </div>
+                  <div>
+                    <p class="font-medium text-gray-900"><%= product.name %></p>
+                    <p class="text-sm text-gray-500">SKU: <%= product.sku %></p>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <p class="font-semibold text-gray-900">₱<%= number_with_delimiter(product.price) %></p>
+                  <p class="text-sm text-gray-500"><%= product.sale_items.sum(:quantity) %> sold</p>
+                </div>
+              </div>
+            <% end %>
+          <% else %>
+            <div class="text-center py-8 text-gray-500">
+              <svg class="w-12 h-12 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+              </svg>
+              <p class="text-lg font-medium">No sales data yet</p>
+              <p class="text-sm">Start selling products to see top performers here.</p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <!-- Recent Sales -->
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-semibold text-gray-900">Recent Sales</h3>
+          <a href="<%= inventory_sales_sales_path %>" class="text-purple-600 hover:text-purple-700 text-sm font-medium">View All</a>
+        </div>
+        <div class="space-y-4">
+          <div class="flex items-center justify-between p-3 border border-gray-200 rounded-lg">
+            <div class="flex items-center space-x-3">
+              <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+              </div>
+              <div>
+                <p class="font-medium text-gray-900">Sale #001</p>
+                <p class="text-sm text-gray-500">Customer: John Doe</p>
+              </div>
+            </div>
+            <div class="text-right">
+              <p class="font-semibold text-gray-900">₱2,500</p>
+              <p class="text-sm text-gray-500">2 hours ago</p>
+            </div>
+          </div>
+          <div class="flex items-center justify-between p-3 border border-gray-200 rounded-lg">
+            <div class="flex items-center space-x-3">
+              <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+              </div>
+              <div>
+                <p class="font-medium text-gray-900">Sale #002</p>
+                <p class="text-sm text-gray-500">Customer: Jane Smith</p>
+              </div>
+            </div>
+            <div class="text-right">
+              <p class="font-semibold text-gray-900">₱1,800</p>
+              <p class="text-sm text-gray-500">4 hours ago</p>
+            </div>
+          </div>
+          <div class="flex items-center justify-between p-3 border border-gray-200 rounded-lg">
+            <div class="flex items-center space-x-3">
+              <div class="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center">
+                <svg class="w-4 h-4 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </div>
+              <div>
+                <p class="font-medium text-gray-900">Sale #003</p>
+                <p class="text-sm text-gray-500">Customer: Bob Johnson</p>
+              </div>
+            </div>
+            <div class="text-right">
+              <p class="font-semibold text-gray-900">₱3,200</p>
+              <p class="text-sm text-gray-500">Pending</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Low Stock Alert -->
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-semibold text-gray-900">Low Stock Alert</h3>
+          <a href="<%= inventory_sales_products_path %>" class="text-red-600 hover:text-red-700 text-sm font-medium">Manage</a>
+        </div>
+        <div class="space-y-4">
+          <div class="flex items-center justify-between p-3 bg-red-50 border border-red-200 rounded-lg">
+            <div class="flex items-center space-x-3">
+              <div class="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center">
+                <svg class="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                </svg>
+              </div>
+              <div>
+                <p class="font-medium text-gray-900">Product X</p>
+                <p class="text-sm text-gray-500">SKU: PRD-X01</p>
+              </div>
+            </div>
+            <div class="text-right">
+              <p class="font-semibold text-red-600">2 left</p>
+              <p class="text-sm text-gray-500">Reorder: 50</p>
+            </div>
+          </div>
+          <div class="flex items-center justify-between p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+            <div class="flex items-center space-x-3">
+              <div class="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center">
+                <svg class="w-4 h-4 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                </svg>
+              </div>
+              <div>
+                <p class="font-medium text-gray-900">Product Y</p>
+                <p class="text-sm text-gray-500">SKU: PRD-Y02</p>
+              </div>
+            </div>
+            <div class="text-right">
+              <p class="font-semibold text-yellow-600">5 left</p>
+              <p class="text-sm text-gray-500">Reorder: 30</p>
+            </div>
+          </div>
+          <div class="flex items-center justify-between p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+            <div class="flex items-center space-x-3">
+              <div class="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center">
+                <svg class="w-4 h-4 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                </svg>
+              </div>
+              <div>
+                <p class="font-medium text-gray-900">Product Z</p>
+                <p class="text-sm text-gray-500">SKU: PRD-Z03</p>
+              </div>
+            </div>
+            <div class="text-right">
+              <p class="font-semibold text-yellow-600">8 left</p>
+              <p class="text-sm text-gray-500">Reorder: 25</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

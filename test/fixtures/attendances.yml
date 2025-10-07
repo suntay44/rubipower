@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  employee: one
+  date: 2025-10-06
+  clock_in: 2025-10-06 18:43:28
+  clock_out: 2025-10-06 18:43:28
+  status: MyString
+  hours_worked: 9.99
+
+two:
+  employee: two
+  date: 2025-10-06
+  clock_in: 2025-10-06 18:43:28
+  clock_out: 2025-10-06 18:43:28
+  status: MyString
+  hours_worked: 9.99

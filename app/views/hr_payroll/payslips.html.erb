@@ -1,0 +1,75 @@
+<div class="p-6">
+  <div class="mb-6">
+    <h1 class="text-3xl font-bold text-gray-900">Payslips</h1>
+    <p class="text-gray-600 mt-2">View and download your payslips</p>
+  </div>
+
+  <!-- Filter Options -->
+  <div class="bg-white rounded-lg shadow p-6 mb-6">
+    <div class="flex flex-wrap items-center gap-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Year</label>
+        <select class="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+          <option>2024</option>
+          <option>2023</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Month</label>
+        <select class="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+          <option>January</option>
+          <option>December</option>
+          <option>November</option>
+        </select>
+      </div>
+      <div class="flex items-end">
+        <button class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+          Filter
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Payslips List -->
+  <div class="bg-white rounded-lg shadow">
+    <div class="px-6 py-4 border-b border-gray-200">
+      <h2 class="text-xl font-semibold text-gray-900">Your Payslips</h2>
+    </div>
+    <div class="divide-y divide-gray-200">
+      <% if @payslips.any? %>
+        <% @payslips.each do |payslip| %>
+          <div class="p-6 hover:bg-gray-50 transition-colors">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-4">
+                <div class="p-3 bg-green-100 rounded-lg">
+                  <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                  </svg>
+                </div>
+                <div>
+                  <h3 class="text-lg font-medium text-gray-900"><%= payslip.pay_period_start.strftime("%B %Y") %></h3>
+                  <p class="text-sm text-gray-500">Pay Period: <%= payslip.pay_period %></p>
+                  <p class="text-sm text-gray-500">Net Pay: $<%= number_with_precision(payslip.net_pay, precision: 2) %></p>
+                </div>
+              </div>
+              <div class="flex items-center space-x-2">
+                <button class="text-green-600 hover:text-green-700 font-medium">
+                  View
+                </button>
+                <button class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+                  Download
+                </button>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      <% else %>
+        <div class="p-6">
+          <div class="text-center">
+            <p class="text-gray-500">No payslips found</p>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

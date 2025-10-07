@@ -81,6 +81,29 @@ Rails.application.routes.draw do
   patch "/expense-revenues/:id/approve-finance", to: "expense_revenues#approve_finance", as: :approve_finance_expense_revenue
   patch "/expense-revenues/:id/reject-finance", to: "expense_revenues#reject_finance", as: :reject_finance_expense_revenue
 
+  # HR & Payroll routes
+  get "/hr-payroll", to: "hr_payroll#index", as: :hr_payroll
+  get "/hr-payroll/time-tracking", to: "hr_payroll#time_tracking", as: :hr_payroll_time_tracking
+  get "/hr-payroll/payslips", to: "hr_payroll#payslips", as: :hr_payroll_payslips
+  get "/hr-payroll/leaves", to: "hr_payroll#leaves", as: :hr_payroll_leaves
+  get "/hr-payroll/attendance", to: "hr_payroll#attendance", as: :hr_payroll_attendance
+  get "/hr-payroll/employee-records", to: "hr_payroll#employee_records", as: :hr_payroll_employee_records
+  get "/hr-payroll/payroll-reports", to: "hr_payroll#payroll_reports", as: :hr_payroll_payroll_reports
+
+  # Inventory & Sales routes
+  get "/inventory-and-sales", to: "inventory_sales#index", as: :inventory_sales
+  get "/inventory-and-sales/products", to: "inventory_sales#products", as: :inventory_sales_products
+  get "/inventory-and-sales/products/new", to: "inventory_sales#new_product", as: :new_inventory_sales_product
+  post "/inventory-and-sales/products", to: "inventory_sales#create_product", as: :inventory_sales_products_create
+  get "/inventory-and-sales/products/:id", to: "inventory_sales#show_product", as: :inventory_sales_product
+  get "/inventory-and-sales/products/:id/edit", to: "inventory_sales#edit_product", as: :edit_inventory_sales_product
+  patch "/inventory-and-sales/products/:id", to: "inventory_sales#update_product", as: :inventory_sales_product_update
+  delete "/inventory-and-sales/products/:id", to: "inventory_sales#destroy_product", as: :inventory_sales_product_destroy
+  get "/inventory-and-sales/sales", to: "inventory_sales#sales", as: :inventory_sales_sales
+  get "/inventory-and-sales/customers", to: "inventory_sales#customers", as: :inventory_sales_customers
+  get "/inventory-and-sales/orders", to: "inventory_sales#orders", as: :inventory_sales_orders
+  get "/inventory-and-sales/reports", to: "inventory_sales#reports", as: :inventory_sales_reports
+
   # Test pages (all protected by authentication)
   get "/home", to: "pages#home"
   get "/about", to: "pages#about"

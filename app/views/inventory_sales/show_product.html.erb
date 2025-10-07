@@ -1,0 +1,195 @@
+<% content_for :title, @product.name %>
+
+<div class="min-h-screen bg-gray-50">
+  <!-- Header -->
+  <div class="bg-white shadow-sm border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center py-6">
+        <div class="flex items-center space-x-4">
+          <button id="mobile-sidebar-toggle" class="text-gray-500 hover:text-gray-700 lg:hidden">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+          </button>
+          <div>
+            <h1 class="text-3xl font-bold text-gray-900"><%= @product.name %></h1>
+            <p class="mt-2 text-gray-600">Product Details</p>
+          </div>
+        </div>
+        <div class="flex space-x-3">
+          <%= link_to inventory_sales_products_path, class: "bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors" do %>
+            <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Back to Products
+          <% end %>
+          <%= link_to edit_inventory_sales_product_path(@product), class: "bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 transition-colors" do %>
+            <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+            </svg>
+            Edit Product
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Product Details -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Main Product Info -->
+      <div class="lg:col-span-2">
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
+          <div class="flex items-start space-x-6">
+            <!-- Product Image Placeholder -->
+            <div class="flex-shrink-0">
+              <div class="h-32 w-32 rounded-lg bg-gray-200 flex items-center justify-center">
+                <svg class="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+              </div>
+            </div>
+
+            <!-- Product Details -->
+            <div class="flex-1">
+              <div class="flex items-center space-x-3 mb-4">
+                <h2 class="text-2xl font-bold text-gray-900"><%= @product.name %></h2>
+                <% case @product.status %>
+                <% when 'active' %>
+                  <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                    Active
+                  </span>
+                <% when 'inactive' %>
+                  <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
+                    Inactive
+                  </span>
+                <% when 'discontinued' %>
+                  <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">
+                    Discontinued
+                  </span>
+                <% end %>
+              </div>
+
+              <div class="grid grid-cols-2 gap-4 mb-6">
+                <div>
+                  <dt class="text-sm font-medium text-gray-500">SKU</dt>
+                  <dd class="mt-1 text-sm text-gray-900"><%= @product.sku %></dd>
+                </div>
+                <div>
+                  <dt class="text-sm font-medium text-gray-500">Category</dt>
+                  <dd class="mt-1 text-sm text-gray-900"><%= @product.category %></dd>
+                </div>
+                <div>
+                  <dt class="text-sm font-medium text-gray-500">Price</dt>
+                  <dd class="mt-1 text-lg font-semibold text-gray-900">₱<%= number_with_delimiter(@product.price) %></dd>
+                </div>
+                <div>
+                  <dt class="text-sm font-medium text-gray-500">Created</dt>
+                  <dd class="mt-1 text-sm text-gray-900"><%= @product.created_at.strftime("%B %d, %Y") %></dd>
+                </div>
+              </div>
+
+              <% if @product.description.present? %>
+                <div>
+                  <dt class="text-sm font-medium text-gray-500 mb-2">Description</dt>
+                  <dd class="text-sm text-gray-900"><%= simple_format(@product.description) %></dd>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stock Management -->
+        <div class="mt-8 bg-white rounded-lg shadow-sm border border-gray-200 p-8">
+          <h3 class="text-lg font-medium text-gray-900 mb-6">Stock Management</h3>
+          
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="text-center">
+              <div class="text-3xl font-bold text-gray-900"><%= @product.stock_quantity %></div>
+              <div class="text-sm text-gray-500">Current Stock</div>
+            </div>
+            <div class="text-center">
+              <div class="text-3xl font-bold text-gray-900"><%= @product.reorder_level %></div>
+              <div class="text-sm text-gray-500">Reorder Level</div>
+            </div>
+            <div class="text-center">
+              <% if @product.low_stock? %>
+                <div class="text-3xl font-bold text-red-600">Low Stock</div>
+                <div class="text-sm text-red-500">Needs Reordering</div>
+              <% elsif @product.out_of_stock? %>
+                <div class="text-3xl font-bold text-gray-600">Out of Stock</div>
+                <div class="text-sm text-gray-500">No Stock Available</div>
+              <% else %>
+                <div class="text-3xl font-bold text-green-600">In Stock</div>
+                <div class="text-sm text-green-500">Stock Available</div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="lg:col-span-1">
+        <!-- Quick Actions -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+          <h3 class="text-lg font-medium text-gray-900 mb-4">Quick Actions</h3>
+          <div class="space-y-3">
+            <%= link_to edit_inventory_sales_product_path(@product), class: "w-full bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 transition-colors text-center block" do %>
+              <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+              </svg>
+              Edit Product
+            <% end %>
+            
+            <button class="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+              <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+              </svg>
+              Add Stock
+            </button>
+            
+            <button class="w-full bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+              <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+              </svg>
+              Create Sale
+            </button>
+          </div>
+        </div>
+
+        <!-- Product Stats -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <h3 class="text-lg font-medium text-gray-900 mb-4">Product Statistics</h3>
+          <div class="space-y-4">
+            <div class="flex justify-between">
+              <span class="text-sm text-gray-500">Total Sales</span>
+              <span class="text-sm font-medium text-gray-900">0</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-sm text-gray-500">Revenue</span>
+              <span class="text-sm font-medium text-gray-900">₱0</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-sm text-gray-500">Last Sale</span>
+              <span class="text-sm font-medium text-gray-900">Never</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-sm text-gray-500">Avg. Order Value</span>
+              <span class="text-sm font-medium text-gray-900">₱0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Danger Zone -->
+        <div class="mt-6 bg-white rounded-lg shadow-sm border border-red-200 p-6">
+          <h3 class="text-lg font-medium text-red-900 mb-4">Danger Zone</h3>
+          <p class="text-sm text-red-600 mb-4">Once you delete a product, there is no going back. Please be certain.</p>
+          <%= link_to "Delete Product", inventory_sales_product_destroy_path(@product), 
+              method: :delete, 
+              data: { confirm: "Are you sure you want to delete this product? This action cannot be undone." },
+              class: "w-full bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors text-center block" %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
