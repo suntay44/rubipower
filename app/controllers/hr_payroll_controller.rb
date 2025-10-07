@@ -61,14 +61,14 @@ class HrPayrollController < ApplicationController
   def create_user
     authorize_user_management!
     @user = User.new(user_params)
-    
+
     if @user.save
       # Assign roles if provided
       if params[:user][:role_names].present?
         @user.set_roles(params[:user][:role_names].reject(&:blank?))
       end
-      
-      redirect_to hr_payroll_user_management_path, notice: 'User was successfully created.'
+
+      redirect_to hr_payroll_user_management_path, notice: "User was successfully created."
     else
       @roles = Role::AVAILABLE_ROLES
       render :new_user, status: :unprocessable_entity
@@ -84,14 +84,21 @@ class HrPayrollController < ApplicationController
   def update_user
     authorize_user_management!
     @user = User.find(params[:id])
-    
-    if @user.update(user_params)
+
+    # Handle password fields - remove them if blank to keep current password
+    update_params = user_params
+    if update_params[:password].blank?
+      update_params.delete(:password)
+      update_params.delete(:password_confirmation)
+    end
+
+    if @user.update(update_params)
       # Update roles if provided
       if params[:user][:role_names].present?
         @user.set_roles(params[:user][:role_names].reject(&:blank?))
       end
-      
-      redirect_to hr_payroll_user_management_path, notice: 'User was successfully updated.'
+
+      redirect_to hr_payroll_user_management_path, notice: "User was successfully updated."
     else
       @roles = Role::AVAILABLE_ROLES
       render :edit_user, status: :unprocessable_entity
@@ -101,22 +108,22 @@ class HrPayrollController < ApplicationController
   def destroy_user
     authorize_user_management!
     @user = User.find(params[:id])
-    
+
     # Prevent admin from deleting themselves
     if @user == current_user
-      redirect_to hr_payroll_user_management_path, alert: 'You cannot delete your own account.'
+      redirect_to hr_payroll_user_management_path, alert: "You cannot delete your own account."
       return
     end
-    
+
     @user.destroy
-    redirect_to hr_payroll_user_management_path, notice: 'User was successfully deleted.'
+    redirect_to hr_payroll_user_management_path, notice: "User was successfully deleted."
   end
 
   private
 
   def authorize_user_management!
     unless current_user&.admin?
-      redirect_to hr_payroll_path, alert: 'Access denied. Admin privileges required.'
+      redirect_to hr_payroll_path, alert: "Access denied. Admin privileges required."
     end
   end
 

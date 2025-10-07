@@ -108,16 +108,17 @@
 
         <!-- Password Fields (Optional) -->
         <div class="border-t border-gray-200 pt-6">
-          <h4 class="text-lg font-medium text-gray-900 mb-4">Change Password (Optional)</h4>
+          <h4 class="text-lg font-medium text-gray-900 mb-2">Change Password (Optional)</h4>
+          <p class="text-sm text-gray-600 mb-4">Leave password fields blank to keep the current password unchanged.</p>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <%= form.label :password, "New Password", class: "block text-sm font-medium text-gray-700" %>
-              <%= form.password_field :password, class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500", placeholder: "Leave blank to keep current password" %>
+              <%= form.password_field :password, class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500", placeholder: "Enter new password (optional)" %>
             </div>
 
             <div>
               <%= form.label :password_confirmation, "Confirm New Password", class: "block text-sm font-medium text-gray-700" %>
-              <%= form.password_field :password_confirmation, class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500", placeholder: "Leave blank to keep current password" %>
+              <%= form.password_field :password_confirmation, class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500", placeholder: "Confirm new password (optional)" %>
             </div>
           </div>
         </div>
