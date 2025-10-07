@@ -1,0 +1,151 @@
+<div class="min-h-screen bg-gray-50">
+  <!-- Flash Messages -->
+  <% if notice %>
+    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4 mx-4 mt-4">
+      <%= notice %>
+    </div>
+  <% end %>
+  
+  <% if alert %>
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 mx-4 mt-4">
+      <%= alert %>
+    </div>
+  <% end %>
+
+  <!-- Header -->
+  <div class="bg-white shadow-sm border-b">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="py-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <h1 class="text-2xl font-bold text-gray-900">Edit User</h1>
+            <p class="mt-1 text-sm text-gray-500">Update user information and role assignments</p>
+          </div>
+          <div class="flex space-x-3">
+            <%= link_to hr_payroll_user_management_path, class: "bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors" do %>
+              <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+              </svg>
+              Back to Users
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Form -->
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div class="bg-white shadow rounded-lg">
+      <div class="px-6 py-4 border-b border-gray-200">
+        <h3 class="text-lg font-medium text-gray-900">User Information</h3>
+        <p class="text-sm text-gray-500">Editing: <%= @user.full_name %></p>
+      </div>
+      
+      <%= form_with model: @user, url: update_hr_payroll_user_path(@user), method: :patch, local: true, class: "p-6 space-y-6" do |form| %>
+        <% if @user.errors.any? %>
+          <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+            <h4 class="font-medium">Please fix the following errors:</h4>
+            <ul class="list-disc list-inside mt-2">
+              <% @user.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- First Name -->
+          <div>
+            <%= form.label :first_name, class: "block text-sm font-medium text-gray-700" %>
+            <%= form.text_field :first_name, class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500" %>
+          </div>
+
+          <!-- Last Name -->
+          <div>
+            <%= form.label :last_name, class: "block text-sm font-medium text-gray-700" %>
+            <%= form.text_field :last_name, class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500" %>
+          </div>
+
+          <!-- Email -->
+          <div>
+            <%= form.label :email, class: "block text-sm font-medium text-gray-700" %>
+            <%= form.email_field :email, class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500" %>
+          </div>
+
+          <!-- Phone Number -->
+          <div>
+            <%= form.label :phone_number, class: "block text-sm font-medium text-gray-700" %>
+            <%= form.text_field :phone_number, class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500" %>
+          </div>
+
+          <!-- Position -->
+          <div>
+            <%= form.label :position, class: "block text-sm font-medium text-gray-700" %>
+            <%= form.text_field :position, class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500" %>
+          </div>
+
+          <!-- Department -->
+          <div>
+            <%= form.label :department, class: "block text-sm font-medium text-gray-700" %>
+            <%= form.text_field :department, class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500" %>
+          </div>
+
+          <!-- Hire Date -->
+          <div>
+            <%= form.label :hire_date, class: "block text-sm font-medium text-gray-700" %>
+            <%= form.date_field :hire_date, class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500" %>
+          </div>
+
+          <!-- Status -->
+          <div>
+            <%= form.label :status, class: "block text-sm font-medium text-gray-700" %>
+            <%= form.select :status, options_for_select([['Active', 'active'], ['Inactive', 'inactive'], ['On Leave', 'on_leave']], @user.status), 
+                { prompt: 'Select Status' }, 
+                { class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500" } %>
+          </div>
+        </div>
+
+        <!-- Password Fields (Optional) -->
+        <div class="border-t border-gray-200 pt-6">
+          <h4 class="text-lg font-medium text-gray-900 mb-4">Change Password (Optional)</h4>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <%= form.label :password, "New Password", class: "block text-sm font-medium text-gray-700" %>
+              <%= form.password_field :password, class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500", placeholder: "Leave blank to keep current password" %>
+            </div>
+
+            <div>
+              <%= form.label :password_confirmation, "Confirm New Password", class: "block text-sm font-medium text-gray-700" %>
+              <%= form.password_field :password_confirmation, class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500", placeholder: "Leave blank to keep current password" %>
+            </div>
+          </div>
+        </div>
+
+        <!-- Role Assignment -->
+        <div class="border-t border-gray-200 pt-6">
+          <label class="block text-sm font-medium text-gray-700 mb-3">Role Assignment</label>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <% @roles.each do |role| %>
+              <div class="flex items-center">
+                <%= check_box_tag "user[role_names][]", role, @user.has_role?(role), 
+                    id: "role_#{role}", 
+                    class: "h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded" %>
+                <%= label_tag "role_#{role}", role.capitalize, 
+                    class: "ml-2 block text-sm text-gray-900" %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+
+        <!-- Submit Buttons -->
+        <div class="flex justify-end space-x-3 pt-6 border-t border-gray-200">
+          <%= link_to hr_payroll_user_management_path, class: "bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition-colors" do %>
+            Cancel
+          <% end %>
+          <%= form.submit "Update User", class: "bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

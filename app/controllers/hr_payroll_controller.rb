@@ -43,7 +43,86 @@ class HrPayrollController < ApplicationController
     @recent_reports = Payslip.includes(:user).order(created_at: :desc).limit(5)
   end
 
+  def user_management
+    authorize_user_management!
+    @users = User.includes(:roles).order(:first_name, :last_name)
+    @roles = Role::AVAILABLE_ROLES
+    @total_users = @users.count
+    @active_users = @users.where(status: "active").count
+    @inactive_users = @users.where(status: "inactive").count
+  end
+
+  def new_user
+    authorize_user_management!
+    @user = User.new
+    @roles = Role::AVAILABLE_ROLES
+  end
+
+  def create_user
+    authorize_user_management!
+    @user = User.new(user_params)
+    
+    if @user.save
+      # Assign roles if provided
+      if params[:user][:role_names].present?
+        @user.set_roles(params[:user][:role_names].reject(&:blank?))
+      end
+      
+      redirect_to hr_payroll_user_management_path, notice: 'User was successfully created.'
+    else
+      @roles = Role::AVAILABLE_ROLES
+      render :new_user, status: :unprocessable_entity
+    end
+  end
+
+  def edit_user
+    authorize_user_management!
+    @user = User.find(params[:id])
+    @roles = Role::AVAILABLE_ROLES
+  end
+
+  def update_user
+    authorize_user_management!
+    @user = User.find(params[:id])
+    
+    if @user.update(user_params)
+      # Update roles if provided
+      if params[:user][:role_names].present?
+        @user.set_roles(params[:user][:role_names].reject(&:blank?))
+      end
+      
+      redirect_to hr_payroll_user_management_path, notice: 'User was successfully updated.'
+    else
+      @roles = Role::AVAILABLE_ROLES
+      render :edit_user, status: :unprocessable_entity
+    end
+  end
+
+  def destroy_user
+    authorize_user_management!
+    @user = User.find(params[:id])
+    
+    # Prevent admin from deleting themselves
+    if @user == current_user
+      redirect_to hr_payroll_user_management_path, alert: 'You cannot delete your own account.'
+      return
+    end
+    
+    @user.destroy
+    redirect_to hr_payroll_user_management_path, notice: 'User was successfully deleted.'
+  end
+
   private
+
+  def authorize_user_management!
+    unless current_user&.admin?
+      redirect_to hr_payroll_path, alert: 'Access denied. Admin privileges required.'
+    end
+  end
+
+  def user_params
+    params.require(:user).permit(:first_name, :last_name, :email, :phone_number, :position, :department, :hire_date, :status, :password, :password_confirmation)
+  end
 
   def get_recent_activities
     activities = []

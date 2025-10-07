@@ -89,6 +89,12 @@ Rails.application.routes.draw do
   get "/hr-payroll/attendance", to: "hr_payroll#attendance", as: :hr_payroll_attendance
   get "/hr-payroll/employee-records", to: "hr_payroll#employee_records", as: :hr_payroll_employee_records
   get "/hr-payroll/payroll-reports", to: "hr_payroll#payroll_reports", as: :hr_payroll_payroll_reports
+  get "/hr-payroll/user-management", to: "hr_payroll#user_management", as: :hr_payroll_user_management
+  get "/hr-payroll/user-management/new", to: "hr_payroll#new_user", as: :new_hr_payroll_user
+  post "/hr-payroll/user-management", to: "hr_payroll#create_user", as: :create_hr_payroll_user
+  get "/hr-payroll/user-management/:id/edit", to: "hr_payroll#edit_user", as: :edit_hr_payroll_user
+  patch "/hr-payroll/user-management/:id", to: "hr_payroll#update_user", as: :update_hr_payroll_user
+  delete "/hr-payroll/user-management/:id", to: "hr_payroll#destroy_user", as: :destroy_hr_payroll_user
 
   # Inventory & Sales routes
   get "/inventory-and-sales", to: "inventory_sales#index", as: :inventory_sales
