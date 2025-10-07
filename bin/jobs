@@ -1,6 +1,8 @@
 #!/usr/bin/env ruby
 
 require_relative "../config/environment"
-require "solid_queue/cli"
 
-SolidQueue::Cli.start(ARGV)
+# Simple job runner for async adapter
+# This file is kept for compatibility but jobs run in-process with async adapter
+puts "Jobs are running in-process with the async adapter"
+puts "No separate job process needed"
