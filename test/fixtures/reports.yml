@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  report_type: MyString
+  date_range: MyString
+  status: MyString
+  generated_at: 2025-10-08 14:15:44
+
+two:
+  name: MyString
+  report_type: MyString
+  date_range: MyString
+  status: MyString
+  generated_at: 2025-10-08 14:15:44

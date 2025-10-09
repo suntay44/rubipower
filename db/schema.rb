@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_07_003912) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_08_181544) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -318,6 +318,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_07_003912) do
     t.index ["requester_user_id"], name: "index_purchase_requests_on_requester_user_id"
   end
 
+  create_table "reports", force: :cascade do |t|
+    t.string "name"
+    t.string "report_type"
+    t.string "date_range"
+    t.string "status"
+    t.datetime "generated_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "roles", force: :cascade do |t|
     t.string "name", null: false
     t.integer "user_id", null: false
@@ -355,6 +365,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_07_003912) do
     t.index ["payment_status"], name: "index_sales_on_payment_status"
     t.index ["sale_date"], name: "index_sales_on_sale_date"
     t.index ["sale_number"], name: "index_sales_on_sale_number", unique: true
+  end
+
+  create_table "system_settings", force: :cascade do |t|
+    t.string "key"
+    t.string "value"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "users", force: :cascade do |t|

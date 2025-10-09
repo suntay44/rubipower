@@ -114,6 +114,41 @@ class InventorySalesController < ApplicationController
     @avg_order_value = Customer.where(total_orders: 1..).average(:total_spent) || 0
   end
 
+  def new_customer
+    @customer = Customer.new
+  end
+
+  def create_customer
+    @customer = Customer.new(customer_params)
+
+    if @customer.save
+      redirect_to inventory_sales_customers_path, notice: "Customer was successfully created."
+    else
+      render :new_customer, status: :unprocessable_entity
+    end
+  end
+
+  def edit_customer
+    @customer = Customer.find(params[:id])
+  end
+
+  def update_customer
+    @customer = Customer.find(params[:id])
+
+    if @customer.update(customer_params)
+      redirect_to inventory_sales_customers_path, notice: "Customer was successfully updated."
+    else
+      render :edit_customer, status: :unprocessable_entity
+    end
+  end
+
+  def destroy_customer
+    @customer = Customer.find(params[:id])
+    @customer.destroy
+
+    redirect_to inventory_sales_customers_path, notice: "Customer was successfully deleted."
+  end
+
   def orders
     # Order management
     @orders = Order.includes(:customer, :order_items)
@@ -140,6 +175,53 @@ class InventorySalesController < ApplicationController
     @processing_orders = Order.processing.count
     @shipped_orders = Order.shipped.count
     @delivered_orders = Order.delivered.count
+  end
+
+  def new_order
+    @order = Order.new
+    @customers = Customer.active.order(:name)
+    @products = Product.active.order(:name)
+  end
+
+  def create_order
+    @order = Order.new(order_params)
+    @customers = Customer.active.order(:name)
+    @products = Product.active.order(:name)
+
+    if @order.save
+      redirect_to inventory_sales_order_path(@order), notice: "Order was successfully created."
+    else
+      render :new_order, status: :unprocessable_entity
+    end
+  end
+
+  def show_order
+    @order = Order.includes(:customer, order_items: :product).find(params[:id])
+  end
+
+  def edit_order
+    @order = Order.find(params[:id])
+    @customers = Customer.active.order(:name)
+    @products = Product.active.order(:name)
+  end
+
+  def update_order
+    @order = Order.find(params[:id])
+    @customers = Customer.active.order(:name)
+    @products = Product.active.order(:name)
+
+    if @order.update(order_params)
+      redirect_to inventory_sales_order_path(@order), notice: "Order was successfully updated."
+    else
+      render :edit_order, status: :unprocessable_entity
+    end
+  end
+
+  def destroy_order
+    @order = Order.find(params[:id])
+    @order.destroy
+
+    redirect_to inventory_sales_orders_path, notice: "Order was successfully deleted."
   end
 
   def reports
@@ -169,7 +251,7 @@ class InventorySalesController < ApplicationController
     @total_revenue = Sale.where(sale_date: @start_date..@end_date).sum(:total_amount)
     @total_units_sold = SaleItem.joins(:sale).where(sales: { sale_date: @start_date..@end_date }).sum(:quantity)
     @avg_order_value = Sale.where(sale_date: @start_date..@end_date).average(:total_amount) || 0
-    @conversion_rate = 3.2 # Placeholder - would need more complex calculation
+    @conversion_rate = SystemSetting.get_float("default_conversion_rate", 3.2)
 
     # Sales by category
     @sales_by_category = Product.joins(:sale_items)
@@ -182,16 +264,20 @@ class InventorySalesController < ApplicationController
     @customer_demographics = Customer.group(:customer_type).count
 
     # Recent reports
-    @recent_reports = [
-      { name: "Monthly Sales Report", type: "Sales", date_range: "Dec 1 - Dec 31, 2024", generated: "2 hours ago", status: "ready" },
-      { name: "Inventory Analysis", type: "Inventory", date_range: "Dec 1 - Dec 31, 2024", generated: "1 day ago", status: "ready" },
-      { name: "Customer Insights", type: "Customer", date_range: "Nov 1 - Nov 30, 2024", generated: "3 days ago", status: "processing" }
-    ]
+    @recent_reports = Report.recent.limit(3)
   end
 
   private
 
   def product_params
     params.require(:product).permit(:name, :sku, :description, :category, :price, :stock_quantity, :reorder_level, :status)
+  end
+
+  def customer_params
+    params.require(:customer).permit(:name, :email, :phone, :address, :customer_type, :status, :notes)
+  end
+
+  def order_params
+    params.require(:order).permit(:customer_id, :order_date, :status, :priority, :notes, order_items_attributes: [ :id, :product_id, :quantity, :unit_price, :_destroy ])
   end
 end

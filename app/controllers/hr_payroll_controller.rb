@@ -17,6 +17,41 @@ class HrPayrollController < ApplicationController
     @recent_attendances = current_user.attendances.order(date: :desc).limit(10)
   end
 
+  def clock_in
+    attendance = current_user.attendances.find_or_initialize_by(date: Date.current)
+    attendance.clock_in = Time.current
+    attendance.status = attendance.is_late? ? "late" : "present"
+    attendance.ip_address = request.remote_ip
+    attendance.clock_in_latitude = params[:latitude]
+    attendance.clock_in_longitude = params[:longitude]
+    attendance.clock_in_accuracy_m = params[:accuracy]
+
+    if attendance.save
+      redirect_to hr_payroll_time_tracking_path, notice: "Clocked in successfully."
+    else
+      redirect_to hr_payroll_time_tracking_path, alert: attendance.errors.full_messages.to_sentence
+    end
+  end
+
+  def clock_out
+    attendance = current_user.attendances.find_by(date: Date.current)
+    unless attendance&.clock_in
+      return redirect_to hr_payroll_time_tracking_path, alert: "You need to clock in first."
+    end
+
+    attendance.clock_out = Time.current
+    attendance.clock_out_latitude = params[:latitude]
+    attendance.clock_out_longitude = params[:longitude]
+    attendance.clock_out_accuracy_m = params[:accuracy]
+    attendance.update_hours_worked
+
+    if attendance.save
+      redirect_to hr_payroll_time_tracking_path, notice: "Clocked out successfully."
+    else
+      redirect_to hr_payroll_time_tracking_path, alert: attendance.errors.full_messages.to_sentence
+    end
+  end
+
   def payslips
     @payslips = current_user.payslips.order(pay_period_end: :desc)
   end
@@ -182,9 +217,9 @@ class HrPayrollController < ApplicationController
 
   def get_leave_balance
     {
-      annual: 15 - current_user.leave_requests.where(leave_type: "annual", status: "approved").sum(:days),
-      sick: 10 - current_user.leave_requests.where(leave_type: "sick", status: "approved").sum(:days),
-      personal: 5 - current_user.leave_requests.where(leave_type: "personal", status: "approved").sum(:days)
+      annual: SystemSetting.get_int("annual_leave_days", 15) - current_user.leave_requests.where(leave_type: "annual", status: "approved").sum(:days),
+      sick: SystemSetting.get_int("sick_leave_days", 10) - current_user.leave_requests.where(leave_type: "sick", status: "approved").sum(:days),
+      personal: SystemSetting.get_int("personal_leave_days", 5) - current_user.leave_requests.where(leave_type: "personal", status: "approved").sum(:days)
     }
   end
 

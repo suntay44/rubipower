@@ -49,7 +49,43 @@ regular_user = User.find_or_create_by!(email: 'user@example.com') do |user|
 end
 regular_user.set_roles([ 'user' ])
 
+# Create system settings
+puts "Creating system settings..."
+
+SystemSetting.set("annual_leave_days", "15", "Default annual leave days per year")
+SystemSetting.set("sick_leave_days", "10", "Default sick leave days per year")
+SystemSetting.set("personal_leave_days", "5", "Default personal leave days per year")
+SystemSetting.set("default_conversion_rate", "3.2", "Default conversion rate percentage")
+
+# Create sample reports
+puts "Creating sample reports..."
+
+Report.create!(
+  name: "Monthly Sales Report",
+  report_type: "Sales",
+  date_range: "Dec 1 - Dec 31, 2024",
+  status: "ready",
+  generated_at: 2.hours.ago
+)
+
+Report.create!(
+  name: "Inventory Analysis",
+  report_type: "Inventory",
+  date_range: "Dec 1 - Dec 31, 2024",
+  status: "ready",
+  generated_at: 1.day.ago
+)
+
+Report.create!(
+  name: "Customer Insights",
+  report_type: "Customer",
+  date_range: "Nov 1 - Nov 30, 2024",
+  status: "processing",
+  generated_at: 3.days.ago
+)
+
 puts "Seed data created successfully!"
 puts "- Admin user: admin@example.com (password: password123)"
 puts "- Staff user: staff@example.com (password: password123)"
 puts "- Regular user: user@example.com (password: password123)"
+puts "- System settings configured"

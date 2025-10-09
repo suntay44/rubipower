@@ -1,0 +1,141 @@
+<% content_for :title, "Add New Customer" %>
+
+<div class="min-h-screen bg-gray-50">
+  <!-- Header -->
+  <div class="bg-white shadow-sm border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center py-6">
+        <div class="flex items-center space-x-4">
+          <button id="mobile-sidebar-toggle" class="text-gray-500 hover:text-gray-700 lg:hidden">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+          </button>
+          <div>
+            <h1 class="text-3xl font-bold text-gray-900">Add New Customer</h1>
+            <p class="mt-2 text-gray-600">Create a new customer in your system</p>
+          </div>
+        </div>
+        <div class="flex space-x-3">
+          <%= link_to inventory_sales_customers_path, class: "bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors" do %>
+            <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Back to Customers
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Form Content -->
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
+      <%= form_with model: @customer, url: create_inventory_sales_customer_path, local: true, class: "space-y-6" do |form| %>
+        <% if @customer.errors.any? %>
+          <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+            <div class="flex">
+              <div class="flex-shrink-0">
+                <svg class="h-5 w-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                </svg>
+              </div>
+              <div class="ml-3">
+                <h3 class="text-sm font-medium text-red-800">
+                  There were <%= pluralize(@customer.errors.count, "error") %> with your submission:
+                </h3>
+                <div class="mt-2 text-sm text-red-700">
+                  <ul class="list-disc list-inside space-y-1">
+                    <% @customer.errors.full_messages.each do |message| %>
+                      <li><%= message %></li>
+                    <% end %>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% end %>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Customer Name -->
+          <div class="md:col-span-2">
+            <%= form.label :name, "Customer Name", class: "block text-sm font-medium text-gray-700 mb-2" %>
+            <%= form.text_field :name, 
+                class: "w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent", 
+                placeholder: "Enter customer name" %>
+          </div>
+
+          <!-- Email -->
+          <div>
+            <%= form.label :email, "Email Address", class: "block text-sm font-medium text-gray-700 mb-2" %>
+            <%= form.email_field :email, 
+                class: "w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent", 
+                placeholder: "customer@example.com" %>
+          </div>
+
+          <!-- Phone -->
+          <div>
+            <%= form.label :phone, "Phone Number", class: "block text-sm font-medium text-gray-700 mb-2" %>
+            <%= form.text_field :phone, 
+                class: "w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent", 
+                placeholder: "+63 912 345 6789" %>
+          </div>
+
+          <!-- Customer Type -->
+          <div>
+            <%= form.label :customer_type, "Customer Type", class: "block text-sm font-medium text-gray-700 mb-2" %>
+            <%= form.select :customer_type, 
+                options_for_select([
+                  ['Select customer type', ''],
+                  ['Individual', 'individual'],
+                  ['Business', 'business'],
+                  ['Government', 'government'],
+                  ['Non-profit', 'non_profit']
+                ], @customer.customer_type),
+                {},
+                { class: "w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" } %>
+          </div>
+
+          <!-- Status -->
+          <div>
+            <%= form.label :status, "Status", class: "block text-sm font-medium text-gray-700 mb-2" %>
+            <%= form.select :status, 
+                options_for_select([
+                  ['Active', 'active'],
+                  ['Inactive', 'inactive'],
+                  ['Suspended', 'suspended']
+                ], @customer.status || 'active'),
+                {},
+                { class: "w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" } %>
+          </div>
+
+          <!-- Address -->
+          <div class="md:col-span-2">
+            <%= form.label :address, "Address", class: "block text-sm font-medium text-gray-700 mb-2" %>
+            <%= form.text_area :address, 
+                rows: 3,
+                class: "w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent", 
+                placeholder: "Enter customer address..." %>
+          </div>
+
+          <!-- Notes -->
+          <div class="md:col-span-2">
+            <%= form.label :notes, "Notes", class: "block text-sm font-medium text-gray-700 mb-2" %>
+            <%= form.text_area :notes, 
+                rows: 3,
+                class: "w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent", 
+                placeholder: "Additional notes about the customer..." %>
+          </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="flex justify-end space-x-4 pt-6 border-t border-gray-200">
+          <%= link_to "Cancel", inventory_sales_customers_path, 
+              class: "px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors" %>
+          <%= form.submit "Create Customer", 
+              class: "px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

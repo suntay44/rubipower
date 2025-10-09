@@ -84,6 +84,8 @@ Rails.application.routes.draw do
   # HR & Payroll routes
   get "/hr-payroll", to: "hr_payroll#index", as: :hr_payroll
   get "/hr-payroll/time-tracking", to: "hr_payroll#time_tracking", as: :hr_payroll_time_tracking
+  post "/hr-payroll/time-tracking/clock_in", to: "hr_payroll#clock_in", as: :hr_payroll_clock_in
+  post "/hr-payroll/time-tracking/clock_out", to: "hr_payroll#clock_out", as: :hr_payroll_clock_out
   get "/hr-payroll/payslips", to: "hr_payroll#payslips", as: :hr_payroll_payslips
   get "/hr-payroll/leaves", to: "hr_payroll#leaves", as: :hr_payroll_leaves
   get "/hr-payroll/attendance", to: "hr_payroll#attendance", as: :hr_payroll_attendance
@@ -107,7 +109,18 @@ Rails.application.routes.draw do
   delete "/inventory-and-sales/products/:id", to: "inventory_sales#destroy_product", as: :inventory_sales_product_destroy
   get "/inventory-and-sales/sales", to: "inventory_sales#sales", as: :inventory_sales_sales
   get "/inventory-and-sales/customers", to: "inventory_sales#customers", as: :inventory_sales_customers
+  get "/inventory-and-sales/customers/new", to: "inventory_sales#new_customer", as: :new_inventory_sales_customer
+  post "/inventory-and-sales/customers", to: "inventory_sales#create_customer", as: :create_inventory_sales_customer
+  get "/inventory-and-sales/customers/:id/edit", to: "inventory_sales#edit_customer", as: :edit_inventory_sales_customer
+  patch "/inventory-and-sales/customers/:id", to: "inventory_sales#update_customer", as: :update_inventory_sales_customer
+  delete "/inventory-and-sales/customers/:id", to: "inventory_sales#destroy_customer", as: :destroy_inventory_sales_customer
   get "/inventory-and-sales/orders", to: "inventory_sales#orders", as: :inventory_sales_orders
+  get "/inventory-and-sales/orders/new", to: "inventory_sales#new_order", as: :new_inventory_sales_order
+  post "/inventory-and-sales/orders", to: "inventory_sales#create_order", as: :create_inventory_sales_order
+  get "/inventory-and-sales/orders/:id", to: "inventory_sales#show_order", as: :inventory_sales_order
+  get "/inventory-and-sales/orders/:id/edit", to: "inventory_sales#edit_order", as: :edit_inventory_sales_order
+  patch "/inventory-and-sales/orders/:id", to: "inventory_sales#update_order", as: :update_inventory_sales_order
+  delete "/inventory-and-sales/orders/:id", to: "inventory_sales#destroy_order", as: :destroy_inventory_sales_order
   get "/inventory-and-sales/reports", to: "inventory_sales#reports", as: :inventory_sales_reports
 
   # Test pages (all protected by authentication)

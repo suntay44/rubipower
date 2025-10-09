@@ -14,7 +14,7 @@
           <span class="text-lg font-medium text-gray-900">Clocked In</span>
           <span class="text-sm text-gray-500">Since <%= @current_attendance.clock_in.strftime("%I:%M %p") %></span>
         </div>
-        <button class="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
+        <button id="clock-out-btn" class="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
           Clock Out
         </button>
       <% else %>
@@ -22,7 +22,7 @@
           <div class="w-4 h-4 bg-gray-400 rounded-full"></div>
           <span class="text-lg font-medium text-gray-900">Not Clocked In</span>
         </div>
-        <button class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
+        <button id="clock-in-btn" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
           Clock In
         </button>
       <% end %>
@@ -84,3 +84,64 @@
     </div>
   </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  function sendLocation(url) {
+    if (!navigator.geolocation) {
+      alert('Geolocation is not supported by your browser.');
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(function(position) {
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = url;
+
+      const csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+      const csrfInput = document.createElement('input');
+      csrfInput.type = 'hidden';
+      csrfInput.name = 'authenticity_token';
+      csrfInput.value = csrf;
+      form.appendChild(csrfInput);
+
+      const lat = document.createElement('input');
+      lat.type = 'hidden';
+      lat.name = 'latitude';
+      lat.value = position.coords.latitude;
+      form.appendChild(lat);
+
+      const lng = document.createElement('input');
+      lng.type = 'hidden';
+      lng.name = 'longitude';
+      lng.value = position.coords.longitude;
+      form.appendChild(lng);
+
+      const acc = document.createElement('input');
+      acc.type = 'hidden';
+      acc.name = 'accuracy';
+      acc.value = position.coords.accuracy;
+      form.appendChild(acc);
+
+      document.body.appendChild(form);
+      form.submit();
+    }, function(error) {
+      alert('Unable to retrieve location: ' + error.message);
+    }, { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 });
+  }
+
+  const clockInBtn = document.getElementById('clock-in-btn');
+  if (clockInBtn) {
+    clockInBtn.addEventListener('click', function() {
+      sendLocation('<%= hr_payroll_clock_in_path %>');
+    });
+  }
+
+  const clockOutBtn = document.getElementById('clock-out-btn');
+  if (clockOutBtn) {
+    clockOutBtn.addEventListener('click', function() {
+      sendLocation('<%= hr_payroll_clock_out_path %>');
+    });
+  }
+});
+</script>
