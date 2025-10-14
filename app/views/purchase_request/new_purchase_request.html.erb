@@ -36,13 +36,6 @@
     <!-- Main Content Area -->
     <main class="flex-1 overflow-y-auto bg-gray-50 p-6">
       <div class="max-w-4xl mx-auto">
-        <!-- Header Section -->
-        <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
-          <div class="text-center">
-            <h2 class="text-2xl font-bold text-gray-900 mb-2">Purchase Request Form</h2>
-          </div>
-        </div>
-        
         <!-- Purchase Request Form -->
         <%= form_with model: @purchase_request, url: create_purchase_request_path, local: true, class: "bg-white rounded-lg shadow-sm p-6" do |form| %>
           <!-- Error Messages -->

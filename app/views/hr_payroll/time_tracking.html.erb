@@ -40,6 +40,7 @@
           <tr>
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Clock In</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Clock In Location</th>
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Clock Out</th>
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Hours</th>
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
@@ -52,6 +53,16 @@
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><%= attendance.date.strftime("%Y-%m-%d") %></td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                   <%= attendance.clock_in&.strftime("%I:%M %p") || "-" %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-600">
+                  <% if attendance.clock_in_latitude && attendance.clock_in_longitude %>
+                    <%= link_to "View on Map", "https://www.google.com/maps?q=#{attendance.clock_in_latitude},#{attendance.clock_in_longitude}", target: "_blank", rel: "noopener" %>
+                    <% if attendance.clock_in_accuracy_m.present? %>
+                      <span class="text-gray-500 ml-2">(~<%= attendance.clock_in_accuracy_m.to_i %>m)</span>
+                    <% end %>
+                  <% else %>
+                    -
+                  <% end %>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                   <%= attendance.clock_out&.strftime("%I:%M %p") || "-" %>
@@ -74,7 +85,7 @@
             <% end %>
           <% else %>
             <tr>
-              <td colspan="5" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+              <td colspan="6" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
                 No attendance records found
               </td>
             </tr>

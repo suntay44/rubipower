@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_08_181544) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_09_150000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -51,6 +51,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_08_181544) do
     t.decimal "hours_worked"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.decimal "clock_in_latitude", precision: 10, scale: 6
+    t.decimal "clock_in_longitude", precision: 10, scale: 6
+    t.decimal "clock_in_accuracy_m", precision: 10, scale: 2
+    t.decimal "clock_out_latitude", precision: 10, scale: 6
+    t.decimal "clock_out_longitude", precision: 10, scale: 6
+    t.decimal "clock_out_accuracy_m", precision: 10, scale: 2
+    t.string "ip_address"
     t.index ["user_id"], name: "index_attendances_on_user_id"
   end
 
