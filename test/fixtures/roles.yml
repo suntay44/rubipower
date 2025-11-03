@@ -1,9 +1,25 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  name: MyString
+admin_role:
+  name: admin
   user_id: 1
 
-two:
-  name: MyString
-  user_id: 1
+finance_role:
+  name: finance
+  user_id: 2
+
+manager_role:
+  name: manager
+  user_id: 3
+
+supervisor_role:
+  name: supervisor
+  user_id: 4
+
+procurement_role:
+  name: procurement
+  user_id: 5
+
+teammates_role:
+  name: teammates
+  user_id: 6

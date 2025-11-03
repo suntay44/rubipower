@@ -122,6 +122,16 @@ Rails.application.routes.draw do
   patch "/inventory-and-sales/orders/:id", to: "inventory_sales#update_order", as: :update_inventory_sales_order
   delete "/inventory-and-sales/orders/:id", to: "inventory_sales#destroy_order", as: :destroy_inventory_sales_order
   get "/inventory-and-sales/reports", to: "inventory_sales#reports", as: :inventory_sales_reports
+  
+  # Vendor routes
+  get "/inventory-and-sales/vendors", to: "vendors#index", as: :inventory_sales_vendors
+  get "/inventory-and-sales/vendors/new", to: "vendors#new", as: :new_inventory_sales_vendor
+  post "/inventory-and-sales/vendors", to: "vendors#create", as: :create_inventory_sales_vendor
+  get "/inventory-and-sales/vendors/:id", to: "vendors#show", as: :inventory_sales_vendor
+  get "/inventory-and-sales/vendors/:id/edit", to: "vendors#edit", as: :edit_inventory_sales_vendor
+  patch "/inventory-and-sales/vendors/:id", to: "vendors#update", as: :update_inventory_sales_vendor
+  delete "/inventory-and-sales/vendors/:id", to: "vendors#destroy", as: :destroy_inventory_sales_vendor
+  delete "/inventory-and-sales/vendors/:id/delete_sample_sales_invoice", to: "vendors#delete_sample_sales_invoice", as: :delete_vendor_sample_sales_invoice
 
   # Test pages (all protected by authentication)
   get "/home", to: "pages#home"

@@ -18,7 +18,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   def update?
-    user.admin? || (user.staff? && !record.admin?) || record == user
+    user.admin? || (user.manager? && !record.admin?) || record == user
   end
 
   def destroy?
@@ -42,7 +42,7 @@ class UserPolicy < ApplicationPolicy
     def resolve
       if user.admin?
         scope.all
-      elsif user.staff?
+      elsif user.manager?
         scope.joins(:roles).where.not(roles: { name: "admin" })
       else
         scope.none

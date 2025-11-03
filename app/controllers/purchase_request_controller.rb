@@ -9,7 +9,7 @@ class PurchaseRequestController < ApplicationController
 
   def edit
     @purchase_request = PurchaseRequest.includes(:requester_user, :items).find(params[:id])
-    @departments = [ "Engineering", "Operations", "Maintenance", "IT", "Finance", "HR", "Sales", "Marketing" ]
+    @departments = User.departments.keys.map(&:titleize)
     @priority_levels = [ "Low", "Medium", "High", "Urgent" ]
   end
 
@@ -28,7 +28,7 @@ class PurchaseRequestController < ApplicationController
 
       redirect_to purchase_request_detail_path(@purchase_request), notice: "Purchase request was successfully updated."
     else
-      @departments = [ "Engineering", "Operations", "Maintenance", "IT", "Finance", "HR", "Sales", "Marketing" ]
+      @departments = User.departments.keys.map(&:titleize)
       @priority_levels = [ "Low", "Medium", "High", "Urgent" ]
       render :edit, status: :unprocessable_entity
     end
@@ -78,7 +78,7 @@ class PurchaseRequestController < ApplicationController
 
   def new_purchase_request
     # This will be used to display the new purchase request form
-    @departments = [ "Engineering", "Operations", "Maintenance", "IT", "Finance", "HR", "Sales", "Marketing" ]
+    @departments = User.departments.keys.map(&:titleize)
     @priority_levels = [ "Low", "Medium", "High", "Urgent" ]
     @purchase_request = PurchaseRequest.new
     @purchase_request.items.build
@@ -95,7 +95,7 @@ class PurchaseRequestController < ApplicationController
 
       redirect_to purchase_request_detail_path(@purchase_request), notice: "Purchase request was successfully created."
     else
-      @departments = [ "Engineering", "Operations", "Maintenance", "IT", "Finance", "HR", "Sales", "Marketing" ]
+      @departments = User.departments.keys.map(&:titleize)
       @priority_levels = [ "Low", "Medium", "High", "Urgent" ]
       render :new_purchase_request, status: :unprocessable_entity
     end

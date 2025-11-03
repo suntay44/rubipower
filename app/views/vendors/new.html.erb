@@ -1,0 +1,102 @@
+<div class="min-h-screen bg-gray-50">
+  <!-- Flash Messages -->
+  <% if alert %>
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 mx-4 mt-4">
+      <%= alert %>
+    </div>
+  <% end %>
+
+  <!-- Header -->
+  <div class="bg-white shadow-sm border-b">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="py-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <h1 class="text-2xl font-bold text-gray-900">Add New Vendor</h1>
+            <p class="mt-1 text-sm text-gray-500">Create a new vendor record</p>
+          </div>
+          <div class="flex space-x-3">
+            <%= link_to inventory_sales_vendors_path, class: "bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors" do %>
+              <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+              </svg>
+              Back to Vendors
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Form -->
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div class="bg-white shadow rounded-lg">
+      <div class="px-6 py-4 border-b border-gray-200">
+        <h3 class="text-lg font-medium text-gray-900">Vendor Information</h3>
+      </div>
+      
+      <%= form_with model: @vendor, url: create_inventory_sales_vendor_path, local: true, class: "p-6 space-y-6" do |form| %>
+        <% if @vendor.errors.any? %>
+          <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+            <h4 class="font-medium">Please fix the following errors:</h4>
+            <ul class="list-disc list-inside mt-2">
+              <% @vendor.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <div class="grid grid-cols-1 gap-6">
+          <!-- Name -->
+          <div>
+            <%= form.label :name, "Vendor Name", class: "block text-sm font-medium text-gray-700" %>
+            <%= form.text_field :name, class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500", placeholder: "Enter vendor name" %>
+          </div>
+
+          <!-- Address -->
+          <div>
+            <%= form.label :address, class: "block text-sm font-medium text-gray-700" %>
+            <%= form.text_area :address, rows: 3, class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500", placeholder: "Enter vendor address" %>
+          </div>
+
+          <!-- TIN 2303 -->
+          <div>
+            <%= form.label :tin, "TIN 2303", class: "block text-sm font-medium text-gray-700" %>
+            <%= form.text_field :tin, class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500", placeholder: "Enter TIN number" %>
+          </div>
+
+          <!-- Bank Details -->
+          <div>
+            <%= form.label :bank_details, "Bank Details", class: "block text-sm font-medium text-gray-700" %>
+            <%= form.text_area :bank_details, rows: 3, class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500", placeholder: "Enter bank details" %>
+          </div>
+
+          <!-- Sample Sales Invoice -->
+          <div>
+            <%= form.label :sample_sales_invoice, "Sample Sales Invoice", class: "block text-sm font-medium text-gray-700" %>
+            <%= form.file_field :sample_sales_invoice, class: "mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100" %>
+            <p class="mt-1 text-sm text-gray-500">Upload a sample sales invoice (PDF, Image, etc.)</p>
+          </div>
+
+          <!-- Status -->
+          <div>
+            <%= form.label :status, class: "block text-sm font-medium text-gray-700" %>
+            <%= form.select :status, options_for_select([['Active', 'active'], ['Inactive', 'inactive']], 'active'), 
+                {}, 
+                { class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500" } %>
+          </div>
+        </div>
+
+        <!-- Submit Buttons -->
+        <div class="flex justify-end space-x-3 pt-6 border-t border-gray-200">
+          <%= link_to inventory_sales_vendors_path, class: "bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition-colors" do %>
+            Cancel
+          <% end %>
+          <%= form.submit "Create Vendor", class: "bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+

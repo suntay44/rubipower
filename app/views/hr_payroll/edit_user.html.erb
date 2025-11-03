@@ -88,7 +88,9 @@
           <!-- Department -->
           <div>
             <%= form.label :department, class: "block text-sm font-medium text-gray-700" %>
-            <%= form.text_field :department, class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500" %>
+            <%= form.select :department, User.departments.keys.map { |d| [d.titleize, d] }, 
+                { prompt: 'Select Department' }, 
+                { class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500" } %>
           </div>
 
           <!-- Hire Date -->

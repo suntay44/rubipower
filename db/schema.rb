@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_09_150000) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_03_065253) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -394,11 +394,24 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_09_150000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "position"
-    t.string "department"
+    t.integer "department"
     t.date "hire_date"
     t.string "status"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  end
+
+  create_table "vendors", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "address"
+    t.string "tin"
+    t.text "bank_details"
+    t.string "status", default: "active"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_vendors_on_name"
+    t.index ["status"], name: "index_vendors_on_status"
+    t.index ["tin"], name: "index_vendors_on_tin"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"

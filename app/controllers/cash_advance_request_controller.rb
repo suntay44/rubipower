@@ -14,7 +14,7 @@ class CashAdvanceRequestController < ApplicationController
 
   def new
     @cash_advance_request = CashAdvanceRequest.new
-    @departments = [ "Engineering", "Operations", "Maintenance", "IT", "Finance", "HR", "Sales", "Marketing" ]
+    @departments = User.departments.keys.map(&:titleize)
     @users = User.all.order(:first_name, :last_name)
   end
 
@@ -26,13 +26,13 @@ class CashAdvanceRequestController < ApplicationController
     if @cash_advance_request.save
       redirect_to cash_advance_request_path(@cash_advance_request), notice: "Cash advance request was successfully created."
     else
-      @departments = [ "Engineering", "Operations", "Maintenance", "IT", "Finance", "HR", "Sales", "Marketing" ]
+      @departments = User.departments.keys.map(&:titleize)
       render :new, status: :unprocessable_entity
     end
   end
 
   def edit
-    @departments = [ "Engineering", "Operations", "Maintenance", "IT", "Finance", "HR", "Sales", "Marketing" ]
+    @departments = User.departments.keys.map(&:titleize)
     @users = User.all.order(:first_name, :last_name)
   end
 
@@ -52,7 +52,7 @@ class CashAdvanceRequestController < ApplicationController
     if @cash_advance_request.update(params_hash)
       redirect_to cash_advance_request_path(@cash_advance_request), notice: "Cash advance request was successfully updated."
     else
-      @departments = [ "Engineering", "Operations", "Maintenance", "IT", "Finance", "HR", "Sales", "Marketing" ]
+      @departments = User.departments.keys.map(&:titleize)
       @users = User.all.order(:first_name, :last_name)
       render :edit, status: :unprocessable_entity
     end

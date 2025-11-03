@@ -4,6 +4,14 @@ class User < ApplicationRecord
   devise :database_authenticatable,
          :recoverable, :rememberable, :validatable
 
+  # Enums
+  enum :department, {
+    finance: 0,
+    engineering: 1,
+    operations: 2,
+    general: 3
+  }, prefix: true
+
   # Associations
   has_many :roles, dependent: :destroy
   has_many :purchase_requests, foreign_key: "requester_user_id", dependent: :destroy
@@ -35,16 +43,24 @@ class User < ApplicationRecord
     roles.exists?(name: "admin")
   end
 
-  def staff?
-    roles.exists?(name: "staff")
+  def finance?
+    roles.exists?(name: "finance")
   end
 
-  def user?
-    roles.exists?(name: "user")
+  def manager?
+    roles.exists?(name: "manager")
   end
 
-  def approver?
-    roles.exists?(name: "approver")
+  def supervisor?
+    roles.exists?(name: "supervisor")
+  end
+
+  def procurement?
+    roles.exists?(name: "procurement")
+  end
+
+  def teammates?
+    roles.exists?(name: "teammates")
   end
 
   def has_role?(role_name)
@@ -57,7 +73,7 @@ class User < ApplicationRecord
 
   # Pundit authorization helper methods
   def can_manage_users?
-    admin? || staff?
+    admin? || manager?
   end
 
   def can_delete_content?
@@ -65,7 +81,7 @@ class User < ApplicationRecord
   end
 
   def can_approve?
-    admin? || approver?
+    admin? || manager? || supervisor?
   end
 
   # Role management methods
@@ -113,5 +129,5 @@ class User < ApplicationRecord
   # Scopes for HR
   scope :employees, -> { where.not(position: nil, department: nil) }
   scope :active_employees, -> { employees.where(status: "active") }
-  scope :by_department, ->(dept) { where(department: dept) }
+  scope :by_department, ->(dept) { where(department: departments[dept.to_sym] || dept) }
 end
