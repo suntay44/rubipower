@@ -43,7 +43,7 @@
                 <%= request.items.count %> item<%= 's' if request.items.count != 1 %>
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                $<%= number_with_precision(request.items.sum(:cost), precision: 2) %>
+                ₱<%= number_with_precision(request.items.sum(:quoted_price), precision: 2) %>
               </td>
               <td class="px-6 py-4 whitespace-nowrap">
                 <div class="flex flex-col space-y-1">

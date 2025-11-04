@@ -25,13 +25,14 @@ class InventorySalesController < ApplicationController
                       .page(params[:page])
 
     # Filtering
-    @products = @products.by_category(params[:category]) if params[:category].present?
     @products = @products.where(status: params[:status]) if params[:status].present?
+    @products = @products.where(vendor_id: params[:vendor_id]) if params[:vendor_id].present?
     @products = @products.where("name ILIKE ? OR sku ILIKE ?", "%#{params[:search]}%", "%#{params[:search]}%") if params[:search].present?
   end
 
   def new_product
     @product = Product.new
+    @vendors = Vendor.active.by_name
   end
 
   def create_product
@@ -40,6 +41,7 @@ class InventorySalesController < ApplicationController
     if @product.save
       redirect_to inventory_sales_products_path, notice: "Product was successfully created."
     else
+      @vendors = Vendor.active.by_name
       render :new_product, status: :unprocessable_entity
     end
   end
@@ -50,6 +52,7 @@ class InventorySalesController < ApplicationController
 
   def edit_product
     @product = Product.find(params[:id])
+    @vendors = Vendor.active.by_name
   end
 
   def update_product
@@ -58,6 +61,7 @@ class InventorySalesController < ApplicationController
     if @product.update(product_params)
       redirect_to inventory_sales_products_path, notice: "Product was successfully updated."
     else
+      @vendors = Vendor.active.by_name
       render :edit_product, status: :unprocessable_entity
     end
   end
@@ -253,11 +257,11 @@ class InventorySalesController < ApplicationController
     @avg_order_value = Sale.where(sale_date: @start_date..@end_date).average(:total_amount) || 0
     @conversion_rate = SystemSetting.get_float("default_conversion_rate", 3.2)
 
-    # Sales by category
-    @sales_by_category = Product.joins(:sale_items)
+    # Sales by vendor
+    @sales_by_vendor = Product.joins(:sale_items, :vendor)
                                .joins("JOIN sales ON sale_items.sale_id = sales.id")
                                .where(sales: { sale_date: @start_date..@end_date })
-                               .group(:category)
+                               .group("vendors.name")
                                .sum("sale_items.total_price")
 
     # Customer demographics
@@ -270,7 +274,7 @@ class InventorySalesController < ApplicationController
   private
 
   def product_params
-    params.require(:product).permit(:name, :sku, :description, :category, :price, :stock_quantity, :reorder_level, :status)
+    params.require(:product).permit(:name, :sku, :description, :price, :stock_quantity, :reorder_level, :status, :vendor_id)
   end
 
   def customer_params

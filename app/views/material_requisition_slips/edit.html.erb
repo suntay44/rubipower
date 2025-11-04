@@ -1,0 +1,256 @@
+<% content_for :title, "Edit Material Requisition Slip" %>
+
+<div class="min-h-screen bg-gray-50 p-6">
+  <div class="max-w-5xl mx-auto">
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-3xl font-bold text-gray-900">Edit MRS-<%= @requisition.id.to_s.rjust(4, '0') %></h1>
+      <%= link_to "Back", material_requisition_slip_path(@requisition), class: "bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700" %>
+    </div>
+
+    <div class="bg-white shadow rounded-lg p-6">
+      <%= form_with model: @requisition, local: true, class: "space-y-6", multipart: true do |form| %>
+        <% if @requisition.errors.any? %>
+          <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+            <h3 class="text-sm font-medium text-red-800">Please fix the following errors:</h3>
+            <ul class="list-disc list-inside mt-2 text-sm text-red-700">
+              <% @requisition.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <%= form.label :request_date, "Request Date *", class: "block text-sm font-medium text-gray-700 mb-2" %>
+            <%= form.date_field :request_date, class: "w-full px-3 py-2 border border-gray-300 rounded-md", required: true %>
+          </div>
+
+          <div>
+            <%= form.label :priority_level, "Priority *", class: "block text-sm font-medium text-gray-700 mb-2" %>
+            <%= form.select :priority_level, options_for_select([['Low', 'low'], ['Medium', 'medium'], ['High', 'high'], ['Urgent', 'urgent']], @requisition.priority_level), {}, { class: "w-full px-3 py-2 border border-gray-300 rounded-md", required: true } %>
+          </div>
+
+          <div>
+            <%= form.label :lead_time, "Lead Time (days)", class: "block text-sm font-medium text-gray-700 mb-2" %>
+            <%= form.number_field :lead_time, value: @requisition.lead_time, min: 0, class: "w-full px-3 py-2 border border-gray-300 rounded-md", placeholder: "Enter lead time in days" %>
+          </div>
+        </div>
+
+        <div>
+          <%= form.label :purpose, "Purpose *", class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= form.text_area :purpose, rows: 3, class: "w-full px-3 py-2 border border-gray-300 rounded-md", placeholder: "Describe the purpose of this requisition...", required: true %>
+        </div>
+
+        <!-- Proposals Attachment -->
+        <div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">Proposals</h3>
+          <p class="text-sm text-gray-600 mb-4">Upload multiple proposal files</p>
+          
+          <!-- Show existing proposals -->
+          <% if @requisition.proposals.attached? %>
+            <div class="mb-4">
+              <p class="text-sm font-medium text-gray-700 mb-2">Current Proposals:</p>
+              <ul class="list-disc list-inside text-sm text-gray-600 mb-3">
+                <% @requisition.proposals.each do |proposal| %>
+                  <li class="flex items-center justify-between mb-1">
+                    <%= link_to proposal.filename, rails_blob_path(proposal, disposition: "attachment"), class: "text-blue-600 hover:underline", target: "_blank" %>
+                    <%= button_to "Remove", purge_proposal_material_requisition_slip_path(@requisition, proposal_id: proposal.signed_id), method: :delete, class: "text-red-600 hover:text-red-800 text-xs ml-2", data: { confirm: "Are you sure?" }, form: { style: "display: inline;" } %>
+                  </li>
+                <% end %>
+              </ul>
+            </div>
+          <% end %>
+          
+          <%= form.file_field :proposals, multiple: true, class: "w-full px-3 py-2 border border-gray-300 rounded-md", accept: "application/pdf,image/*,.doc,.docx" %>
+          <p class="text-xs text-gray-500 mt-2">Accepted formats: PDF, Images, Word documents. You can select multiple files.</p>
+        </div>
+
+        <!-- Materials Requested - will save to Items table -->
+        <div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">Materials Requested</h3>
+          <p class="text-sm text-gray-600 mb-4">Select materials and vendor/price will be auto-populated</p>
+          <div id="items-container">
+            <% @requisition.items_exclusive.each_with_index do |item, index| %>
+              <% material = @materials.find { |m| m.vendor_id == item.vendor_id && m.name == item.name } || @materials.first %>
+              <div class="item-row bg-gray-50 p-4 rounded-lg mb-4 border border-gray-200">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Material *</label>
+                    <select name="material_requisition_slip[items_attributes][<%= index %>][material_id]" class="material-select w-full px-3 py-2 border border-gray-300 rounded-md" onchange="updateVendorAndPrice(this)" required>
+                      <option value="">Select material</option>
+                      <% @materials.each do |m| %>
+                        <option value="<%= m.id %>" data-vendor-id="<%= m.vendor_id %>" data-vendor-name="<%= m.vendor.name %>" data-material-name="<%= m.name %>" data-description="<%= m.description %>" <%= 'selected' if material && m.id == material.id %>>
+                          <%= m.name %> (<%= m.vendor.name %>)
+                        </option>
+                      <% end %>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Vendor</label>
+                    <input type="text" class="vendor-display w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100" readonly value="<%= item.vendor&.name || '' %>" placeholder="Auto-populated">
+                    <input type="hidden" name="material_requisition_slip[items_attributes][<%= index %>][vendor_id]" class="vendor-id" value="<%= item.vendor_id %>">
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Quantity *</label>
+                    <input type="number" name="material_requisition_slip[items_attributes][<%= index %>][quantity]" min="1" class="w-full px-3 py-2 border border-gray-300 rounded-md" value="<%= item.quantity %>" required>
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Quoted Price (₱) *</label>
+                    <input type="number" name="material_requisition_slip[items_attributes][<%= index %>][quoted_price]" step="0.01" min="0" class="w-full px-3 py-2 border border-gray-300 rounded-md" value="<%= item.quoted_price %>" placeholder="0.00" required>
+                  </div>
+                </div>
+                <div class="mt-3">
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                  <textarea name="material_requisition_slip[items_attributes][<%= index %>][description]" rows="2" class="description-field w-full px-3 py-2 border border-gray-300 rounded-md"><%= item.description %></textarea>
+                  <input type="hidden" name="material_requisition_slip[items_attributes][<%= index %>][name]" class="name-field" value="<%= item.name %>">
+                  <input type="hidden" name="material_requisition_slip[items_attributes][<%= index %>][id]" value="<%= item.id %>">
+                </div>
+                <button type="button" onclick="removeItem(this)" class="mt-2 text-red-600 hover:text-red-800 text-sm font-medium">Remove</button>
+              </div>
+            <% end %>
+            <% if @requisition.items_exclusive.empty? %>
+              <div class="item-row bg-gray-50 p-4 rounded-lg mb-4 border border-gray-200">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Material *</label>
+                    <select name="material_requisition_slip[items_attributes][0][material_id]" class="material-select w-full px-3 py-2 border border-gray-300 rounded-md" onchange="updateVendorAndPrice(this)" required>
+                      <option value="">Select material</option>
+                      <% @materials.each do |material| %>
+                        <option value="<%= material.id %>" data-vendor-id="<%= material.vendor_id %>" data-vendor-name="<%= material.vendor.name %>" data-material-name="<%= material.name %>" data-description="<%= material.description %>">
+                          <%= material.name %> (<%= material.vendor.name %>)
+                        </option>
+                      <% end %>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Vendor</label>
+                    <input type="text" class="vendor-display w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100" readonly placeholder="Auto-populated">
+                    <input type="hidden" name="material_requisition_slip[items_attributes][0][vendor_id]" class="vendor-id">
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Quantity *</label>
+                    <input type="number" name="material_requisition_slip[items_attributes][0][quantity]" min="1" class="w-full px-3 py-2 border border-gray-300 rounded-md" required>
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Quoted Price (₱) *</label>
+                    <input type="number" name="material_requisition_slip[items_attributes][0][quoted_price]" step="0.01" min="0" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="0.00" required>
+                  </div>
+                </div>
+                <div class="mt-3">
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                  <textarea name="material_requisition_slip[items_attributes][0][description]" rows="2" class="description-field w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Item description (auto-filled from material)"></textarea>
+                  <input type="hidden" name="material_requisition_slip[items_attributes][0][name]" class="name-field">
+                </div>
+                <button type="button" onclick="removeItem(this)" class="mt-2 text-red-600 hover:text-red-800 text-sm font-medium">Remove</button>
+              </div>
+            <% end %>
+          </div>
+          <button type="button" onclick="addItem()" class="mt-2 text-red-600 hover:text-red-800 text-sm font-medium">
+            + Add Material
+          </button>
+        </div>
+
+        <div class="flex justify-end space-x-4 pt-6 border-t">
+          <%= link_to "Cancel", material_requisition_slip_path(@requisition), class: "px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50" %>
+          <%= form.submit "Update Requisition", class: "px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<script>
+let itemCounter = <%= [@requisition.items_exclusive.size, 1].max %>;
+const materials = <%= raw @materials.map { |m| { id: m.id, name: m.name, vendor_id: m.vendor_id, vendor_name: m.vendor.name, description: m.description || "" } }.to_json %>;
+
+function updateVendorAndPrice(selectElement) {
+  const row = selectElement.closest('.item-row');
+  const selectedOption = selectElement.options[selectElement.selectedIndex];
+  const vendorDisplay = row.querySelector('.vendor-display');
+  const vendorIdInput = row.querySelector('.vendor-id');
+  const descriptionField = row.querySelector('.description-field');
+  const nameField = row.querySelector('.name-field');
+  
+  if (selectedOption.value) {
+    const material = materials.find(m => m.id == parseInt(selectedOption.value));
+    if (material) {
+      vendorDisplay.value = material.vendor_name;
+      vendorIdInput.value = material.vendor_id;
+      if (!descriptionField.value) {
+        descriptionField.value = material.description;
+      }
+      if (!nameField.value) {
+        nameField.value = material.name;
+      }
+    }
+  } else {
+    if (!vendorDisplay.value) {
+      vendorDisplay.value = '';
+    }
+    if (!vendorIdInput.value) {
+      vendorIdInput.value = '';
+    }
+  }
+}
+
+function addItem() {
+  const container = document.getElementById('items-container');
+  const newRow = document.createElement('div');
+  newRow.className = 'item-row bg-gray-50 p-4 rounded-lg mb-4 border border-gray-200';
+  
+  let materialOptions = '<option value="">Select material</option>';
+  materials.forEach(material => {
+    materialOptions += `<option value="${material.id}" data-vendor-id="${material.vendor_id}" data-vendor-name="${material.vendor_name}" data-material-name="${material.name}" data-description="${material.description}">${material.name} (${material.vendor_name})</option>`;
+  });
+  
+  newRow.innerHTML = `
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Material *</label>
+        <select name="material_requisition_slip[items_attributes][${itemCounter}][material_id]" class="material-select w-full px-3 py-2 border border-gray-300 rounded-md" onchange="updateVendorAndPrice(this)" required>
+          ${materialOptions}
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Vendor</label>
+        <input type="text" class="vendor-display w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100" readonly placeholder="Auto-populated">
+        <input type="hidden" name="material_requisition_slip[items_attributes][${itemCounter}][vendor_id]" class="vendor-id">
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Quantity *</label>
+        <input type="number" name="material_requisition_slip[items_attributes][${itemCounter}][quantity]" min="1" class="w-full px-3 py-2 border border-gray-300 rounded-md" required>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Quoted Price (₱) *</label>
+        <input type="number" name="material_requisition_slip[items_attributes][${itemCounter}][quoted_price]" step="0.01" min="0" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="0.00" required>
+      </div>
+    </div>
+    <div class="mt-3">
+      <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+      <textarea name="material_requisition_slip[items_attributes][${itemCounter}][description]" rows="2" class="description-field w-full px-3 py-2 border border-gray-300 rounded-md"></textarea>
+      <input type="hidden" name="material_requisition_slip[items_attributes][${itemCounter}][name]" class="name-field">
+    </div>
+    <button type="button" onclick="removeItem(this)" class="mt-2 text-red-600 hover:text-red-800 text-sm font-medium">Remove</button>
+  `;
+  
+  container.appendChild(newRow);
+  itemCounter++;
+}
+
+function removeItem(button) {
+  const row = button.closest('.item-row');
+  const idInput = row.querySelector('input[name*="[id]"]');
+  if (idInput && idInput.value) {
+    // Mark for deletion
+    const destroyInput = document.createElement('input');
+    destroyInput.type = 'hidden';
+    destroyInput.name = idInput.name.replace('[id]', '[_destroy]');
+    destroyInput.value = '1';
+    row.appendChild(destroyInput);
+    row.style.display = 'none';
+  } else {
+    row.remove();
+  }
+}
+</script>

@@ -1,6 +1,14 @@
 class Vendor < ApplicationRecord
-  # Active Storage attachment
+  # Active Storage attachments
   has_one_attached :sample_sales_invoice
+  has_one_attached :tax_certificate
+  has_one_attached :sales_invoice
+  has_one_attached :vendor_quotation
+
+  # Associations
+  has_many :products, dependent: :nullify
+  has_many :materials, dependent: :nullify
+  has_many :items, dependent: :nullify
 
   # Validations
   validates :name, presence: true, length: { minimum: 2, maximum: 255 }

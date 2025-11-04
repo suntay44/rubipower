@@ -23,8 +23,8 @@ class PurchaseOrderController < ApplicationController
     @purchase_request = PurchaseRequest.find(params[:id])
 
     # Check if both approvals are present
-    unless @purchase_request.budget_approve? && @purchase_request.procurement_approve?
-      redirect_to purchase_request_detail_path(@purchase_request), alert: "Both budget and procurement approvals are required to create a purchase order."
+    unless @purchase_request.all_approvals_complete?
+      redirect_to purchase_request_detail_path(@purchase_request), alert: "Both Manager and Finance approvals are required to create a purchase order."
       return
     end
 
@@ -35,7 +35,7 @@ class PurchaseOrderController < ApplicationController
     end
 
     # Calculate total amount from items
-    total_amount = @purchase_request.items.sum { |item| item.quantity * item.cost }
+    total_amount = @purchase_request.items.sum { |item| item.quantity * item.quoted_price }
 
     # Create the purchase order
     @purchase_order = @purchase_request.build_purchase_order(

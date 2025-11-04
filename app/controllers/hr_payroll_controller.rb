@@ -1,5 +1,6 @@
 class HrPayrollController < ApplicationController
   before_action :authenticate_user!
+  before_action :require_admin!
 
   def index
     # Main HR & Payroll dashboard
@@ -155,6 +156,12 @@ class HrPayrollController < ApplicationController
   end
 
   private
+
+  def require_admin!
+    unless current_user&.admin?
+      redirect_to root_path, alert: "Access denied. Admin privileges required."
+    end
+  end
 
   def authorize_user_management!
     unless current_user&.admin?

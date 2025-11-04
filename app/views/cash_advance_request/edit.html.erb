@@ -89,18 +89,32 @@
                 <p class="text-sm text-gray-500 mb-2">e.g., travel, project purchase</p>
                 <%= form.text_area :purpose_of_advance, rows: 3, required: true, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500" %>
               </div>
+              <!-- Breakdown of Expenses - Item List -->
               <div>
-                <%= form.label :breakdown_of_expenses, "Breakdown of Expenses", class: "block text-sm font-medium text-gray-700 mb-2" %>
-                <%= form.text_area :breakdown_of_expenses, rows: 4, required: true, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500" %>
+                <div class="flex items-center justify-between mb-4">
+                  <%= form.label :breakdown_of_expenses, "Breakdown of Expenses", class: "block text-sm font-medium text-gray-700" %>
+                  <button type="button" onclick="addExpenseItem()" class="px-3 py-1 bg-red-600 text-white text-sm rounded-md hover:bg-red-700 transition-colors">
+                    + Add Item
+                  </button>
+                </div>
+                <div id="expense-items-container" class="space-y-3">
+                  <!-- Expense items will be added here dynamically -->
+                </div>
+                <div id="expense-items-total" class="mt-4 p-3 bg-gray-50 rounded-md border border-gray-200">
+                  <div class="flex justify-between items-center">
+                    <span class="text-sm font-semibold text-gray-700">Total Amount:</span>
+                    <span class="text-lg font-bold text-gray-900">₱<span id="total-amount-display">0.00</span></span>
+                  </div>
+                </div>
+                <!-- Hidden field to store JSON data -->
+                <%= form.hidden_field :breakdown_of_expenses, id: "breakdown_of_expenses_hidden" %>
+                <%= form.hidden_field :amount_requested, id: "amount_requested_hidden" %>
               </div>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <%= form.label :amount_requested, "Amount Requested (₱) *", class: "block text-sm font-medium text-gray-700 mb-2" %>
-                  <%= form.number_field :amount_requested, step: 0.01, required: true, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500" %>
-                </div>
-                <div>
                   <%= form.label :required_date, "Required Date", class: "block text-sm font-medium text-gray-700 mb-2" %>
-                  <%= form.date_field :required_date, required: true, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500" %>
+                  <%= form.date_field :required_date, required: true, min: (Date.current + 3.days).strftime("%Y-%m-%d"), class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500" %>
+                  <p class="text-xs text-gray-500 mt-1">Required date must be at least 3 days from today</p>
                 </div>
               </div>
               <div>
@@ -138,74 +152,6 @@
             </div>
           </div>
 
-          <!-- Signature Section -->
-          <div class="bg-white rounded-lg shadow-sm p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">Signature and Date</h3>
-            <p class="text-sm text-gray-600 mb-6 italic">Note: By adding the name it is considered as signature</p>
-            
-            <div class="space-y-6">
-              <!-- Prepare -->
-              <div>
-                <h4 class="text-sm font-medium text-gray-700 mb-4">Prepare</h4>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <%= form.label :prepare_name, "Name", class: "block text-sm font-medium text-gray-700 mb-2" %>
-                    <%= form.text_field :prepare_name, required: true, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500" %>
-                  </div>
-                  <div>
-                    <%= form.label :prepare_date, "Date", class: "block text-sm font-medium text-gray-700 mb-2" %>
-                    <%= form.date_field :prepare_date, required: true, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500" %>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Approval -->
-              <div>
-                <h4 class="text-sm font-medium text-gray-700 mb-4">Approval</h4>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <%= form.label :approval_name, "Name", class: "block text-sm font-medium text-gray-700 mb-2" %>
-                    <%= form.text_field :approval_name, required: true, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500" %>
-                  </div>
-                  <div>
-                    <%= form.label :approval_date, "Date", class: "block text-sm font-medium text-gray-700 mb-2" %>
-                    <%= form.date_field :approval_date, required: true, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500" %>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Release -->
-              <div>
-                <h4 class="text-sm font-medium text-gray-700 mb-4">Release</h4>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <%= form.label :release_name, "Name", class: "block text-sm font-medium text-gray-700 mb-2" %>
-                    <%= form.text_field :release_name, required: true, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500" %>
-                  </div>
-                  <div>
-                    <%= form.label :release_date, "Date", class: "block text-sm font-medium text-gray-700 mb-2" %>
-                    <%= form.date_field :release_date, required: true, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500" %>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Receive -->
-              <div>
-                <h4 class="text-sm font-medium text-gray-700 mb-4">Receive</h4>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <%= form.label :receive_name, "Name", class: "block text-sm font-medium text-gray-700 mb-2" %>
-                    <%= form.text_field :receive_name, required: true, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500" %>
-                  </div>
-                  <div>
-                    <%= form.label :receive_date, "Date", class: "block text-sm font-medium text-gray-700 mb-2" %>
-                    <%= form.date_field :receive_date, required: true, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500" %>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
           <!-- Form Actions -->
           <div class="flex justify-end space-x-4">
             <%= link_to "Cancel", cash_advance_request_path(@cash_advance_request), class: "px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" %>
@@ -218,6 +164,82 @@
 <script>
   // User data for JavaScript
   const users = <%= raw @users.map { |user| { name: user.full_name, id: user.employee_id, user_id: user.id } }.to_json %>;
+
+  // Expense items management
+  let expenseItemCounter = 0;
+  
+  // Load existing expense items from JSON
+  <% 
+    begin
+      existing_items = JSON.parse(@cash_advance_request.breakdown_of_expenses || '[]')
+    rescue JSON::ParserError
+      existing_items = []
+    end
+  %>
+  const existingExpenseItems = <%= raw existing_items.to_json %>;
+
+  function addExpenseItem(name = '', amount = '') {
+    expenseItemCounter++;
+    const container = document.getElementById('expense-items-container');
+    const itemRow = document.createElement('div');
+    itemRow.className = 'expense-item-row bg-gray-50 border border-gray-200 rounded-lg p-4';
+    itemRow.id = `expense-item-${expenseItemCounter}`;
+    
+    itemRow.innerHTML = `
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
+        <div class="md:col-span-5">
+          <label class="block text-sm font-medium text-gray-700 mb-2">Name *</label>
+          <input type="text" class="expense-item-name w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500" placeholder="Enter expense name" value="${name}" required onchange="updateExpenseData()">
+        </div>
+        <div class="md:col-span-5">
+          <label class="block text-sm font-medium text-gray-700 mb-2">Amount Requested (₱) *</label>
+          <input type="number" step="0.01" min="0" class="expense-item-amount w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500" placeholder="0.00" value="${amount}" required onchange="updateExpenseData()" oninput="updateExpenseData()">
+        </div>
+        <div class="md:col-span-2">
+          <button type="button" onclick="removeExpenseItem(${expenseItemCounter})" class="w-full px-3 py-2 bg-red-600 text-white text-sm rounded-md hover:bg-red-700 transition-colors">
+            Remove
+          </button>
+        </div>
+      </div>
+    `;
+    
+    container.appendChild(itemRow);
+    updateExpenseData();
+  }
+
+  function removeExpenseItem(itemId) {
+    const itemRow = document.getElementById(`expense-item-${itemId}`);
+    if (itemRow) {
+      itemRow.remove();
+      updateExpenseData();
+    }
+  }
+
+  function updateExpenseData() {
+    const items = [];
+    let totalAmount = 0;
+    
+    document.querySelectorAll('.expense-item-row').forEach(row => {
+      const nameInput = row.querySelector('.expense-item-name');
+      const amountInput = row.querySelector('.expense-item-amount');
+      
+      if (nameInput && amountInput && nameInput.value.trim() && amountInput.value) {
+        const name = nameInput.value.trim();
+        const amount = parseFloat(amountInput.value) || 0;
+        items.push({ name: name, amount: amount });
+        totalAmount += amount;
+      }
+    });
+    
+    // Update hidden fields
+    const breakdownField = document.getElementById('breakdown_of_expenses_hidden');
+    const amountField = document.getElementById('amount_requested_hidden');
+    const totalDisplay = document.getElementById('total-amount-display');
+    
+    breakdownField.value = JSON.stringify(items);
+    amountField.value = totalAmount.toFixed(2);
+    totalDisplay.textContent = totalAmount.toFixed(2);
+  }
 
   function updateEmployeeId() {
     const select = document.getElementById('employee_name_select');
@@ -243,6 +265,32 @@
     const select = document.getElementById('employee_name_select');
     if (select.value) {
       updateEmployeeId();
+    }
+    
+    // Load existing expense items
+    if (existingExpenseItems && existingExpenseItems.length > 0) {
+      existingExpenseItems.forEach(item => {
+        addExpenseItem(item.name || item['name'] || '', item.amount || item['amount'] || '');
+      });
+    } else {
+      // If no items exist, add one empty item
+      addExpenseItem();
+    }
+    
+    // Update expense data before form submission
+    const form = document.querySelector('form');
+    if (form) {
+      form.addEventListener('submit', function(e) {
+        updateExpenseData();
+        
+        // Validate that at least one item exists
+        const items = JSON.parse(document.getElementById('breakdown_of_expenses_hidden').value || '[]');
+        if (items.length === 0) {
+          e.preventDefault();
+          alert('Please add at least one expense item.');
+          return false;
+        }
+      });
     }
 
     // File preview functionality

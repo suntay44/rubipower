@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  material_requisition_slip: one
+  material: one
+  quantity: 1
+  purpose: MyText
+
+two:
+  material_requisition_slip: two
+  material: two
+  quantity: 1
+  purpose: MyText

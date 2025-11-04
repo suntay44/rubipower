@@ -1,0 +1,21 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  requester_user: one
+  department: MyString
+  request_date: 2025-11-03
+  purpose: MyText
+  priority_level: MyString
+  status: MyString
+  approved_by: 1
+  approved_at: 2025-11-03 04:10:29
+
+two:
+  requester_user: two
+  department: MyString
+  request_date: 2025-11-03
+  purpose: MyText
+  priority_level: MyString
+  status: MyString
+  approved_by: 1
+  approved_at: 2025-11-03 04:10:29

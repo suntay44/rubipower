@@ -1,10 +1,11 @@
 class PurchaseRequest < ApplicationRecord
   belongs_to :requester_user, class_name: "User"
+  belongs_to :manager_approver, class_name: "User", foreign_key: "manager_approved_by", optional: true
+  belongs_to :finance_approver, class_name: "User", foreign_key: "finance_approved_by", optional: true
+  
   has_many :items, dependent: :destroy
   has_one :purchase_order, dependent: :destroy
-  has_one_attached :tax_certificate
-  has_one_attached :sales_invoice
-  has_one_attached :vendor_quotation
+  belongs_to :material_requisition_slip, optional: true
 
   accepts_nested_attributes_for :items, allow_destroy: true
 
@@ -19,11 +20,15 @@ class PurchaseRequest < ApplicationRecord
     urgent: "urgent"
   }
 
-  def budget_approve?
-    budget_approve
+  def all_approvals_complete?
+    manager_approved? && finance_approved?
   end
-
-  def procurement_approve?
-    procurement_approve
+  
+  def manager_approved?
+    manager_approved == true
+  end
+  
+  def finance_approved?
+    finance_approved == true
   end
 end

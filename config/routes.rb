@@ -14,6 +14,22 @@ Rails.application.routes.draw do
   # Dashboard route (protected by authentication)
   get "/dashboard", to: "dashboard#index", as: :dashboard
 
+  # Material Requisition Slip routes
+  resources :material_requisition_slips do
+    member do
+      patch :approve_supervisor
+      patch :reject_supervisor
+      patch :approve_procurement
+      patch :reject_procurement
+      patch :approve_engineering
+      patch :reject_engineering
+      patch :approve_admin
+      patch :reject_admin
+      post :create_purchase_request
+      delete :purge_proposal
+    end
+  end
+
   # Purchase Request Workflow
   get "/purchase-request", to: "purchase_request#index", as: :purchase_request
   get "/purchase-request/new", to: "purchase_request#new_purchase_request", as: :new_purchase_request
@@ -23,11 +39,8 @@ Rails.application.routes.draw do
   get "/purchase-request/:id", to: "purchase_request#show", as: :purchase_request_detail
   get "/purchase-request/:id/edit", to: "purchase_request#edit", as: :edit_purchase_request
   patch "/purchase-request/:id", to: "purchase_request#update", as: :update_purchase_request
-  patch "/purchase-request/:id/approve-budget", to: "purchase_request#approve_budget", as: :approve_budget
-  patch "/purchase-request/:id/approve-procurement", to: "purchase_request#approve_procurement", as: :approve_procurement
-  delete "/purchase-request/:id/delete-tax_certificate", to: "purchase_request#delete_tax_certificate", as: :delete_tax_certificate
-  delete "/purchase-request/:id/delete-sales_invoice", to: "purchase_request#delete_sales_invoice", as: :delete_sales_invoice
-  delete "/purchase-request/:id/delete-vendor_quotation", to: "purchase_request#delete_vendor_quotation", as: :delete_vendor_quotation
+  patch "/purchase-request/:id/approve-manager", to: "purchase_request#approve_manager", as: :approve_manager_purchase_request
+  patch "/purchase-request/:id/approve-finance", to: "purchase_request#approve_finance", as: :approve_finance_purchase_request
   post "/purchase-request/:id/create-purchase-order", to: "purchase_order#create", as: :create_purchase_order
   get "/purchase-request/:id/purchase-order", to: "purchase_order#show_by_request", as: :purchase_request_purchase_order
 
@@ -132,6 +145,15 @@ Rails.application.routes.draw do
   patch "/inventory-and-sales/vendors/:id", to: "vendors#update", as: :update_inventory_sales_vendor
   delete "/inventory-and-sales/vendors/:id", to: "vendors#destroy", as: :destroy_inventory_sales_vendor
   delete "/inventory-and-sales/vendors/:id/delete_sample_sales_invoice", to: "vendors#delete_sample_sales_invoice", as: :delete_vendor_sample_sales_invoice
+  
+  # Material routes
+  get "/inventory-and-sales/materials", to: "materials#index", as: :inventory_sales_materials
+  get "/inventory-and-sales/materials/new", to: "materials#new", as: :new_inventory_sales_material
+  post "/inventory-and-sales/materials", to: "materials#create", as: :create_inventory_sales_material
+  get "/inventory-and-sales/materials/:id", to: "materials#show", as: :inventory_sales_material
+  get "/inventory-and-sales/materials/:id/edit", to: "materials#edit", as: :edit_inventory_sales_material
+  patch "/inventory-and-sales/materials/:id", to: "materials#update", as: :update_inventory_sales_material
+  delete "/inventory-and-sales/materials/:id", to: "materials#destroy", as: :destroy_inventory_sales_material
 
   # Test pages (all protected by authentication)
   get "/home", to: "pages#home"

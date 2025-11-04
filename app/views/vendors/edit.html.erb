@@ -73,34 +73,99 @@
             <%= form.text_area :bank_details, rows: 3, class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500", placeholder: "Enter bank details" %>
           </div>
 
-          <!-- Sample Sales Invoice -->
-          <div>
-            <%= form.label :sample_sales_invoice, "Sample Sales Invoice", class: "block text-sm font-medium text-gray-700" %>
-            <% if @vendor.sample_sales_invoice.attached? %>
-              <div class="mt-2 mb-3 p-3 bg-gray-50 border border-gray-200 rounded-md">
-                <div class="flex items-center justify-between">
-                  <div class="flex items-center">
-                    <svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                    </svg>
-                    <span class="text-sm text-gray-700"><%= @vendor.sample_sales_invoice.filename %></span>
+          <!-- Attachments Section -->
+          <div class="border-t border-gray-200 pt-4">
+            <h4 class="text-md font-semibold text-gray-900 mb-4">Vendor Documents</h4>
+            
+            <!-- Tax Certificate (2303) -->
+            <div class="mb-4">
+              <%= form.label :tax_certificate, "Tax Certificate (2303)", class: "block text-sm font-medium text-gray-700 mb-1" %>
+              <% if @vendor.tax_certificate.attached? %>
+                <div class="mt-2 mb-3 p-3 bg-gray-50 border border-gray-200 rounded-md">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                      <svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                      </svg>
+                      <span class="text-sm text-gray-700"><%= @vendor.tax_certificate.filename %></span>
+                    </div>
+                    <%= link_to rails_blob_path(@vendor.tax_certificate), target: "_blank", class: "text-blue-600 hover:text-blue-800 text-sm mr-2" do %>
+                      View
+                    <% end %>
                   </div>
-                  <%= link_to delete_vendor_sample_sales_invoice_path(@vendor), method: :delete, data: { confirm: "Are you sure you want to delete this file?" }, class: "text-red-600 hover:text-red-800 text-sm" do %>
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                    </svg>
-                  <% end %>
                 </div>
-              </div>
-            <% end %>
-            <%= form.file_field :sample_sales_invoice, class: "mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100" %>
-            <p class="mt-1 text-sm text-gray-500">
-              <% if @vendor.sample_sales_invoice.attached? %>
-                Upload a new file to replace the existing one
-              <% else %>
-                Upload a sample sales invoice (PDF, Image, etc.)
               <% end %>
-            </p>
+              <%= form.file_field :tax_certificate, accept: ".pdf,.jpg,.jpeg,.png", class: "mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100" %>
+              <p class="mt-1 text-xs text-gray-500">Upload vendor's 2303 tax certificate</p>
+            </div>
+
+            <!-- Sales Invoice -->
+            <div class="mb-4">
+              <%= form.label :sales_invoice, "Sample Sales Invoice", class: "block text-sm font-medium text-gray-700 mb-1" %>
+              <% if @vendor.sales_invoice.attached? %>
+                <div class="mt-2 mb-3 p-3 bg-gray-50 border border-gray-200 rounded-md">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                      <svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                      </svg>
+                      <span class="text-sm text-gray-700"><%= @vendor.sales_invoice.filename %></span>
+                    </div>
+                    <%= link_to rails_blob_path(@vendor.sales_invoice), target: "_blank", class: "text-blue-600 hover:text-blue-800 text-sm mr-2" do %>
+                      View
+                    <% end %>
+                  </div>
+                </div>
+              <% end %>
+              <%= form.file_field :sales_invoice, accept: ".pdf,.jpg,.jpeg,.png", class: "mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100" %>
+              <p class="mt-1 text-xs text-gray-500">Upload a sample sales invoice from vendor</p>
+            </div>
+
+            <!-- Vendor Quotation -->
+            <div class="mb-4">
+              <%= form.label :vendor_quotation, "Vendor Quotation", class: "block text-sm font-medium text-gray-700 mb-1" %>
+              <% if @vendor.vendor_quotation.attached? %>
+                <div class="mt-2 mb-3 p-3 bg-gray-50 border border-gray-200 rounded-md">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                      <svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                      </svg>
+                      <span class="text-sm text-gray-700"><%= @vendor.vendor_quotation.filename %></span>
+                    </div>
+                    <%= link_to rails_blob_path(@vendor.vendor_quotation), target: "_blank", class: "text-blue-600 hover:text-blue-800 text-sm mr-2" do %>
+                      View
+                    <% end %>
+                  </div>
+                </div>
+              <% end %>
+              <%= form.file_field :vendor_quotation, accept: ".pdf,.jpg,.jpeg,.png", class: "mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100" %>
+              <p class="mt-1 text-xs text-gray-500">Upload vendor quotation document</p>
+            </div>
+
+            <!-- Sample Sales Invoice (legacy) -->
+            <div class="mb-4">
+              <%= form.label :sample_sales_invoice, "Additional Sample Sales Invoice", class: "block text-sm font-medium text-gray-700 mb-1" %>
+              <% if @vendor.sample_sales_invoice.attached? %>
+                <div class="mt-2 mb-3 p-3 bg-gray-50 border border-gray-200 rounded-md">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                      <svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                      </svg>
+                      <span class="text-sm text-gray-700"><%= @vendor.sample_sales_invoice.filename %></span>
+                    </div>
+                    <%= link_to delete_vendor_sample_sales_invoice_path(@vendor), method: :delete, data: { confirm: "Are you sure you want to delete this file?" }, class: "text-red-600 hover:text-red-800 text-sm" do %>
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                      </svg>
+                    <% end %>
+                  </div>
+                </div>
+              <% end %>
+              <%= form.file_field :sample_sales_invoice, class: "mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100" %>
+              <p class="mt-1 text-xs text-gray-500">Upload additional sample sales invoice (optional)</p>
+            </div>
           </div>
 
           <!-- Status -->

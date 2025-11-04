@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_03_065253) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_04_093531) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -80,14 +80,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_03_065253) do
     t.bigint "requester_user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "prepare_name"
-    t.date "prepare_date"
-    t.string "approval_name"
-    t.date "approval_date"
-    t.string "release_name"
-    t.date "release_date"
-    t.string "receive_name"
-    t.date "receive_date"
     t.index ["finance_department_status"], name: "index_cash_advance_requests_on_finance_department_status"
     t.index ["manager_status"], name: "index_cash_advance_requests_on_manager_status"
     t.index ["requester_user_id"], name: "index_cash_advance_requests_on_requester_user_id"
@@ -200,13 +192,18 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_03_065253) do
   end
 
   create_table "items", force: :cascade do |t|
-    t.bigint "purchase_request_id", null: false
+    t.bigint "purchase_request_id"
     t.text "description"
     t.integer "quantity"
-    t.decimal "cost", precision: 10, scale: 2
+    t.decimal "quoted_price", precision: 10, scale: 2
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "name"
+    t.bigint "material_requisition_slip_id"
+    t.bigint "vendor_id"
+    t.index ["material_requisition_slip_id"], name: "index_items_on_material_requisition_slip_id"
     t.index ["purchase_request_id"], name: "index_items_on_purchase_request_id"
+    t.index ["vendor_id"], name: "index_items_on_vendor_id"
   end
 
   create_table "leave_requests", force: :cascade do |t|
@@ -220,6 +217,63 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_03_065253) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_leave_requests_on_user_id"
+  end
+
+  create_table "material_requisition_items", force: :cascade do |t|
+    t.bigint "material_requisition_slip_id", null: false
+    t.bigint "material_id", null: false
+    t.integer "quantity"
+    t.text "purpose"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["material_id"], name: "index_material_requisition_items_on_material_id"
+    t.index ["material_requisition_slip_id"], name: "idx_on_material_requisition_slip_id_1412970d03"
+  end
+
+  create_table "material_requisition_slips", force: :cascade do |t|
+    t.bigint "requester_user_id", null: false
+    t.string "department"
+    t.date "request_date", null: false
+    t.text "purpose"
+    t.string "priority_level", default: "medium"
+    t.string "status", default: "pending"
+    t.integer "approved_by"
+    t.datetime "approved_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "supervisor_approved", default: false
+    t.integer "supervisor_approved_by"
+    t.datetime "supervisor_approved_at"
+    t.boolean "procurement_approved", default: false
+    t.integer "procurement_approved_by"
+    t.datetime "procurement_approved_at"
+    t.boolean "engineering_approved", default: false
+    t.integer "engineering_approved_by"
+    t.datetime "engineering_approved_at"
+    t.boolean "manager_approved", default: false
+    t.integer "manager_approved_by"
+    t.datetime "manager_approved_at"
+    t.boolean "admin_approved", default: false
+    t.integer "admin_approved_by"
+    t.datetime "admin_approved_at"
+    t.integer "lead_time"
+    t.index ["request_date"], name: "index_material_requisition_slips_on_request_date"
+    t.index ["requester_user_id"], name: "index_material_requisition_slips_on_requester_user_id"
+    t.index ["status"], name: "index_material_requisition_slips_on_status"
+  end
+
+  create_table "materials", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "description"
+    t.string "unit"
+    t.decimal "unit_price", precision: 10, scale: 2
+    t.string "status", default: "active"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "vendor_id", null: false
+    t.index ["name"], name: "index_materials_on_name"
+    t.index ["status"], name: "index_materials_on_status"
+    t.index ["vendor_id"], name: "index_materials_on_vendor_id"
   end
 
   create_table "order_items", force: :cascade do |t|
@@ -271,16 +325,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_03_065253) do
     t.string "name", null: false
     t.string "sku", null: false
     t.text "description"
-    t.string "category"
     t.decimal "price", precision: 10, scale: 2, null: false
     t.integer "stock_quantity", default: 0
     t.integer "reorder_level", default: 10
     t.string "status", default: "active"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["category"], name: "index_products_on_category"
+    t.bigint "vendor_id", null: false
     t.index ["sku"], name: "index_products_on_sku", unique: true
     t.index ["status"], name: "index_products_on_status"
+    t.index ["vendor_id"], name: "index_products_on_vendor_id"
   end
 
   create_table "purchase_order_status_logs", force: :cascade do |t|
@@ -322,6 +376,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_03_065253) do
     t.string "vendor_name"
     t.text "vendor_address"
     t.text "bank_details"
+    t.boolean "manager_approved"
+    t.integer "manager_approved_by"
+    t.datetime "manager_approved_at"
+    t.boolean "finance_approved"
+    t.integer "finance_approved_by"
+    t.datetime "finance_approved_at"
+    t.bigint "material_requisition_slip_id"
+    t.index ["material_requisition_slip_id"], name: "index_purchase_requests_on_material_requisition_slip_id"
     t.index ["requester_user_id"], name: "index_purchase_requests_on_requester_user_id"
   end
 
@@ -423,15 +485,23 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_03_065253) do
   add_foreign_key "expense_reports", "users", column: "submitted_by_id"
   add_foreign_key "expense_revenues", "users", column: "requester_user_id"
   add_foreign_key "expense_revenues", "users", column: "verified_by_id"
+  add_foreign_key "items", "material_requisition_slips"
   add_foreign_key "items", "purchase_requests"
+  add_foreign_key "items", "vendors"
   add_foreign_key "leave_requests", "users"
+  add_foreign_key "material_requisition_items", "material_requisition_slips"
+  add_foreign_key "material_requisition_items", "materials"
+  add_foreign_key "material_requisition_slips", "users", column: "requester_user_id"
+  add_foreign_key "materials", "vendors"
   add_foreign_key "order_items", "orders"
   add_foreign_key "order_items", "products"
   add_foreign_key "orders", "customers"
   add_foreign_key "payslips", "users"
+  add_foreign_key "products", "vendors"
   add_foreign_key "purchase_order_status_logs", "purchase_orders"
   add_foreign_key "purchase_order_status_logs", "users", column: "updated_by_id"
   add_foreign_key "purchase_orders", "purchase_requests"
+  add_foreign_key "purchase_requests", "material_requisition_slips"
   add_foreign_key "purchase_requests", "users", column: "requester_user_id"
   add_foreign_key "roles", "users", on_delete: :cascade
   add_foreign_key "sale_items", "products"

@@ -1,0 +1,119 @@
+<% content_for :title, "Material Requisition Slips" %>
+
+<div class="min-h-screen bg-gray-50 p-6">
+  <div class="max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-6">
+      <div>
+        <h1 class="text-3xl font-bold text-gray-900">Material Requisition Slips</h1>
+        <p class="mt-2 text-gray-600">Request materials for your department</p>
+      </div>
+      <%= link_to new_material_requisition_slip_path, class: "bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors" do %>
+        <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+        </svg>
+        New Requisition
+      <% end %>
+    </div>
+
+    <!-- Filters -->
+    <%= form_with url: material_requisition_slips_path, method: :get, local: true, class: "bg-white p-4 rounded-lg shadow mb-6" do |f| %>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <%= f.label :status, "Approval Status", class: "block text-sm font-medium text-gray-700 mb-1" %>
+          <%= f.select :status, options_for_select([['All', ''], ['Pending Supervisor', 'pending_supervisor'], ['Pending Procurement', 'pending_procurement'], ['Pending Engineering Manager', 'pending_engineering'], ['Pending Admin', 'pending_admin'], ['All Approved', 'all_approved']], params[:status]), {}, class: "w-full px-3 py-2 border border-gray-300 rounded-md" %>
+        </div>
+        <div>
+          <%= f.label :department, "Department", class: "block text-sm font-medium text-gray-700 mb-1" %>
+          <%= f.select :department, options_for_select([['All', '']] + User.departments.keys.map { |d| [d.titleize, d.titleize] }, params[:department]), {}, class: "w-full px-3 py-2 border border-gray-300 rounded-md" %>
+        </div>
+        <div class="flex items-end">
+          <%= f.submit "Filter", class: "bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 w-full" %>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Table -->
+    <div class="bg-white shadow rounded-lg overflow-hidden">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">MRS #</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Requester</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Department</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Items</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Priority</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <% if @requisitions.any? %>
+            <% @requisitions.each do |requisition| %>
+              <tr class="hover:bg-gray-50">
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                  MRS-<%= requisition.id.to_s.rjust(4, '0') %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <%= requisition.request_date.strftime("%b %d, %Y") %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <%= requisition.requester_user.email %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <%= requisition.department %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <%= requisition.items_exclusive.count %> item(s)
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="px-2 py-1 text-xs font-semibold rounded-full <%= 
+                    case requisition.priority_level
+                    when 'urgent' then 'bg-red-100 text-red-800'
+                    when 'high' then 'bg-orange-100 text-orange-800'
+                    when 'medium' then 'bg-yellow-100 text-yellow-800'
+                    else 'bg-green-100 text-green-800'
+                    end %>">
+                    <%= requisition.priority_level.titleize %>
+                  </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <% if requisition.all_approvals_complete? %>
+                    <span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                      All Approved
+                    </span>
+                  <% else %>
+                    <span class="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                      Pending <%= requisition.current_approval_step.to_s.titleize %>
+                    </span>
+                  <% end %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                  <%= link_to "View", material_requisition_slip_path(requisition), class: "text-blue-600 hover:text-blue-900" %>
+                  <% if !requisition.supervisor_approved? && requisition.can_be_edited_by?(current_user) %>
+                    <%= link_to "Edit", edit_material_requisition_slip_path(requisition), class: "text-yellow-600 hover:text-yellow-900" %>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          <% else %>
+            <tr>
+              <td colspan="8" class="px-6 py-4 text-center text-gray-500">
+                No material requisition slips found. <%= link_to "Create one", new_material_requisition_slip_path, class: "text-red-600 hover:text-red-800" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <% if @requisitions.respond_to?(:total_pages) && @requisitions.total_pages > 1 %>
+      <div class="mt-6">
+        <%= paginate @requisitions %>
+      </div>
+    <% end %>
+  </div>
+</div>
+

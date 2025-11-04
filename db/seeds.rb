@@ -156,6 +156,55 @@ Vendor.create!(
   status: "active"
 )
 
+# Assign vendors to existing products
+if Product.exists?
+  vendors = Vendor.all
+  Product.where(vendor_id: nil).find_each do |product|
+    product.update!(vendor: vendors.sample)
+  end
+  puts "Updated existing products with vendors"
+end
+
+# Assign vendors to existing materials
+if Material.exists?
+  vendors = Vendor.all
+  Material.where(vendor_id: nil).find_each do |material|
+    material.update!(vendor: vendors.sample)
+  end
+  puts "Updated existing materials with vendors"
+end
+
+puts "Creating sample materials..."
+# Get random vendors for materials
+material_vendors = Vendor.all.to_a
+
+Material.create!(
+  name: "Steel Bars",
+  description: "High-grade steel reinforcement bars for construction",
+  unit: "kg",
+  unit_price: 45.50,
+  status: "active",
+  vendor: material_vendors.sample
+)
+
+Material.create!(
+  name: "Cement",
+  description: "Portland cement for general construction purposes",
+  unit: "bag",
+  unit_price: 250.00,
+  status: "active",
+  vendor: material_vendors.sample
+)
+
+Material.create!(
+  name: "Electrical Wire",
+  description: "Copper electrical wire - 2.0mm diameter",
+  unit: "meter",
+  unit_price: 12.75,
+  status: "active",
+  vendor: material_vendors.sample
+)
+
 puts "Seed data created successfully!"
 puts "\nUsers created:"
 puts "- Admin: admin@example.com (password: password123)"
@@ -167,3 +216,4 @@ puts "- Teammate: teammate@example.com (password: password123)"
 puts "\n- System settings configured"
 puts "- Sample reports created"
 puts "- Sample vendors created"
+puts "- Sample materials created"

@@ -1,0 +1,297 @@
+<% content_for :title, "Material Requisition Slip ##{@requisition.id}" %>
+
+<div class="min-h-screen bg-gray-50 p-6">
+  <div class="max-w-6xl mx-auto">
+    <div class="flex justify-between items-center mb-6">
+      <div>
+        <h1 class="text-3xl font-bold text-gray-900">MRS-<%= @requisition.id.to_s.rjust(4, '0') %></h1>
+        <p class="text-gray-600">Material Requisition Slip</p>
+      </div>
+      <div class="flex space-x-2">
+        <%= link_to "Back", material_requisition_slips_path, class: "bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700" %>
+        <% if @requisition.can_be_edited_by?(current_user) %>
+          <%= link_to "Edit", edit_material_requisition_slip_path(@requisition), class: "bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700" %>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Approval Status Section -->
+    <div class="bg-white shadow rounded-lg p-6 mb-6">
+      <h2 class="text-xl font-semibold mb-4">Approval Status</h2>
+      <div class="space-y-3">
+        <!-- Supervisor Approval -->
+        <div class="flex items-center justify-between p-3 <%= @requisition.supervisor_approved? ? 'bg-green-50' : @requisition.current_approval_step == :supervisor ? 'bg-yellow-50' : 'bg-gray-50' %> rounded-lg">
+          <div class="flex items-center space-x-3">
+            <span class="font-medium">1. Supervisor Approval</span>
+            <% if @requisition.supervisor_approved? %>
+              <span class="text-green-600 text-sm">✓ Approved by <%= @requisition.supervisor_approver&.email %> on <%= @requisition.supervisor_approved_at&.strftime("%b %d, %Y") %></span>
+            <% elsif @requisition.current_approval_step == :supervisor %>
+              <span class="text-yellow-600 text-sm">⏳ Pending</span>
+            <% else %>
+              <span class="text-gray-500 text-sm">Waiting...</span>
+            <% end %>
+          </div>
+          <% if @requisition.current_approval_step == :supervisor && @requisition.can_be_approved_by?(current_user) %>
+            <div class="flex space-x-2">
+              <%= button_to "Approve", approve_supervisor_material_requisition_slip_path(@requisition), method: :patch, class: "bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700" %>
+              <%= button_to "Reject", reject_supervisor_material_requisition_slip_path(@requisition), method: :patch, class: "bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700", data: { confirm: "Are you sure?" } %>
+            </div>
+          <% end %>
+        </div>
+
+        <!-- Procurement Approval -->
+        <div class="flex items-center justify-between p-3 <%= @requisition.procurement_approved? ? 'bg-green-50' : @requisition.current_approval_step == :procurement ? 'bg-yellow-50' : 'bg-gray-50' %> rounded-lg">
+          <div class="flex items-center space-x-3">
+            <span class="font-medium">2. Procurement Approval</span>
+            <% if @requisition.procurement_approved? %>
+              <span class="text-green-600 text-sm">✓ Approved by <%= @requisition.procurement_approver&.email %> on <%= @requisition.procurement_approved_at&.strftime("%b %d, %Y") %></span>
+            <% elsif @requisition.current_approval_step == :procurement %>
+              <span class="text-yellow-600 text-sm">⏳ Pending</span>
+            <% else %>
+              <span class="text-gray-500 text-sm">Waiting...</span>
+            <% end %>
+          </div>
+          <% if @requisition.current_approval_step == :procurement && @requisition.can_be_approved_by?(current_user) %>
+            <div class="flex space-x-2">
+              <%= button_to "Approve", approve_procurement_material_requisition_slip_path(@requisition), method: :patch, class: "bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700" %>
+              <%= button_to "Reject", reject_procurement_material_requisition_slip_path(@requisition), method: :patch, class: "bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700", data: { confirm: "Are you sure?" } %>
+            </div>
+          <% end %>
+        </div>
+
+        <!-- Engineering Manager Approval -->
+        <div class="flex items-center justify-between p-3 <%= @requisition.engineering_approved? ? 'bg-green-50' : @requisition.current_approval_step == :engineering ? 'bg-yellow-50' : 'bg-gray-50' %> rounded-lg">
+          <div class="flex items-center space-x-3">
+            <span class="font-medium">3. Engineering Manager Approval</span>
+            <% if @requisition.engineering_approved? %>
+              <span class="text-green-600 text-sm">✓ Approved by <%= @requisition.engineering_approver&.email %> on <%= @requisition.engineering_approved_at&.strftime("%b %d, %Y") %></span>
+            <% elsif @requisition.current_approval_step == :engineering %>
+              <span class="text-yellow-600 text-sm">⏳ Pending</span>
+            <% else %>
+              <span class="text-gray-500 text-sm">Waiting...</span>
+            <% end %>
+          </div>
+          <% if @requisition.current_approval_step == :engineering && @requisition.can_be_approved_by?(current_user) %>
+            <div class="flex space-x-2">
+              <%= button_to "Approve", approve_engineering_material_requisition_slip_path(@requisition), method: :patch, class: "bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700" %>
+              <%= button_to "Reject", reject_engineering_material_requisition_slip_path(@requisition), method: :patch, class: "bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700", data: { confirm: "Are you sure?" } %>
+            </div>
+          <% end %>
+        </div>
+
+        <!-- Admin Approval -->
+        <div class="flex items-center justify-between p-3 <%= @requisition.admin_approved? ? 'bg-green-50' : @requisition.current_approval_step == :admin ? 'bg-yellow-50' : 'bg-gray-50' %> rounded-lg">
+          <div class="flex items-center space-x-3">
+            <span class="font-medium">4. Admin Approval</span>
+            <% if @requisition.admin_approved? %>
+              <span class="text-green-600 text-sm">✓ Approved by <%= @requisition.admin_approver&.email %> on <%= @requisition.admin_approved_at&.strftime("%b %d, %Y") %></span>
+            <% elsif @requisition.current_approval_step == :admin %>
+              <span class="text-yellow-600 text-sm">⏳ Pending</span>
+            <% else %>
+              <span class="text-gray-500 text-sm">Waiting...</span>
+            <% end %>
+          </div>
+          <% if @requisition.current_approval_step == :admin && @requisition.can_be_approved_by?(current_user) %>
+            <div class="flex space-x-2">
+              <%= button_to "Approve", approve_admin_material_requisition_slip_path(@requisition), method: :patch, class: "bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700" %>
+              <%= button_to "Reject", reject_admin_material_requisition_slip_path(@requisition), method: :patch, class: "bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700", data: { confirm: "Are you sure?" } %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Requisition Details -->
+    <div class="bg-white shadow rounded-lg p-6 mb-6">
+      <h2 class="text-xl font-semibold mb-4">Requisition Details</h2>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div>
+          <label class="block text-sm font-medium text-gray-500">Request Date</label>
+          <p class="mt-1 text-sm text-gray-900"><%= @requisition.request_date.strftime("%B %d, %Y") %></p>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-500">Priority</label>
+          <p class="mt-1">
+            <span class="px-2 py-1 text-sm font-semibold rounded-full <%= 
+              case @requisition.priority_level
+              when 'urgent' then 'bg-red-100 text-red-800'
+              when 'high' then 'bg-orange-100 text-orange-800'
+              when 'medium' then 'bg-yellow-100 text-yellow-800'
+              else 'bg-green-100 text-green-800'
+              end %>">
+              <%= @requisition.priority_level.titleize %>
+            </span>
+          </p>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-500">Requester</label>
+          <p class="mt-1 text-sm text-gray-900"><%= @requisition.requester_user.email %></p>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-500">Department</label>
+          <p class="mt-1 text-sm text-gray-900"><%= @requisition.department %></p>
+        </div>
+        <% if @requisition.lead_time.present? %>
+          <div>
+            <label class="block text-sm font-medium text-gray-500">Lead Time</label>
+            <p class="mt-1 text-sm text-gray-900"><%= @requisition.lead_time %> days</p>
+          </div>
+        <% end %>
+      </div>
+      <div class="mt-4">
+        <label class="block text-sm font-medium text-gray-500">Purpose</label>
+        <p class="mt-1 text-sm text-gray-900"><%= @requisition.purpose %></p>
+      </div>
+      
+      <!-- Proposals -->
+      <% if @requisition.proposals.attached? %>
+        <div class="mt-4">
+          <label class="block text-sm font-medium text-gray-500 mb-2">Proposals</label>
+          <ul class="list-disc list-inside text-sm text-gray-900">
+            <% @requisition.proposals.each do |proposal| %>
+              <li class="mb-1">
+                <%= link_to proposal.filename, rails_blob_path(proposal, disposition: "attachment"), class: "text-blue-600 hover:underline", target: "_blank" %>
+                <span class="text-gray-500 text-xs">(<%= number_to_human_size(proposal.byte_size) %>)</span>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Materials Requested (from Items table) -->
+    <div class="bg-white shadow rounded-lg p-6 mb-6">
+<h2 class="text-xl font-semibold mb-4">Materials Requested (<%= @requisition.items_exclusive.count %>)</h2>
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Description</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Vendor</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Quantity</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Quoted Price</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Total</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <% @requisition.items_exclusive.each do |item| %>
+              <tr>
+                <td class="px-6 py-4 text-sm font-medium text-gray-900"><%= item.name %></td>
+                <td class="px-6 py-4 text-sm text-gray-900"><%= truncate(item.description, length: 50) %></td>
+                <td class="px-6 py-4 text-sm text-gray-900"><%= item.vendor&.name || "N/A" %></td>
+                <td class="px-6 py-4 text-sm text-gray-900"><%= item.quantity %></td>
+                <td class="px-6 py-4 text-sm text-gray-900">₱<%= number_with_precision(item.quoted_price, precision: 2) %></td>
+                <td class="px-6 py-4 text-sm font-medium text-gray-900">₱<%= number_with_precision(item.quantity * item.quoted_price, precision: 2) %></td>
+              </tr>
+            <% end %>
+          </tbody>
+          <tfoot class="bg-gray-50">
+            <tr>
+              <td colspan="5" class="px-6 py-4 text-right font-semibold">Total:</td>
+              <td class="px-6 py-4 text-sm font-bold">₱<%= number_with_precision(@requisition.items_exclusive.sum { |item| item.quantity * item.quoted_price }, precision: 2) %></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+
+    <!-- Vendor Proposals Section (for Procurement role) -->
+    <% if @requisition.supervisor_approved? && current_user.procurement? %>
+      <div class="bg-white shadow rounded-lg p-6 mb-6">
+        <h2 class="text-xl font-semibold mb-4">Vendor Proposals</h2>
+        <p class="text-sm text-gray-600 mb-4">Attach 3 vendor proposals for evaluation</p>
+        
+        <%= form_with model: @requisition, url: material_requisition_slip_path(@requisition), method: :patch, local: true, multipart: true, class: "space-y-4" do |form| %>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Vendor Proposal 1</label>
+              <%= form.file_field :vendor_proposal_1, multiple: true, accept: ".pdf,.jpg,.jpeg,.png", class: "w-full px-3 py-2 border border-gray-300 rounded-md" %>
+              <% if @requisition.vendor_proposal_1.attached? %>
+                <div class="mt-2 space-y-1">
+                  <% @requisition.vendor_proposal_1.each do |attachment| %>
+                    <div class="flex items-center justify-between text-sm">
+                      <%= link_to attachment.filename, rails_blob_path(attachment), target: "_blank", class: "text-blue-600 hover:underline" %>
+                    </div>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Vendor Proposal 2</label>
+              <%= form.file_field :vendor_proposal_2, multiple: true, accept: ".pdf,.jpg,.jpeg,.png", class: "w-full px-3 py-2 border border-gray-300 rounded-md" %>
+              <% if @requisition.vendor_proposal_2.attached? %>
+                <div class="mt-2 space-y-1">
+                  <% @requisition.vendor_proposal_2.each do |attachment| %>
+                    <div class="flex items-center justify-between text-sm">
+                      <%= link_to attachment.filename, rails_blob_path(attachment), target: "_blank", class: "text-blue-600 hover:underline" %>
+                    </div>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Vendor Proposal 3</label>
+              <%= form.file_field :vendor_proposal_3, multiple: true, accept: ".pdf,.jpg,.jpeg,.png", class: "w-full px-3 py-2 border border-gray-300 rounded-md" %>
+              <% if @requisition.vendor_proposal_3.attached? %>
+                <div class="mt-2 space-y-1">
+                  <% @requisition.vendor_proposal_3.each do |attachment| %>
+                    <div class="flex items-center justify-between text-sm">
+                      <%= link_to attachment.filename, rails_blob_path(attachment), target: "_blank", class: "text-blue-600 hover:underline" %>
+                    </div>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+          <div>
+            <%= form.label :lead_time, "Lead Time (days)", class: "block text-sm font-medium text-gray-700 mb-2" %>
+            <%= form.number_field :lead_time, value: @requisition.lead_time, min: 0, class: "w-full px-3 py-2 border border-gray-300 rounded-md" %>
+          </div>
+          <%= form.submit "Save Proposals", class: "bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" %>
+        <% end %>
+      </div>
+    <% elsif @requisition.procurement_approved? && @requisition.vendor_proposal_1.attached? %>
+      <div class="bg-white shadow rounded-lg p-6 mb-6">
+        <h2 class="text-xl font-semibold mb-4">Vendor Proposals</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <% [@requisition.vendor_proposal_1, @requisition.vendor_proposal_2, @requisition.vendor_proposal_3].each_with_index do |proposals, index| %>
+            <div>
+              <h4 class="font-medium mb-2">Proposal <%= index + 1 %></h4>
+              <% if proposals.attached? %>
+                <div class="space-y-1">
+                  <% proposals.each do |attachment| %>
+                    <div class="text-sm">
+                      <%= link_to attachment.filename, rails_blob_path(attachment), target: "_blank", class: "text-blue-600 hover:underline" %>
+                    </div>
+                  <% end %>
+                </div>
+              <% else %>
+                <p class="text-sm text-gray-500">No attachments</p>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+        <% if @requisition.lead_time.present? %>
+          <div class="mt-4">
+            <label class="block text-sm font-medium text-gray-500">Lead Time</label>
+            <p class="mt-1 text-sm text-gray-900"><%= @requisition.lead_time %> days</p>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+
+    <!-- Create Purchase Request Button -->
+    <% if @requisition.all_approvals_complete? && (current_user.admin? || current_user.supervisor?) %>
+      <div class="bg-white shadow rounded-lg p-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-lg font-semibold text-gray-900">Ready to Create Purchase Request</h3>
+            <p class="text-sm text-gray-600 mt-1">All approvals have been completed. Click below to create a Purchase Request.</p>
+          </div>
+          <%= button_to "Create Purchase Request", create_purchase_request_material_requisition_slip_path(@requisition), method: :post, class: "bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 text-lg font-medium" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

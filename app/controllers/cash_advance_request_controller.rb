@@ -122,8 +122,6 @@ class CashAdvanceRequestController < ApplicationController
       :employee_name, :employee_id, :department, :sales_order_number, :client_name,
       :purpose_of_advance, :breakdown_of_expenses, :amount_requested, :required_date,
       :manager_reject_notes, :finance_department_documentation_notes,
-      :prepare_name, :prepare_date, :approval_name, :approval_date,
-      :release_name, :release_date, :receive_name, :receive_date,
       supporting_documents: []
     )
   end

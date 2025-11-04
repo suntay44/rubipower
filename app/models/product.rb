@@ -1,5 +1,6 @@
 class Product < ApplicationRecord
   # Associations
+  belongs_to :vendor
   has_many :order_items, dependent: :destroy
   has_many :orders, through: :order_items
   has_many :sale_items, dependent: :destroy
@@ -12,12 +13,10 @@ class Product < ApplicationRecord
   validates :stock_quantity, presence: true, numericality: { greater_than_or_equal_to: 0 }
   validates :reorder_level, presence: true, numericality: { greater_than_or_equal_to: 0 }
   validates :status, inclusion: { in: %w[active inactive discontinued] }
-  validates :category, presence: true
 
   # Scopes
   scope :active, -> { where(status: "active") }
   scope :low_stock, -> { where("stock_quantity <= reorder_level") }
-  scope :by_category, ->(category) { where(category: category) }
 
   # Callbacks
   before_save :normalize_sku
