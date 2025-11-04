@@ -3,10 +3,27 @@ class CashAdvanceRequestController < ApplicationController
 
   def index
     @cash_advance_requests = CashAdvanceRequest.includes(:requester_user).order(created_at: :desc)
-    @pending_requests = @cash_advance_requests.pending_manager_approval
-    @approved_requests = @cash_advance_requests.approved_by_manager
-    @revised_requests = @cash_advance_requests.where(manager_status: "revised")
-    @rejected_requests = @cash_advance_requests.where(manager_status: "rejected")
+    
+    # Apply filters
+    if params[:manager_status].present?
+      @cash_advance_requests = @cash_advance_requests.where(manager_status: params[:manager_status])
+    end
+    
+    if params[:finance_status].present?
+      @cash_advance_requests = @cash_advance_requests.where(finance_department_status: params[:finance_status])
+    end
+    
+    if params[:department].present?
+      @cash_advance_requests = @cash_advance_requests.where(department: params[:department])
+    end
+    
+    if params[:search].present?
+      search_term = "%#{params[:search]}%"
+      @cash_advance_requests = @cash_advance_requests.where(
+        "employee_name ILIKE ? OR employee_id ILIKE ? OR sales_order_number ILIKE ?",
+        search_term, search_term, search_term
+      )
+    end
   end
 
   def show
