@@ -1,24 +1,11 @@
 class EmployeeReimbursement < ApplicationRecord
   belongs_to :requester_user, class_name: "User"
-  has_many_attached :receipts
-  has_many_attached :proof_of_payment
-  has_many_attached :travel_itinerary
+  belongs_to :cash_advance_request
+  # Removed attachments: receipts, proof_of_payment, travel_itinerary
 
-  validates :employee_name, presence: true
-  validates :employee_id, presence: true
-  validates :expense_type, presence: true
-  validates :expense_purpose, presence: true
-  validates :amount_claimed, presence: true, numericality: { greater_than: 0 }
-  validates :expense_date, presence: true
-  validates :sales_order_number, presence: true
-  validates :client_name, presence: true
-
-  enum :expense_type, {
-    travel: 0,
-    meals_entertainment: 1,
-    office_supplies: 2,
-    client_meeting_costs: 3
-  }
+  validates :cash_advance_request_id, presence: true
+  validates :description, presence: true
+  validates :amount_to_reimburse, presence: true, numericality: { greater_than: 0 }
 
   enum :supervisor_status, {
     pending: 0,

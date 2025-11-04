@@ -55,9 +55,6 @@ Rails.application.routes.draw do
   get "/cash-advance-request/:id", to: "cash_advance_request#show", as: :cash_advance_request
   get "/cash-advance-request/:id/edit", to: "cash_advance_request#edit", as: :edit_cash_advance_request
   patch "/cash-advance-request/:id", to: "cash_advance_request#update", as: :update_cash_advance_request
-  patch "/cash-advance-request/:id/approve-manager", to: "cash_advance_request#approve_manager", as: :approve_manager_cash_advance
-  patch "/cash-advance-request/:id/revise-manager", to: "cash_advance_request#revise_manager", as: :revise_manager_cash_advance
-  patch "/cash-advance-request/:id/reject-manager", to: "cash_advance_request#reject_manager", as: :reject_manager_cash_advance
   patch "/cash-advance-request/:id/approve-finance", to: "cash_advance_request#approve_finance", as: :approve_finance_cash_advance
   patch "/cash-advance-request/:id/reject-finance", to: "cash_advance_request#reject_finance", as: :reject_finance_cash_advance
   delete "/cash-advance-request/:id/delete-attachment/:attachment_id", to: "cash_advance_request#delete_attachment", as: :delete_attachment_cash_advance
@@ -79,9 +76,6 @@ Rails.application.routes.draw do
   delete "/employee-reimbursements/:id/delete-receipt/:attachment_id", to: "employee_reimbursements#delete_receipt", as: :delete_receipt_employee_reimbursement
   delete "/employee-reimbursements/:id/delete-proof/:attachment_id", to: "employee_reimbursements#delete_proof", as: :delete_proof_employee_reimbursement
   delete "/employee-reimbursements/:id/delete-itinerary/:attachment_id", to: "employee_reimbursements#delete_itinerary", as: :delete_itinerary_employee_reimbursement
-  patch "/employee-reimbursements/:id/approve-supervisor", to: "employee_reimbursements#approve_supervisor", as: :approve_supervisor_employee_reimbursement
-  patch "/employee-reimbursements/:id/revise-supervisor", to: "employee_reimbursements#revise_supervisor", as: :revise_supervisor_employee_reimbursement
-  patch "/employee-reimbursements/:id/reject-supervisor", to: "employee_reimbursements#reject_supervisor", as: :reject_supervisor_employee_reimbursement
   patch "/employee-reimbursements/:id/approve-finance", to: "employee_reimbursements#approve_finance", as: :approve_finance_employee_reimbursement
   patch "/employee-reimbursements/:id/reject-finance", to: "employee_reimbursements#reject_finance", as: :reject_finance_employee_reimbursement
 

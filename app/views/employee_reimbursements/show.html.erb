@@ -27,141 +27,67 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <!-- Main Content -->
       <div class="lg:col-span-2 space-y-6">
-        <!-- Employee Information -->
+        <!-- Cash Advance Request Information -->
         <div class="bg-white rounded-lg shadow">
           <div class="px-6 py-4 border-b border-gray-200">
-            <h2 class="text-lg font-semibold text-gray-900">Employee Information</h2>
+            <h2 class="text-lg font-semibold text-gray-900">Cash Advance Request</h2>
           </div>
           <div class="p-6 space-y-4">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
+                <label class="block text-sm font-medium text-gray-700">Cash Advance Request ID</label>
+                <p class="mt-1 text-sm text-gray-900">
+                  <%= link_to "CAR ##{@employee_reimbursement.cash_advance_request.id}", cash_advance_request_path(@employee_reimbursement.cash_advance_request), class: "text-red-600 hover:text-red-900" %>
+                </p>
+              </div>
+              <div>
                 <label class="block text-sm font-medium text-gray-700">Employee Name</label>
-                <p class="mt-1 text-sm text-gray-900"><%= @employee_reimbursement.employee_name %></p>
+                <p class="mt-1 text-sm text-gray-900"><%= @employee_reimbursement.cash_advance_request.employee_name %></p>
               </div>
               <div>
                 <label class="block text-sm font-medium text-gray-700">Employee ID</label>
-                <p class="mt-1 text-sm text-gray-900"><%= @employee_reimbursement.employee_id.rjust(5, '0') %></p>
+                <p class="mt-1 text-sm text-gray-900"><%= @employee_reimbursement.cash_advance_request.employee_id %></p>
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700">Expense Type</label>
-                <p class="mt-1 text-sm text-gray-900"><%= @employee_reimbursement.expense_type.humanize %></p>
+                <label class="block text-sm font-medium text-gray-700">Department</label>
+                <p class="mt-1 text-sm text-gray-900"><%= @employee_reimbursement.cash_advance_request.department %></p>
+              </div>
+              <% if @employee_reimbursement.cash_advance_request.sales_order_number.present? %>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700">Sales Order Number</label>
+                  <p class="mt-1 text-sm text-gray-900"><%= @employee_reimbursement.cash_advance_request.sales_order_number %></p>
+                </div>
+              <% end %>
+              <% if @employee_reimbursement.cash_advance_request.client_name.present? %>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700">Client Name</label>
+                  <p class="mt-1 text-sm text-gray-900"><%= @employee_reimbursement.cash_advance_request.client_name %></p>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+
+        <!-- Reimbursement Details -->
+        <div class="bg-white rounded-lg shadow">
+          <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-lg font-semibold text-gray-900">Reimbursement Details</h2>
+          </div>
+          <div class="p-6 space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Amount to Reimburse</label>
+                <p class="mt-1 text-sm text-gray-900">₱<%= number_with_precision(@employee_reimbursement.amount_to_reimburse, precision: 2) %></p>
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700">Amount Claimed</label>
-                <p class="mt-1 text-sm text-gray-900">₱<%= number_with_precision(@employee_reimbursement.amount_claimed, precision: 2) %></p>
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700">Expense Date</label>
-                <p class="mt-1 text-sm text-gray-900"><%= @employee_reimbursement.expense_date.strftime("%B %d, %Y") %></p>
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700">Sales Order Number</label>
-                <p class="mt-1 text-sm text-gray-900"><%= @employee_reimbursement.sales_order_number %></p>
+                <label class="block text-sm font-medium text-gray-700">Created</label>
+                <p class="mt-1 text-sm text-gray-900"><%= @employee_reimbursement.created_at.strftime("%B %d, %Y") %></p>
               </div>
             </div>
-            
             <div>
-              <label class="block text-sm font-medium text-gray-700">Expense Purpose</label>
-              <p class="mt-1 text-sm text-gray-900 whitespace-pre-line"><%= @employee_reimbursement.expense_purpose %></p>
+              <label class="block text-sm font-medium text-gray-700">Description</label>
+              <p class="mt-1 text-sm text-gray-900 whitespace-pre-line"><%= @employee_reimbursement.description %></p>
             </div>
-            
-            <div>
-              <label class="block text-sm font-medium text-gray-700">Client Name</label>
-              <p class="mt-1 text-sm text-gray-900"><%= @employee_reimbursement.client_name %></p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Receipts -->
-        <div class="bg-white rounded-lg shadow">
-          <div class="px-6 py-4 border-b border-gray-200">
-            <h2 class="text-lg font-semibold text-gray-900">Receipts</h2>
-          </div>
-          <div class="p-6">
-            <% if @employee_reimbursement.receipts.attached? %>
-              <div class="space-y-3">
-                <% @employee_reimbursement.receipts.each do |receipt| %>
-                  <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                    <div class="flex items-center space-x-3">
-                      <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                      </svg>
-                      <div>
-                        <p class="text-sm font-medium text-gray-900"><%= receipt.filename %></p>
-                        <p class="text-xs text-gray-500"><%= number_to_human_size(receipt.byte_size) %></p>
-                      </div>
-                    </div>
-                    <a href="<%= rails_blob_path(receipt, disposition: "attachment") %>" class="text-red-600 hover:text-red-800 text-sm font-medium">
-                      Download
-                    </a>
-                  </div>
-                <% end %>
-              </div>
-            <% else %>
-              <p class="text-sm text-gray-500">No receipts attached</p>
-            <% end %>
-          </div>
-        </div>
-
-        <!-- Proof of Payment -->
-        <div class="bg-white rounded-lg shadow">
-          <div class="px-6 py-4 border-b border-gray-200">
-            <h2 class="text-lg font-semibold text-gray-900">Proof of Payment</h2>
-          </div>
-          <div class="p-6">
-            <% if @employee_reimbursement.proof_of_payment.attached? %>
-              <div class="space-y-3">
-                <% @employee_reimbursement.proof_of_payment.each do |proof| %>
-                  <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                    <div class="flex items-center space-x-3">
-                      <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                      </svg>
-                      <div>
-                        <p class="text-sm font-medium text-gray-900"><%= proof.filename %></p>
-                        <p class="text-xs text-gray-500"><%= number_to_human_size(proof.byte_size) %></p>
-                      </div>
-                    </div>
-                    <a href="<%= rails_blob_path(proof, disposition: "attachment") %>" class="text-red-600 hover:text-red-800 text-sm font-medium">
-                      Download
-                    </a>
-                  </div>
-                <% end %>
-              </div>
-            <% else %>
-              <p class="text-sm text-gray-500">No proof of payment attached</p>
-            <% end %>
-          </div>
-        </div>
-
-        <!-- Travel Itinerary -->
-        <div class="bg-white rounded-lg shadow">
-          <div class="px-6 py-4 border-b border-gray-200">
-            <h2 class="text-lg font-semibold text-gray-900">Travel Itinerary</h2>
-          </div>
-          <div class="p-6">
-            <% if @employee_reimbursement.travel_itinerary.attached? %>
-              <div class="space-y-3">
-                <% @employee_reimbursement.travel_itinerary.each do |itinerary| %>
-                  <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                    <div class="flex items-center space-x-3">
-                      <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                      </svg>
-                      <div>
-                        <p class="text-sm font-medium text-gray-900"><%= itinerary.filename %></p>
-                        <p class="text-xs text-gray-500"><%= number_to_human_size(itinerary.byte_size) %></p>
-                      </div>
-                    </div>
-                    <a href="<%= rails_blob_path(itinerary, disposition: "attachment") %>" class="text-red-600 hover:text-red-800 text-sm font-medium">
-                      Download
-                    </a>
-                  </div>
-                <% end %>
-              </div>
-            <% else %>
-              <p class="text-sm text-gray-500">No travel itinerary attached</p>
-            <% end %>
           </div>
         </div>
       </div>
@@ -174,75 +100,62 @@
             <h3 class="text-lg font-semibold text-gray-900">Status</h3>
           </div>
           <div class="p-6 space-y-4">
-            <div>
-              <label class="block text-sm font-medium text-gray-700">Supervisor Status</label>
-              <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full 
-                <%= case @employee_reimbursement.supervisor_status
-                    when 'pending' then 'bg-yellow-100 text-yellow-800'
-                    when 'approved' then 'bg-green-100 text-green-800'
-                    when 'revised' then 'bg-blue-100 text-blue-800'
-                    when 'rejected' then 'bg-red-100 text-red-800'
-                    end %>">
-                <%= @employee_reimbursement.supervisor_status.humanize %>
-              </span>
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700">Finance Status</label>
-              <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full 
-                <%= case @employee_reimbursement.finance_status
-                    when 'pending' then 'bg-blue-100 text-blue-800'
-                    when 'approved' then 'bg-green-100 text-green-800'
-                    when 'rejected' then 'bg-red-100 text-red-800'
-                    end %>">
-                <%= @employee_reimbursement.finance_status.humanize %>
-              </span>
-            </div>
-            <% if @employee_reimbursement.supervisor_comments.present? %>
-              <div>
-                <label class="block text-sm font-medium text-gray-700">Supervisor Comments</label>
-                <p class="mt-1 text-sm text-gray-900 whitespace-pre-line"><%= @employee_reimbursement.supervisor_comments %></p>
+            <div class="flex flex-col">
+              <div class="flex items-center justify-between mb-2">
+                <label class="text-sm font-medium text-gray-700">Finance Status</label>
+                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full 
+                  <%= case @employee_reimbursement.finance_status
+                      when 'finance_pending' then 'bg-yellow-100 text-yellow-800'
+                      when 'finance_approved' then 'bg-green-100 text-green-800'
+                      when 'finance_rejected' then 'bg-red-100 text-red-800'
+                      else 'bg-gray-100 text-gray-800'
+                      end %>">
+                  <%= @employee_reimbursement.finance_status&.humanize || 'Unknown' %>
+                </span>
               </div>
-            <% end %>
-            <% if @employee_reimbursement.finance_comments.present? %>
-              <div>
-                <label class="block text-sm font-medium text-gray-700">Finance Comments</label>
-                <p class="mt-1 text-sm text-gray-900 whitespace-pre-line"><%= @employee_reimbursement.finance_comments %></p>
-              </div>
-            <% end %>
+              <% if @employee_reimbursement.finance_status == 'finance_rejected' && @employee_reimbursement.finance_comments.present? %>
+                <div class="mt-2 p-2 bg-red-50 border border-red-200 rounded text-xs text-red-800">
+                  <strong>Note:</strong> <%= truncate(@employee_reimbursement.finance_comments, length: 100) %>
+                </div>
+              <% end %>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-sm font-medium text-gray-700">Created</span>
+              <span class="text-sm text-gray-900"><%= @employee_reimbursement.created_at.strftime("%m/%d/%Y") %></span>
+            </div>
           </div>
         </div>
 
+        <!-- Finance Notes -->
+        <% if @employee_reimbursement.finance_comments.present? %>
+        <div class="bg-white rounded-lg shadow">
+          <div class="px-6 py-4 border-b border-gray-200">
+            <h3 class="text-lg font-semibold text-gray-900">Finance Notes</h3>
+          </div>
+          <div class="p-6">
+            <p class="text-sm text-gray-900 whitespace-pre-line"><%= @employee_reimbursement.finance_comments %></p>
+          </div>
+        </div>
+        <% end %>
+
         <!-- Actions -->
+        <% if current_user&.admin? || current_user&.department_finance? %>
+        <% if @employee_reimbursement.finance_status != 'finance_approved' %>
         <div class="bg-white rounded-lg shadow">
           <div class="px-6 py-4 border-b border-gray-200">
             <h3 class="text-lg font-semibold text-gray-900">Actions</h3>
           </div>
           <div class="p-6 space-y-3">
-            <% if @employee_reimbursement.supervisor_status == 'pending' %>
-              <%= button_to approve_supervisor_employee_reimbursement_path(@employee_reimbursement), method: :patch, 
-                  class: "w-full bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition-colors duration-200" do %>
-                Approve
-              <% end %>
-              <%= button_to revise_supervisor_employee_reimbursement_path(@employee_reimbursement), method: :patch, 
-                  class: "w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors duration-200" do %>
-                Revise
-              <% end %>
-              <%= button_to reject_supervisor_employee_reimbursement_path(@employee_reimbursement), method: :patch, 
-                  class: "w-full bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors duration-200" do %>
-                Reject
-              <% end %>
-            <% elsif @employee_reimbursement.supervisor_status == 'approved' && @employee_reimbursement.finance_status == 'pending' %>
-              <%= button_to approve_finance_employee_reimbursement_path(@employee_reimbursement), method: :patch, 
-                  class: "w-full bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition-colors duration-200" do %>
-                Approve Finance
-              <% end %>
-              <%= button_to reject_finance_employee_reimbursement_path(@employee_reimbursement), method: :patch, 
-                  class: "w-full bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors duration-200" do %>
-                Reject Finance
-              <% end %>
-            <% end %>
+            <button onclick="confirmFinanceAction('approve')" class="w-full bg-green-600 text-white px-4 py-2 rounded-md text-center text-sm font-medium hover:bg-green-700 transition-colors duration-200 shadow-sm hover:shadow-md border border-green-700">
+              Approve
+            </button>
+            <button onclick="openFinanceRejectModal()" class="w-full bg-red-600 text-white px-4 py-2 rounded-md text-center text-sm font-medium hover:bg-red-700 transition-colors duration-200 shadow-sm hover:shadow-md border border-red-700">
+              Reject
+            </button>
           </div>
         </div>
+        <% end %>
+        <% end %>
 
         <!-- Summary -->
         <div class="bg-white rounded-lg shadow">
@@ -251,16 +164,16 @@
           </div>
           <div class="p-6 space-y-3">
             <div class="flex justify-between">
-              <span class="text-sm text-gray-600">Amount Claimed:</span>
-              <span class="text-sm font-medium text-gray-900">₱<%= number_with_precision(@employee_reimbursement.amount_claimed, precision: 2) %></span>
-            </div>
-            <div class="flex justify-between">
-              <span class="text-sm text-gray-600">Expense Type:</span>
-              <span class="text-sm font-medium text-gray-900"><%= @employee_reimbursement.expense_type.humanize %></span>
+              <span class="text-sm text-gray-600">Amount to Reimburse:</span>
+              <span class="text-sm font-medium text-gray-900">₱<%= number_with_precision(@employee_reimbursement.amount_to_reimburse, precision: 2) %></span>
             </div>
             <div class="flex justify-between">
               <span class="text-sm text-gray-600">Created:</span>
               <span class="text-sm font-medium text-gray-900"><%= @employee_reimbursement.created_at.strftime("%B %d, %Y") %></span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-sm text-gray-600">Requester:</span>
+              <span class="text-sm font-medium text-gray-900"><%= @employee_reimbursement.requester_user&.full_name || 'Unknown' %></span>
             </div>
           </div>
         </div>
@@ -269,3 +182,158 @@
   </div>
 </main>
 
+<!-- Finance Reject Modal -->
+<div id="financeRejectModal" class="fixed inset-0 bg-white bg-opacity-10 overflow-y-auto h-full w-full hidden z-50">
+  <div class="relative top-20 mx-auto p-6 border w-96 shadow-lg rounded-md bg-white min-h-96">
+    <div class="mt-3">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-medium text-gray-900">Reject Request</h3>
+        <button onclick="closeFinanceRejectModal()" class="text-gray-400 hover:text-gray-600">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+      
+      <form id="financeRejectForm">
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700 mb-2">Rejection Reason *</label>
+          <textarea id="financeRejectNotes" name="finance_comments" rows="5" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 resize-none" placeholder="Please provide a reason for rejection..." required></textarea>
+        </div>
+        
+        <div class="flex justify-end space-x-3">
+          <button type="button" onclick="closeFinanceRejectModal()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition-colors">
+            Cancel
+          </button>
+          <button type="button" onclick="submitFinanceReject()" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors">
+            Reject Request
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Finance Approve Modal -->
+<div id="financeApproveModal" class="fixed inset-0 bg-white bg-opacity-10 overflow-y-auto h-full w-full hidden z-50">
+  <div class="relative top-20 mx-auto p-6 border w-96 shadow-lg rounded-md bg-white min-h-96">
+    <div class="mt-3">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-medium text-gray-900">Approve Request</h3>
+        <button onclick="closeFinanceApproveModal()" class="text-gray-400 hover:text-gray-600">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+      
+      <form id="financeApproveForm">
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700 mb-2">Notes (Optional)</label>
+          <textarea id="financeApproveNotes" name="finance_comments" rows="5" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 resize-none" placeholder="Please provide notes..."></textarea>
+        </div>
+        
+        <div class="flex justify-end space-x-3">
+          <button type="button" onclick="closeFinanceApproveModal()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition-colors">
+            Cancel
+          </button>
+          <button type="button" onclick="submitFinanceApprove()" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors">
+            Approve Request
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+function confirmFinanceAction(action) {
+  if (action === 'approve') {
+    openFinanceApproveModal();
+  } else {
+    openFinanceRejectModal();
+  }
+}
+
+function openFinanceApproveModal() {
+  document.getElementById('financeApproveModal').classList.remove('hidden');
+}
+
+function closeFinanceApproveModal() {
+  document.getElementById('financeApproveModal').classList.add('hidden');
+}
+
+function submitFinanceApprove() {
+  if (confirm('Are you sure you want to approve this reimbursement request?')) {
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = `/employee-reimbursements/<%= @employee_reimbursement.id %>/approve-finance`;
+    
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+    const csrfInput = document.createElement('input');
+    csrfInput.type = 'hidden';
+    csrfInput.name = 'authenticity_token';
+    csrfInput.value = csrfToken;
+    form.appendChild(csrfInput);
+    
+    const methodInput = document.createElement('input');
+    methodInput.type = 'hidden';
+    methodInput.name = '_method';
+    methodInput.value = 'PATCH';
+    form.appendChild(methodInput);
+    
+    const notesInput = document.createElement('input');
+    notesInput.type = 'hidden';
+    notesInput.name = 'finance_comments';
+    notesInput.value = document.getElementById('financeApproveNotes').value;
+    form.appendChild(notesInput);
+    
+    document.body.appendChild(form);
+    form.submit();
+  }
+}
+
+function openFinanceRejectModal() {
+  document.getElementById('financeRejectModal').classList.remove('hidden');
+}
+
+function closeFinanceRejectModal() {
+  document.getElementById('financeRejectModal').classList.add('hidden');
+}
+
+function submitFinanceReject() {
+  const notesValue = document.getElementById('financeRejectNotes').value.trim();
+  if (!notesValue) {
+    alert('Please provide a rejection reason.');
+    return;
+  }
+  
+  if (confirm('Are you sure you want to reject this reimbursement request?')) {
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = `/employee-reimbursements/<%= @employee_reimbursement.id %>/reject-finance`;
+    
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+    const csrfInput = document.createElement('input');
+    csrfInput.type = 'hidden';
+    csrfInput.name = 'authenticity_token';
+    csrfInput.value = csrfToken;
+    form.appendChild(csrfInput);
+    
+    const methodInput = document.createElement('input');
+    methodInput.type = 'hidden';
+    methodInput.name = '_method';
+    methodInput.value = 'PATCH';
+    form.appendChild(methodInput);
+    
+    const notesInput = document.createElement('input');
+    notesInput.type = 'hidden';
+    notesInput.name = 'finance_comments';
+    notesInput.value = notesValue;
+    form.appendChild(notesInput);
+    
+    document.body.appendChild(form);
+    form.submit();
+  }
+}
+</script>

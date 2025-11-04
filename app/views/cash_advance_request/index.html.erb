@@ -28,24 +28,14 @@
     <div class="p-6">
       <!-- Filters -->
       <%= form_with url: cash_advance_requests_path, method: :get, local: true, class: "bg-white p-4 rounded-lg shadow mb-6" do |f| %>
-        <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
-          <div>
-            <%= f.label :manager_status, "Manager Status", class: "block text-sm font-medium text-gray-700 mb-1" %>
-            <%= f.select :manager_status, options_for_select([
-              ['All', ''],
-              ['Pending', 'pending'],
-              ['Approved', 'approved'],
-              ['Revised', 'revised'],
-              ['Rejected', 'rejected']
-            ], params[:manager_status]), {}, class: "w-full px-3 py-2 border border-gray-300 rounded-md" %>
-          </div>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div>
             <%= f.label :finance_status, "Finance Status", class: "block text-sm font-medium text-gray-700 mb-1" %>
             <%= f.select :finance_status, options_for_select([
               ['All', ''],
-              ['Pending', 'pending'],
-              ['Approved', 'approved'],
-              ['Rejected', 'rejected']
+              ['Pending', 'finance_pending'],
+              ['Approved', 'finance_approved'],
+              ['Rejected', 'finance_rejected']
             ], params[:finance_status]), {}, class: "w-full px-3 py-2 border border-gray-300 rounded-md" %>
           </div>
           <div>
@@ -110,27 +100,15 @@
                     <%= request.required_date.strftime("%b %d, %Y") %>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap">
-                    <div class="flex flex-col space-y-1">
-                      <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full
-                        <%= case request.manager_status
-                            when 'pending' then 'bg-yellow-100 text-yellow-800'
-                            when 'approved' then 'bg-green-100 text-green-800'
-                            when 'revised' then 'bg-blue-100 text-blue-800'
-                            when 'rejected' then 'bg-red-100 text-red-800'
-                            else 'bg-gray-100 text-gray-800'
-                            end %>">
-                        Manager: <%= request.manager_status&.humanize || 'Unknown' %>
-                      </span>
-                      <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full
-                        <%= case request.finance_department_status
-                            when 'pending' then 'bg-yellow-100 text-yellow-800'
-                            when 'approved' then 'bg-green-100 text-green-800'
-                            when 'rejected' then 'bg-red-100 text-red-800'
-                            else 'bg-gray-100 text-gray-800'
-                            end %>">
-                        Finance: <%= request.finance_department_status&.humanize || 'Unknown' %>
-                      </span>
-                    </div>
+                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full
+                      <%= case request.finance_department_status
+                          when 'pending' then 'bg-yellow-100 text-yellow-800'
+                          when 'approved' then 'bg-green-100 text-green-800'
+                          when 'rejected' then 'bg-red-100 text-red-800'
+                          else 'bg-gray-100 text-gray-800'
+                          end %>">
+                      <%= request.finance_department_status&.humanize || 'Unknown' %>
+                    </span>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     <%= request.created_at.strftime("%b %d, %Y") %>

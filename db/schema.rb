@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_04_102232) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_04_105113) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -73,8 +73,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_04_102232) do
     t.date "request_date", null: false
     t.date "required_date", null: false
     t.text "supporting_documents"
-    t.string "manager_status", default: "pending"
-    t.text "manager_reject_notes"
     t.string "finance_department_status", default: "pending"
     t.text "finance_department_documentation_notes"
     t.bigint "requester_user_id", null: false
@@ -84,7 +82,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_04_102232) do
     t.string "project_name"
     t.text "description"
     t.index ["finance_department_status"], name: "index_cash_advance_requests_on_finance_department_status"
-    t.index ["manager_status"], name: "index_cash_advance_requests_on_manager_status"
     t.index ["requester_user_id"], name: "index_cash_advance_requests_on_requester_user_id"
     t.index ["sale_id"], name: "index_cash_advance_requests_on_sale_id"
   end
@@ -107,14 +104,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_04_102232) do
   end
 
   create_table "employee_reimbursements", force: :cascade do |t|
-    t.string "employee_name"
-    t.string "employee_id"
-    t.integer "expense_type", default: 0
-    t.text "expense_purpose"
-    t.decimal "amount_claimed", precision: 10, scale: 2
-    t.date "expense_date"
-    t.string "sales_order_number"
-    t.string "client_name"
+    t.text "description"
+    t.decimal "amount_to_reimburse", precision: 10, scale: 2
     t.integer "supervisor_status", default: 0
     t.text "supervisor_comments"
     t.integer "finance_status", default: 0
@@ -124,7 +115,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_04_102232) do
     t.bigint "requester_user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["expense_type"], name: "index_employee_reimbursements_on_expense_type"
+    t.bigint "cash_advance_request_id", null: false
+    t.index ["cash_advance_request_id"], name: "index_employee_reimbursements_on_cash_advance_request_id"
     t.index ["finance_status"], name: "index_employee_reimbursements_on_finance_status"
     t.index ["requester_user_id"], name: "index_employee_reimbursements_on_requester_user_id"
     t.index ["supervisor_status"], name: "index_employee_reimbursements_on_supervisor_status"
@@ -490,6 +482,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_04_102232) do
   add_foreign_key "attendances", "users"
   add_foreign_key "cash_advance_requests", "sales"
   add_foreign_key "cash_advance_requests", "users", column: "requester_user_id"
+  add_foreign_key "employee_reimbursements", "cash_advance_requests"
   add_foreign_key "employee_reimbursements", "users", column: "requester_user_id"
   add_foreign_key "expense_reports", "cash_advance_requests"
   add_foreign_key "expense_reports", "users", column: "submitted_by_id"

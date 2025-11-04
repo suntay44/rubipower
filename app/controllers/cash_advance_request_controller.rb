@@ -1,14 +1,10 @@
 class CashAdvanceRequestController < ApplicationController
-  before_action :set_cash_advance_request, only: [ :show, :edit, :update, :approve_manager, :revise_manager, :reject_manager, :approve_finance, :reject_finance, :delete_attachment ]
+  before_action :set_cash_advance_request, only: [ :show, :edit, :update, :approve_finance, :reject_finance, :delete_attachment ]
 
   def index
     @cash_advance_requests = CashAdvanceRequest.includes(:requester_user).order(created_at: :desc)
     
     # Apply filters
-    if params[:manager_status].present?
-      @cash_advance_requests = @cash_advance_requests.where(manager_status: params[:manager_status])
-    end
-    
     if params[:finance_status].present?
       @cash_advance_requests = @cash_advance_requests.where(finance_department_status: params[:finance_status])
     end
@@ -138,31 +134,12 @@ class CashAdvanceRequestController < ApplicationController
         end
   end
 
-  def approve_manager
-    if @cash_advance_request.update(manager_status: "approved")
-      redirect_to cash_advance_request_path(@cash_advance_request), notice: "Cash advance request approved by manager."
-    else
-      redirect_to cash_advance_request_path(@cash_advance_request), alert: "Failed to approve request."
-    end
-  end
-
-  def revise_manager
-    if @cash_advance_request.update(manager_status: "revised")
-      redirect_to cash_advance_request_path(@cash_advance_request), notice: "Cash advance request marked for revision by manager."
-    else
-      redirect_to cash_advance_request_path(@cash_advance_request), alert: "Failed to mark request for revision."
-    end
-  end
-
-  def reject_manager
-    if @cash_advance_request.update(manager_status: "rejected", manager_reject_notes: params[:manager_reject_notes])
-      redirect_to cash_advance_request_path(@cash_advance_request), notice: "Cash advance request rejected by manager."
-    else
-      redirect_to cash_advance_request_path(@cash_advance_request), alert: "Failed to reject request."
-    end
-  end
-
   def approve_finance
+    unless current_user.admin? || current_user.department_finance?
+      redirect_to cash_advance_request_path(@cash_advance_request), alert: "Access denied. Admin or Finance privileges required."
+      return
+    end
+    
     if @cash_advance_request.update(finance_department_status: "finance_approved", finance_department_documentation_notes: params[:finance_department_documentation_notes])
       redirect_to cash_advance_request_path(@cash_advance_request), notice: "Cash advance request approved by finance department."
     else
@@ -171,6 +148,11 @@ class CashAdvanceRequestController < ApplicationController
   end
 
   def reject_finance
+    unless current_user.admin? || current_user.department_finance?
+      redirect_to cash_advance_request_path(@cash_advance_request), alert: "Access denied. Admin or Finance privileges required."
+      return
+    end
+    
     if @cash_advance_request.update(finance_department_status: "finance_rejected", finance_department_documentation_notes: params[:finance_department_documentation_notes])
       redirect_to cash_advance_request_path(@cash_advance_request), notice: "Cash advance request rejected by finance department."
     else
