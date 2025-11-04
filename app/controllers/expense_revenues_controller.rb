@@ -1,12 +1,25 @@
 class ExpenseRevenuesController < ApplicationController
   before_action :set_expense_revenue, only: [ :show, :edit, :update, :destroy, :delete_receipt, :delete_supporting_document, :approve_supervisor, :reject_supervisor, :approve_finance, :reject_finance ]
-  before_action :set_current_user
 
   def index
-    @pending_supervisor = ExpenseRevenue.pending_supervisor.order(created_at: :desc)
-    @pending_finance = ExpenseRevenue.pending_finance.order(created_at: :desc)
-    @approved_payment = ExpenseRevenue.approved_payment.order(created_at: :desc)
-    @completed = ExpenseRevenue.completed.order(created_at: :desc)
+    @expense_revenues = ExpenseRevenue.includes(:requester_user).order(created_at: :desc)
+    
+    # Apply filters
+    if params[:supervisor_status].present?
+      @expense_revenues = @expense_revenues.where(supervisor_status: params[:supervisor_status])
+    end
+    
+    if params[:finance_status].present?
+      @expense_revenues = @expense_revenues.where(finance_status: params[:finance_status])
+    end
+    
+    if params[:search].present?
+      search_term = "%#{params[:search]}%"
+      @expense_revenues = @expense_revenues.where(
+        "vendor_name ILIKE ? OR sales_order_number ILIKE ? OR client_name ILIKE ? OR purpose ILIKE ?",
+        search_term, search_term, search_term, search_term
+      )
+    end
   end
 
   def show
@@ -20,7 +33,7 @@ class ExpenseRevenuesController < ApplicationController
 
   def create
     @expense_revenue = ExpenseRevenue.new(expense_revenue_params)
-    @expense_revenue.requester_user = @current_user
+    @expense_revenue.requester_user = current_user
 
     if @expense_revenue.save
       redirect_to @expense_revenue, notice: "Expense/Revenue entry was successfully created."
@@ -88,7 +101,7 @@ class ExpenseRevenuesController < ApplicationController
   end
 
   def approve_finance
-    if @expense_revenue.update(finance_status: :finance_approved, verified_by: @current_user, verified_at: Time.current)
+    if @expense_revenue.update(finance_status: :finance_approved, verified_by: current_user, verified_at: Time.current)
       redirect_to @expense_revenue, notice: "Expense/Revenue entry approved by finance."
     else
       redirect_to @expense_revenue, alert: "Failed to approve entry."
@@ -107,10 +120,6 @@ class ExpenseRevenuesController < ApplicationController
 
   def set_expense_revenue
     @expense_revenue = ExpenseRevenue.find(params[:id])
-  end
-
-  def set_current_user
-    @current_user = User.find(session[:user_id]) if session[:user_id]
   end
 
   def expense_revenue_params

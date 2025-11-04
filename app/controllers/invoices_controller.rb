@@ -1,9 +1,17 @@
 class InvoicesController < ApplicationController
   before_action :set_invoice, only: [ :show, :edit, :update, :destroy, :delete_attachment ]
-  before_action :set_current_user
 
   def index
     @invoices = Invoice.all.order(created_at: :desc)
+    
+    # Apply search filter
+    if params[:search].present?
+      search_term = "%#{params[:search]}%"
+      @invoices = @invoices.where(
+        "invoice_number ILIKE ? OR client_name ILIKE ? OR client_company ILIKE ? OR company_name ILIKE ?",
+        search_term, search_term, search_term, search_term
+      )
+    end
   end
 
   def show
@@ -60,9 +68,6 @@ class InvoicesController < ApplicationController
     @invoice = Invoice.find(params[:id])
   end
 
-  def set_current_user
-    @current_user = User.find(session[:user_id]) if session[:user_id]
-  end
 
   def invoice_params
     params.require(:invoice).permit(:invoice_type, :company_name, :company_address, :company_contact,

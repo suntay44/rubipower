@@ -24,16 +24,23 @@
       </div>
     </header>
 
-    <!-- Main Content Area -->
-    <main class="flex-1 overflow-y-auto bg-gray-50 p-6">
-      <div class="max-w-7xl mx-auto">
+    <!-- Content -->
+    <div class="p-6">
+        <!-- Filters -->
+        <%= form_with url: invoices_path, method: :get, local: true, class: "bg-white p-4 rounded-lg shadow mb-6" do |f| %>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <%= f.label :search, "Search", class: "block text-sm font-medium text-gray-700 mb-1" %>
+              <%= f.text_field :search, placeholder: "Invoice #, Client, Company...", value: params[:search], class: "w-full px-3 py-2 border border-gray-300 rounded-md" %>
+            </div>
+            <div class="flex items-end">
+              <%= f.submit "Filter", class: "bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 w-full" %>
+            </div>
+          </div>
+        <% end %>
 
         <!-- Invoices Table -->
-        <div class="bg-white rounded-lg shadow-sm overflow-hidden">
-          <div class="px-6 py-4 border-b border-gray-200">
-            <h3 class="text-lg font-semibold text-gray-900">All Invoices</h3>
-            <p class="text-sm text-gray-600">Complete list of invoices</p>
-          </div>
+        <div class="bg-white shadow rounded-lg overflow-hidden">
           <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
               <thead class="bg-gray-50">
@@ -88,13 +95,9 @@
                         <%= invoice.created_at.strftime("%b %d, %Y") %>
                       </td>
                       <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <div class="flex space-x-2">
-                          <a href="<%= invoice_path(invoice) %>" class="text-blue-600 hover:text-blue-900">View</a>
-                          <a href="<%= edit_invoice_path(invoice) %>" class="text-gray-600 hover:text-gray-900">Edit</a>
-                          <%= link_to "Delete", invoice_path(invoice), method: :delete, 
-                              data: { confirm: "Are you sure?" }, 
-                              class: "text-red-600 hover:text-red-900" %>
-                        </div>
+                        <a href="<%= invoice_path(invoice) %>" class="text-red-600 hover:text-red-900">
+                          View Details
+                        </a>
                       </td>
                     </tr>
                   <% end %>
@@ -109,8 +112,4 @@
             </table>
           </div>
         </div>
-      </div>
-    </main>
-
-    <!-- Sidebar Script -->
-    <%= render 'shared/sidebar_script' %>
+    </div>
