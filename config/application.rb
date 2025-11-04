@@ -23,5 +23,9 @@ module Rubipower
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+    
+    # Add app/pdfs to autoload paths
+    config.autoload_paths << Rails.root.join("app/pdfs")
+    config.eager_load_paths << Rails.root.join("app/pdfs")
   end
 end

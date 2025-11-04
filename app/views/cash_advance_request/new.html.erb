@@ -49,18 +49,25 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <%= form.label :employee_name, "Employee Name", class: "block text-sm font-medium text-gray-700 mb-2" %>
-                <%= form.select :employee_name, options_for_select(@users.map { |user| [user.full_name, user.full_name] }, @cash_advance_request.employee_name), { prompt: "Select Employee" }, { class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500", id: "employee_name_select", onchange: "updateEmployeeId()", required: true } %>
+                <% if @is_admin %>
+                  <%= form.select :employee_name, options_for_select(@users.map { |user| [user.full_name, user.full_name] }, @cash_advance_request.employee_name), { prompt: "Select Employee" }, { class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500", id: "employee_name_select", onchange: "updateEmployeeInfo()", required: true } %>
+                <% else %>
+                  <%= form.text_field :employee_name, value: @cash_advance_request.employee_name, readonly: true, class: "w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-600" %>
+                <% end %>
               </div>
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Employee ID</label>
                 <div id="employee_id_display" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-600">
-                  Select an employee to see ID
+                  <%= @cash_advance_request.employee_id.present? ? @cash_advance_request.employee_id : "Select an employee to see ID" %>
                 </div>
-                <%= form.hidden_field :employee_id, id: "employee_id_hidden" %>
+                <%= form.hidden_field :employee_id, id: "employee_id_hidden", value: @cash_advance_request.employee_id %>
               </div>
               <div class="md:col-span-2">
-                <%= form.label :department, "Department", class: "block text-sm font-medium text-gray-700 mb-2" %>
-                <%= form.select :department, options_for_select(@departments.map { |dept| [dept, dept] }, @cash_advance_request.department), { prompt: "Select Department" }, { class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500", required: true } %>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Department</label>
+                <div id="department_display" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-600">
+                  <%= @cash_advance_request.department.present? ? @cash_advance_request.department : "Select an employee to see department" %>
+                </div>
+                <%= form.hidden_field :department, id: "department_hidden", value: @cash_advance_request.department %>
               </div>
             </div>
           </div>
@@ -68,14 +75,32 @@
           <!-- Project Information -->
           <div class="bg-white rounded-lg shadow-sm p-6">
             <h3 class="text-lg font-semibold text-gray-900 mb-4">Project Information</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="space-y-6">
               <div>
-                <%= form.label :sales_order_number, "Sales Order Number", class: "block text-sm font-medium text-gray-700 mb-2" %>
-                <%= form.text_field :sales_order_number, required: true, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500" %>
+                <%= form.label :sale_id, "Select Sale", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                <%= form.select :sale_id, options_for_select(@sales.map { |sale| ["#{sale.project_name} - #{sale.client_name} (#{number_to_currency(sale.total_amount, unit: '₱', separator: '.', delimiter: ',')})", sale.id] }, @cash_advance_request.sale_id), { prompt: "Select a Sale (Optional)" }, { class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500", id: "sale_select", onchange: "populateFromSale()" } %>
+                <p class="text-xs text-gray-500 mt-1">Select a sale to auto-populate project information</p>
               </div>
-              <div>
-                <%= form.label :client_name, "Client Name", class: "block text-sm font-medium text-gray-700 mb-2" %>
-                <%= form.text_field :client_name, required: true, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500" %>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <%= form.label :sales_order_number, "Sales Order Number", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                  <%= form.text_field :sales_order_number, required: true, readonly: true, class: "w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-600 focus:outline-none", id: "sales_order_number_field" %>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Sale Total</label>
+                  <div id="sale_total_display" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-600">
+                    Select a sale to see total
+                  </div>
+                  <%= form.hidden_field :sale_total, id: "sale_total_hidden" %>
+                </div>
+                <div>
+                  <%= form.label :client_name, "Client Name", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                  <%= form.text_field :client_name, required: true, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500", id: "client_name_field" %>
+                </div>
+                <div>
+                  <%= form.label :description, "Description", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                  <%= form.text_area :description, rows: 3, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500", id: "description_field" %>
+                </div>
               </div>
             </div>
           </div>
@@ -137,7 +162,57 @@
 
 <script>
   // User data for JavaScript
-  const users = <%= raw @users.map { |user| { name: user.full_name, id: user.employee_id, user_id: user.id } }.to_json %>;
+  const users = <%= raw @users.map { |user| { name: user.full_name, id: user.employee_id, user_id: user.id, department: user.department&.titleize } }.to_json %>;
+
+  // Sales data for JavaScript
+  const sales = <%= raw @sales.map { |sale| { id: sale.id, sale_number: sale.sale_number, project_name: sale.project_name, client_name: sale.client_name, description: sale.description || '', total_amount: sale.total_amount.to_f } }.to_json %>;
+
+  // Function to populate fields from selected sale
+  function populateFromSale() {
+    const saleSelect = document.getElementById('sale_select');
+    const selectedSaleId = saleSelect ? saleSelect.value : null;
+    
+    if (!selectedSaleId || selectedSaleId === '') {
+      // Clear fields if no sale is selected
+      const salesOrderNumberField = document.getElementById('sales_order_number_field');
+      const saleTotalDisplay = document.getElementById('sale_total_display');
+      const saleTotalHidden = document.getElementById('sale_total_hidden');
+      
+      if (salesOrderNumberField) salesOrderNumberField.value = '';
+      if (saleTotalDisplay) saleTotalDisplay.textContent = 'Select a sale to see total';
+      if (saleTotalHidden) saleTotalHidden.value = '';
+      return;
+    }
+    
+    const sale = sales.find(s => s.id == selectedSaleId);
+    
+    if (sale) {
+      // Populate Sales Order Number from sale's project_name
+      const salesOrderNumberField = document.getElementById('sales_order_number_field');
+      if (salesOrderNumberField) {
+        salesOrderNumberField.value = sale.project_name || '';
+      }
+      
+      // Display Sale Total
+      const saleTotalDisplay = document.getElementById('sale_total_display');
+      const saleTotalHidden = document.getElementById('sale_total_hidden');
+      if (saleTotalDisplay && saleTotalHidden && sale.total_amount) {
+        saleTotalDisplay.textContent = `₱${sale.total_amount.toFixed(2)}`;
+        saleTotalHidden.value = sale.total_amount.toFixed(2);
+      }
+      
+      // Populate fields (editable)
+      const clientNameField = document.getElementById('client_name_field');
+      const descriptionField = document.getElementById('description_field');
+      
+      if (clientNameField) {
+        clientNameField.value = sale.client_name || '';
+      }
+      if (descriptionField) {
+        descriptionField.value = sale.description || '';
+      }
+    }
+  }
 
   // Expense items management
   let expenseItemCounter = 0;
@@ -226,24 +301,55 @@
     }
   });
 
-  function updateEmployeeId() {
+  function updateEmployeeInfo() {
     const select = document.getElementById('employee_name_select');
-    const display = document.getElementById('employee_id_display');
-    const hidden = document.getElementById('employee_id_hidden');
+    const idDisplay = document.getElementById('employee_id_display');
+    const idHidden = document.getElementById('employee_id_hidden');
+    const deptDisplay = document.getElementById('department_display');
+    const deptHidden = document.getElementById('department_hidden');
     
-    const selectedName = select.value;
+    const selectedName = select ? select.value : '<%= @cash_advance_request.employee_name %>';
     const user = users.find(u => u.name === selectedName);
     
     if (user) {
-      display.textContent = user.id;
-      display.className = "w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900";
-      hidden.value = user.id;
+      // Update Employee ID
+      idDisplay.textContent = user.id || '';
+      idDisplay.className = "w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-600";
+      idHidden.value = user.id || '';
+      
+      // Update Department
+      if (user.department) {
+        deptDisplay.textContent = user.department;
+        deptDisplay.className = "w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-600";
+        deptHidden.value = user.department;
+      } else {
+        deptDisplay.textContent = "No department assigned";
+        deptDisplay.className = "w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-600";
+        deptHidden.value = "";
+      }
     } else {
-      display.textContent = "Select an employee to see ID";
-      display.className = "w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-600";
-      hidden.value = "";
+      idDisplay.textContent = "Select an employee to see ID";
+      idDisplay.className = "w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-600";
+      idHidden.value = "";
+      deptDisplay.textContent = "Select an employee to see department";
+      deptDisplay.className = "w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-600";
+      deptHidden.value = "";
     }
   }
+  
+  // Initialize employee info on page load
+  document.addEventListener('DOMContentLoaded', function() {
+    <% if !@is_admin && @cash_advance_request.employee_name.present? %>
+      // Auto-populate for non-admin users
+      updateEmployeeInfo();
+    <% end %>
+    
+    // Initialize Sales Order Number if sale is already selected
+    const saleSelect = document.getElementById('sale_select');
+    if (saleSelect && saleSelect.value) {
+      populateFromSale();
+    }
+  });
 
   // File preview functionality
   document.addEventListener('DOMContentLoaded', function() {

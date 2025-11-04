@@ -1,5 +1,6 @@
 class CashAdvanceRequest < ApplicationRecord
   belongs_to :requester_user, class_name: "User"
+  belongs_to :sale, optional: true
   has_many_attached :supporting_documents
   has_one :expense_report, dependent: :destroy
 

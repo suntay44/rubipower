@@ -10,30 +10,73 @@ class CashAdvanceRequestController < ApplicationController
   end
 
   def show
+    respond_to do |format|
+      format.html
+      format.pdf do
+        # Load PDF class explicitly
+        require Rails.root.join('app/pdfs/cash_advance_request_pdf').to_s
+        pdf = CashAdvanceRequestPdf.new(@cash_advance_request)
+        send_data pdf.render, filename: "cash_advance_request_#{@cash_advance_request.id}.pdf",
+                              type: "application/pdf",
+                              disposition: "inline"
+      end
+    end
   end
 
   def new
     @cash_advance_request = CashAdvanceRequest.new
-    @departments = User.departments.keys.map(&:titleize)
-    @users = User.all.order(:first_name, :last_name)
+    @is_admin = current_user.admin?
+    @sales = Sale.order(created_at: :desc).limit(100) # Load recent sales for dropdown
+    
+    if @is_admin
+      @users = User.all.order(:first_name, :last_name)
+    else
+      # For non-admin, auto-populate with current user
+      @cash_advance_request.employee_name = current_user.full_name
+      @cash_advance_request.employee_id = current_user.employee_id
+      @cash_advance_request.department = current_user.department&.titleize
+      @users = [current_user] # Only include current user for JavaScript
+    end
   end
 
   def create
     @cash_advance_request = CashAdvanceRequest.new(cash_advance_request_params)
     @cash_advance_request.requester_user = current_user
     @cash_advance_request.request_date = Date.current
+    
+    # Auto-populate department from selected employee
+    if @cash_advance_request.employee_id.present?
+      employee_user = User.find_by(employee_id: @cash_advance_request.employee_id)
+    elsif @cash_advance_request.employee_name.present?
+      employee_user = User.find_by("CONCAT(first_name, ' ', last_name) = ?", @cash_advance_request.employee_name)
+    end
+    
+    if employee_user && employee_user.department.present?
+      @cash_advance_request.department = employee_user.department&.titleize
+    end
+    
+    # Auto-populate sales_order_number from sale's project_name if sale is selected
+    if @cash_advance_request.sale_id.present?
+      sale = Sale.find_by(id: @cash_advance_request.sale_id)
+      if sale && sale.project_name.present?
+        @cash_advance_request.sales_order_number = sale.project_name
+      end
+    end
 
     if @cash_advance_request.save
       redirect_to cash_advance_request_path(@cash_advance_request), notice: "Cash advance request was successfully created."
     else
-      @departments = User.departments.keys.map(&:titleize)
+      @is_admin = current_user.admin?
+      @users = @is_admin ? User.all.order(:first_name, :last_name) : [current_user]
+      @sales = Sale.order(created_at: :desc).limit(100) # Load recent sales for dropdown
       render :new, status: :unprocessable_entity
     end
   end
 
   def edit
-    @departments = User.departments.keys.map(&:titleize)
-    @users = User.all.order(:first_name, :last_name)
+    @is_admin = current_user.admin?
+    @users = @is_admin ? User.all.order(:first_name, :last_name) : [@cash_advance_request.requester_user]
+    @sales = Sale.order(created_at: :desc).limit(100) # Load recent sales for dropdown
   end
 
   def update
@@ -49,13 +92,33 @@ class CashAdvanceRequestController < ApplicationController
       params_hash.delete(:supporting_documents)
     end
 
-    if @cash_advance_request.update(params_hash)
-      redirect_to cash_advance_request_path(@cash_advance_request), notice: "Cash advance request was successfully updated."
-    else
-      @departments = User.departments.keys.map(&:titleize)
-      @users = User.all.order(:first_name, :last_name)
-      render :edit, status: :unprocessable_entity
+    # Auto-populate department from selected employee
+    if params_hash[:employee_id].present?
+      employee_user = User.find_by(employee_id: params_hash[:employee_id])
+    elsif params_hash[:employee_name].present?
+      employee_user = User.find_by("CONCAT(first_name, ' ', last_name) = ?", params_hash[:employee_name])
     end
+    
+    if employee_user && employee_user.department.present?
+      params_hash[:department] = employee_user.department&.titleize
+    end
+    
+    # Auto-populate sales_order_number from sale's project_name if sale is selected
+    if params_hash[:sale_id].present?
+      sale = Sale.find_by(id: params_hash[:sale_id])
+      if sale && sale.project_name.present?
+        params_hash[:sales_order_number] = sale.project_name
+      end
+    end
+
+        if @cash_advance_request.update(params_hash)
+          redirect_to cash_advance_request_path(@cash_advance_request), notice: "Cash advance request was successfully updated."
+        else
+          @is_admin = current_user.admin?
+          @users = @is_admin ? User.all.order(:first_name, :last_name) : [@cash_advance_request.requester_user]
+          @sales = Sale.order(created_at: :desc).limit(100) # Load recent sales for dropdown
+          render :edit, status: :unprocessable_entity
+        end
   end
 
   def approve_manager
@@ -114,7 +177,7 @@ class CashAdvanceRequestController < ApplicationController
   private
 
   def set_cash_advance_request
-    @cash_advance_request = CashAdvanceRequest.find(params[:id])
+    @cash_advance_request = CashAdvanceRequest.includes(:sale).find(params[:id])
   end
 
   def cash_advance_request_params
@@ -122,6 +185,7 @@ class CashAdvanceRequestController < ApplicationController
       :employee_name, :employee_id, :department, :sales_order_number, :client_name,
       :purpose_of_advance, :breakdown_of_expenses, :amount_requested, :required_date,
       :manager_reject_notes, :finance_department_documentation_notes,
+      :sale_id, :project_name, :description,
       supporting_documents: []
     )
   end

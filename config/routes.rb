@@ -120,7 +120,13 @@ Rails.application.routes.draw do
   get "/inventory-and-sales/products/:id/edit", to: "inventory_sales#edit_product", as: :edit_inventory_sales_product
   patch "/inventory-and-sales/products/:id", to: "inventory_sales#update_product", as: :inventory_sales_product_update
   delete "/inventory-and-sales/products/:id", to: "inventory_sales#destroy_product", as: :inventory_sales_product_destroy
-  get "/inventory-and-sales/sales", to: "inventory_sales#sales", as: :inventory_sales_sales
+  get "/inventory-and-sales/sales", to: "sales#index", as: :inventory_sales_sales
+  get "/inventory-and-sales/sales/new", to: "sales#new", as: :new_inventory_sales_sale
+  post "/inventory-and-sales/sales", to: "sales#create", as: :create_inventory_sales_sale
+  get "/inventory-and-sales/sales/:id", to: "sales#show", as: :inventory_sales_sale
+  get "/inventory-and-sales/sales/:id/edit", to: "sales#edit", as: :edit_inventory_sales_sale
+  patch "/inventory-and-sales/sales/:id", to: "sales#update", as: :update_inventory_sales_sale
+  delete "/inventory-and-sales/sales/:id", to: "sales#destroy", as: :destroy_inventory_sales_sale
   get "/inventory-and-sales/customers", to: "inventory_sales#customers", as: :inventory_sales_customers
   get "/inventory-and-sales/customers/new", to: "inventory_sales#new_customer", as: :new_inventory_sales_customer
   post "/inventory-and-sales/customers", to: "inventory_sales#create_customer", as: :create_inventory_sales_customer

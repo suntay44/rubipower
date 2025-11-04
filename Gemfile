@@ -74,3 +74,5 @@ group :test do
 end
 
 gem "ultimate_turbo_modal", "~> 2.2"
+gem "prawn"
+gem "prawn-table"

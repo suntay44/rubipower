@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_04_093531) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_04_102232) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -80,9 +80,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_04_093531) do
     t.bigint "requester_user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "sale_id"
+    t.string "project_name"
+    t.text "description"
     t.index ["finance_department_status"], name: "index_cash_advance_requests_on_finance_department_status"
     t.index ["manager_status"], name: "index_cash_advance_requests_on_manager_status"
     t.index ["requester_user_id"], name: "index_cash_advance_requests_on_requester_user_id"
+    t.index ["sale_id"], name: "index_cash_advance_requests_on_sale_id"
   end
 
   create_table "customers", force: :cascade do |t|
@@ -421,7 +425,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_04_093531) do
   end
 
   create_table "sales", force: :cascade do |t|
-    t.bigint "customer_id", null: false
+    t.bigint "customer_id"
     t.string "sale_number", null: false
     t.decimal "total_amount", precision: 10, scale: 2, null: false
     t.string "payment_method"
@@ -430,8 +434,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_04_093531) do
     t.text "notes"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "project_name"
+    t.text "description"
+    t.string "client_name"
+    t.integer "project_year"
     t.index ["customer_id"], name: "index_sales_on_customer_id"
     t.index ["payment_status"], name: "index_sales_on_payment_status"
+    t.index ["project_year", "project_name"], name: "index_sales_on_project_year_and_project_name", unique: true, where: "(project_name IS NOT NULL)"
     t.index ["sale_date"], name: "index_sales_on_sale_date"
     t.index ["sale_number"], name: "index_sales_on_sale_number", unique: true
   end
@@ -479,6 +488,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_04_093531) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "attendances", "users"
+  add_foreign_key "cash_advance_requests", "sales"
   add_foreign_key "cash_advance_requests", "users", column: "requester_user_id"
   add_foreign_key "employee_reimbursements", "users", column: "requester_user_id"
   add_foreign_key "expense_reports", "cash_advance_requests"
@@ -506,5 +516,4 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_04_093531) do
   add_foreign_key "roles", "users", on_delete: :cascade
   add_foreign_key "sale_items", "products"
   add_foreign_key "sale_items", "sales"
-  add_foreign_key "sales", "customers"
 end

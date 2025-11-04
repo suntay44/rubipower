@@ -10,6 +10,12 @@
           </a>
           <div class="flex items-center space-x-3">
             <h1 class="text-2xl font-bold text-gray-900">Cash Advance Request #<%= @cash_advance_request.id %></h1>
+            <%= link_to cash_advance_request_path(@cash_advance_request, format: :pdf), class: "bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors duration-200 flex items-center space-x-2", target: "_blank" do %>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+              </svg>
+              <span>Export PDF</span>
+            <% end %>
           </div>
         </div>
         
@@ -26,7 +32,7 @@
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
               </svg>
-              <span>+ Expense Report</span>
+              <span>Expense Report</span>
             </a>
           <% end %>
           <a href="<%= edit_cash_advance_request_path(@cash_advance_request) %>" class="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition-colors duration-200 flex items-center space-x-2">
@@ -72,10 +78,30 @@
                   <label class="block text-sm font-medium text-gray-700 mb-1">Sales Order Number</label>
                   <p class="text-sm text-gray-900"><%= @cash_advance_request.sales_order_number.present? ? @cash_advance_request.sales_order_number : 'N/A' %></p>
                 </div>
+                <% if @cash_advance_request.sale.present? %>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Sale Total</label>
+                    <p class="text-sm text-gray-900">₱<%= number_with_precision(@cash_advance_request.sale.total_amount, precision: 2) %></p>
+                  </div>
+                <% end %>
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-1">Client Name</label>
                   <p class="text-sm text-gray-900"><%= @cash_advance_request.client_name.present? ? @cash_advance_request.client_name : 'N/A' %></p>
                 </div>
+                <% if @cash_advance_request.description.present? %>
+                  <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                    <p class="text-sm text-gray-900"><%= @cash_advance_request.description %></p>
+                  </div>
+                <% end %>
+                <% if @cash_advance_request.sale.present? %>
+                  <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Related Sale</label>
+                    <p class="text-sm text-gray-900">
+                      <%= link_to "#{@cash_advance_request.sale.project_name} - #{@cash_advance_request.sale.client_name}", inventory_sales_sale_path(@cash_advance_request.sale), class: "text-red-600 hover:text-red-700 underline" %>
+                    </p>
+                  </div>
+                <% end %>
               </div>
             </div>
 
